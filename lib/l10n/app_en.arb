@@ -4,12 +4,12 @@
   "appName": "OhMyShelly",
   "appTagline": "Smart Home Made Simple",
 
-  "onboardingTitle1": "Welcome to OhMyShelly",
-  "onboardingDesc1": "Control all your Shelly smart home devices from one place",
-  "onboardingTitle2": "Monitor Your Home",
-  "onboardingDesc2": "Track power usage, weather conditions, and device status in real-time",
-  "onboardingTitle3": "Stay in Control",
-  "onboardingDesc3": "Turn devices on or off with a single tap, anywhere you are",
+  "onboardingTitle1": "Your Smart Home Dashboard",
+  "onboardingDesc1": "See all your devices at a glance. Monitor power consumption, weather data, and device status in real-time. Organize by rooms.",
+  "onboardingTitle2": "Detailed Statistics",
+  "onboardingDesc2": "View historical charts for power usage and weather. Track trends by day, week, month, or year with beautiful graphs.",
+  "onboardingTitle3": "Schedules & Automation",
+  "onboardingDesc3": "Create schedules to turn devices on or off automatically. Set times, pick days, and let your home run itself.",
   "getStarted": "Get Started",
   "skip": "Skip",
   "next": "Next",
@@ -34,6 +34,7 @@
   "weatherStation": "Weather Station",
   "gatewayDevice": "Gateway",
   "unknownDevice": "Device",
+  "otherDevices": "Other",
   "online": "Connected",
   "offline": "Offline",
   "on": "On",
@@ -103,6 +104,9 @@
   "lux": "lux",
 
   "settings": "Settings",
+  "appearance": "Appearance",
+  "showDevicesTab": "Show Devices Tab",
+  "showDevicesTabDesc": "When disabled, only the Dashboard is shown",
   "language": "Language",
   "languageSystem": "System Default",
   "languageEnglish": "English",
@@ -222,5 +226,84 @@
   "updateTapToInstall": "Tap to install",
   "updateInstall": "Install",
   "updateError": "Update error",
-  "updateClose": "Close"
+  "updateClose": "Close",
+
+  "schedules": "Schedules",
+  "noSchedules": "No schedules",
+  "addSchedule": "Add Schedule",
+  "editSchedule": "Edit",
+  "deleteSchedule": "Delete",
+  "deleteScheduleConfirm": "Are you sure you want to delete this schedule?",
+  "scheduleTime": "Time",
+  "scheduleDays": "Days",
+  "scheduleAction": "Action",
+  "turnOn": "Turn On",
+  "turnOff": "Turn Off",
+  "everyDay": "Every day",
+  "weekdays": "Weekdays",
+  "weekends": "Weekends",
+  "save": "Save",
+
+  "activity": "Activity",
+  "noActivity": "No recent activity",
+  "sourceButton": "Button",
+  "sourceSchedule": "Schedule",
+  "sourceApp": "App",
+  "sourceSystem": "System",
+  "sourceUnknown": "Unknown",
+
+  "justNow": "Just now",
+  "minutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterday": "Yesterday",
+  "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "deviceInfo": "Device Information",
+  "name": "Name",
+  "model": "Model",
+  "type": "Type",
+  "generation": "Generation",
+  "deviceId": "Device ID",
+  "serial": "Serial",
+  "room": "Room",
+  "connection": "Connection",
+  "status": "Status",
+  "wifiNetwork": "WiFi Network",
+  "ipAddress": "IP Address",
+  "signalStrength": "Signal Strength",
+  "signalExcellent": "Excellent",
+  "signalGood": "Good",
+  "signalFair": "Fair",
+  "signalWeak": "Weak",
+  "signalUnknown": "Unknown",
+  "uptime": "Uptime",
+  "ramFree": "RAM Free",
+  "deviceOffline": "Device is offline",
+
+  "tapForHistory": "Tap for history",
+
+  "reorderDevices": "Reorder",
+  "reorderDevicesDone": "Done",
+  "dragToReorder": "Drag to reorder devices"
 }

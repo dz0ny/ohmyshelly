@@ -113,37 +113,37 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to OhMyShelly'**
+  /// **'Your Smart Home Dashboard'**
   String get onboardingTitle1;
 
   /// No description provided for @onboardingDesc1.
   ///
   /// In en, this message translates to:
-  /// **'Control all your Shelly smart home devices from one place'**
+  /// **'See all your devices at a glance. Monitor power consumption, weather data, and device status in real-time. Organize by rooms.'**
   String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
   ///
   /// In en, this message translates to:
-  /// **'Monitor Your Home'**
+  /// **'Detailed Statistics'**
   String get onboardingTitle2;
 
   /// No description provided for @onboardingDesc2.
   ///
   /// In en, this message translates to:
-  /// **'Track power usage, weather conditions, and device status in real-time'**
+  /// **'View historical charts for power usage and weather. Track trends by day, week, month, or year with beautiful graphs.'**
   String get onboardingDesc2;
 
   /// No description provided for @onboardingTitle3.
   ///
   /// In en, this message translates to:
-  /// **'Stay in Control'**
+  /// **'Schedules & Automation'**
   String get onboardingTitle3;
 
   /// No description provided for @onboardingDesc3.
   ///
   /// In en, this message translates to:
-  /// **'Turn devices on or off with a single tap, anywhere you are'**
+  /// **'Create schedules to turn devices on or off automatically. Set times, pick days, and let your home run itself.'**
   String get onboardingDesc3;
 
   /// No description provided for @getStarted.
@@ -271,6 +271,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Device'**
   String get unknownDevice;
+
+  /// No description provided for @otherDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get otherDevices;
 
   /// No description provided for @online.
   ///
@@ -631,6 +637,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @showDevicesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Devices Tab'**
+  String get showDevicesTab;
+
+  /// No description provided for @showDevicesTabDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'When disabled, only the Dashboard is shown'**
+  String get showDevicesTabDesc;
 
   /// No description provided for @language.
   ///
@@ -1231,6 +1255,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get updateClose;
+
+  /// No description provided for @schedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules'**
+  String get schedules;
+
+  /// No description provided for @noSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules'**
+  String get noSchedules;
+
+  /// No description provided for @addSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Schedule'**
+  String get addSchedule;
+
+  /// No description provided for @editSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editSchedule;
+
+  /// No description provided for @deleteSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteSchedule;
+
+  /// No description provided for @deleteScheduleConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this schedule?'**
+  String get deleteScheduleConfirm;
+
+  /// No description provided for @scheduleTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get scheduleTime;
+
+  /// No description provided for @scheduleDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get scheduleDays;
+
+  /// No description provided for @scheduleAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get scheduleAction;
+
+  /// No description provided for @turnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get turnOn;
+
+  /// No description provided for @turnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn Off'**
+  String get turnOff;
+
+  /// No description provided for @everyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get everyDay;
+
+  /// No description provided for @weekdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get weekdays;
+
+  /// No description provided for @weekends.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekends'**
+  String get weekends;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// No description provided for @noActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noActivity;
+
+  /// No description provided for @sourceButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Button'**
+  String get sourceButton;
+
+  /// No description provided for @sourceSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get sourceSchedule;
+
+  /// No description provided for @sourceApp.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get sourceApp;
+
+  /// No description provided for @sourceSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get sourceSystem;
+
+  /// No description provided for @sourceUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get sourceUnknown;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute ago} other{{count} minutes ago}}'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
+  String hoursAgo(int count);
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day ago} other{{count} days ago}}'**
+  String daysAgo(int count);
+
+  /// No description provided for @deviceInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Information'**
+  String get deviceInfo;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @model.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get model;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @generation.
+  ///
+  /// In en, this message translates to:
+  /// **'Generation'**
+  String get generation;
+
+  /// No description provided for @deviceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Device ID'**
+  String get deviceId;
+
+  /// No description provided for @serial.
+  ///
+  /// In en, this message translates to:
+  /// **'Serial'**
+  String get serial;
+
+  /// No description provided for @room.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get room;
+
+  /// No description provided for @connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get connection;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @wifiNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'WiFi Network'**
+  String get wifiNetwork;
+
+  /// No description provided for @ipAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'IP Address'**
+  String get ipAddress;
+
+  /// No description provided for @signalStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal Strength'**
+  String get signalStrength;
+
+  /// No description provided for @signalExcellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get signalExcellent;
+
+  /// No description provided for @signalGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get signalGood;
+
+  /// No description provided for @signalFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get signalFair;
+
+  /// No description provided for @signalWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get signalWeak;
+
+  /// No description provided for @signalUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get signalUnknown;
+
+  /// No description provided for @uptime.
+  ///
+  /// In en, this message translates to:
+  /// **'Uptime'**
+  String get uptime;
+
+  /// No description provided for @ramFree.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM Free'**
+  String get ramFree;
+
+  /// No description provided for @deviceOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Device is offline'**
+  String get deviceOffline;
+
+  /// No description provided for @tapForHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for history'**
+  String get tapForHistory;
+
+  /// No description provided for @reorderDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get reorderDevices;
+
+  /// No description provided for @reorderDevicesDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get reorderDevicesDone;
+
+  /// No description provided for @dragToReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder devices'**
+  String get dragToReorder;
 }
 
 class _AppLocalizationsDelegate

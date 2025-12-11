@@ -15,25 +15,25 @@ class AppLocalizationsSl extends AppLocalizations {
   String get appTagline => 'Pametni dom, enostavno';
 
   @override
-  String get onboardingTitle1 => 'Dobrodošli v OhMyShelly';
+  String get onboardingTitle1 => 'Nadzorna plošča';
 
   @override
   String get onboardingDesc1 =>
-      'Upravljajte vse svoje Shelly naprave na enem mestu';
+      'Vse naprave na enem mestu. Spremljajte porabo energije, vremenske podatke in stanje naprav v realnem času. Organizirajte po sobah.';
 
   @override
-  String get onboardingTitle2 => 'Spremljajte svoj dom';
+  String get onboardingTitle2 => 'Podrobna statistika';
 
   @override
   String get onboardingDesc2 =>
-      'Sledite porabi energije, vremenu in stanju naprav v realnem času';
+      'Oglejte si zgodovinske grafe porabe in vremena. Spremljajte trende po dnevih, tednih, mesecih ali letih.';
 
   @override
-  String get onboardingTitle3 => 'Imejte nadzor';
+  String get onboardingTitle3 => 'Urniki in avtomatizacija';
 
   @override
   String get onboardingDesc3 =>
-      'Vklopite ali izklopite naprave z enim dotikom, kjerkoli ste';
+      'Ustvarite urnike za samodejno vklapljanje ali izklapljanje naprav. Nastavite čas, izberite dneve in pustite, da dom deluje sam.';
 
   @override
   String get getStarted => 'Začni';
@@ -97,6 +97,9 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get unknownDevice => 'Naprava';
+
+  @override
+  String get otherDevices => 'Drugo';
 
   @override
   String get online => 'Povezano';
@@ -277,6 +280,16 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings => 'Nastavitve';
+
+  @override
+  String get appearance => 'Izgled';
+
+  @override
+  String get showDevicesTab => 'Prikaži zavihek Naprave';
+
+  @override
+  String get showDevicesTabDesc =>
+      'Ko je izklopljeno, je prikazana samo nadzorna plošča';
 
   @override
   String get language => 'Jezik';
@@ -580,4 +593,191 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get updateClose => 'Zapri';
+
+  @override
+  String get schedules => 'Urniki';
+
+  @override
+  String get noSchedules => 'Ni urnikov';
+
+  @override
+  String get addSchedule => 'Dodaj urnik';
+
+  @override
+  String get editSchedule => 'Uredi';
+
+  @override
+  String get deleteSchedule => 'Izbriši';
+
+  @override
+  String get deleteScheduleConfirm =>
+      'Ali ste prepričani, da želite izbrisati ta urnik?';
+
+  @override
+  String get scheduleTime => 'Čas';
+
+  @override
+  String get scheduleDays => 'Dnevi';
+
+  @override
+  String get scheduleAction => 'Dejanje';
+
+  @override
+  String get turnOn => 'Vklopi';
+
+  @override
+  String get turnOff => 'Izklopi';
+
+  @override
+  String get everyDay => 'Vsak dan';
+
+  @override
+  String get weekdays => 'Delovni dnevi';
+
+  @override
+  String get weekends => 'Vikend';
+
+  @override
+  String get save => 'Shrani';
+
+  @override
+  String get activity => 'Aktivnost';
+
+  @override
+  String get noActivity => 'Ni nedavne aktivnosti';
+
+  @override
+  String get sourceButton => 'Gumb';
+
+  @override
+  String get sourceSchedule => 'Urnik';
+
+  @override
+  String get sourceApp => 'Aplikacija';
+
+  @override
+  String get sourceSystem => 'Sistem';
+
+  @override
+  String get sourceUnknown => 'Neznano';
+
+  @override
+  String get justNow => 'Pravkar';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'pred $count minutami',
+      few: 'pred $count minutami',
+      two: 'pred 2 minutama',
+      one: 'pred 1 minuto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'pred $count urami',
+      few: 'pred $count urami',
+      two: 'pred 2 urama',
+      one: 'pred 1 uro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yesterday => 'Včeraj';
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'pred $count dnevi',
+      few: 'pred $count dnevi',
+      two: 'pred 2 dnevoma',
+      one: 'pred 1 dnem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deviceInfo => 'Podatki o napravi';
+
+  @override
+  String get name => 'Ime';
+
+  @override
+  String get model => 'Model';
+
+  @override
+  String get type => 'Vrsta';
+
+  @override
+  String get generation => 'Generacija';
+
+  @override
+  String get deviceId => 'ID naprave';
+
+  @override
+  String get serial => 'Serijska št.';
+
+  @override
+  String get room => 'Soba';
+
+  @override
+  String get connection => 'Povezava';
+
+  @override
+  String get status => 'Stanje';
+
+  @override
+  String get wifiNetwork => 'WiFi omrežje';
+
+  @override
+  String get ipAddress => 'IP naslov';
+
+  @override
+  String get signalStrength => 'Moč signala';
+
+  @override
+  String get signalExcellent => 'Odličen';
+
+  @override
+  String get signalGood => 'Dober';
+
+  @override
+  String get signalFair => 'Zadovoljiv';
+
+  @override
+  String get signalWeak => 'Šibek';
+
+  @override
+  String get signalUnknown => 'Neznano';
+
+  @override
+  String get uptime => 'Čas delovanja';
+
+  @override
+  String get ramFree => 'Prosti RAM';
+
+  @override
+  String get deviceOffline => 'Naprava ni povezana';
+
+  @override
+  String get tapForHistory => 'Tapni za zgodovino';
+
+  @override
+  String get reorderDevices => 'Razvrsti';
+
+  @override
+  String get reorderDevicesDone => 'Končano';
+
+  @override
+  String get dragToReorder => 'Povleci za prerazporeditev naprav';
 }

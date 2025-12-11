@@ -8,6 +8,8 @@ class StorageService {
   static const String _userKey = 'user_data';
   static const String _onboardingKey = 'onboarding_complete';
   static const String _languageKey = 'language_code';
+  static const String _showDevicesTabKey = 'show_devices_tab';
+  static const String _dashboardDeviceOrderKey = 'dashboard_device_order';
 
   Future<void> init() async {
     _storage = const FlutterSecureStorage(
@@ -74,6 +76,33 @@ class StorageService {
     } else {
       await _storage.write(key: _languageKey, value: languageCode);
     }
+  }
+
+  // Show devices tab setting (default: true)
+  Future<bool> getShowDevicesTab() async {
+    final value = await _storage.read(key: _showDevicesTabKey);
+    return value != 'false'; // Default to true
+  }
+
+  Future<void> setShowDevicesTab(bool show) async {
+    await _storage.write(key: _showDevicesTabKey, value: show.toString());
+  }
+
+  // Dashboard device order (list of device IDs)
+  Future<List<String>> getDashboardDeviceOrder() async {
+    final value = await _storage.read(key: _dashboardDeviceOrderKey);
+    if (value == null || value.isEmpty) return [];
+    try {
+      final List<dynamic> decoded = jsonDecode(value);
+      return decoded.cast<String>();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> setDashboardDeviceOrder(List<String> deviceIds) async {
+    final encoded = jsonEncode(deviceIds);
+    await _storage.write(key: _dashboardDeviceOrderKey, value: encoded);
   }
 
   // Clear all data (for logout)

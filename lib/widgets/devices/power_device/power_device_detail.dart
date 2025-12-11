@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_icons.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../data/models/device.dart';
 import '../../../data/models/device_status.dart';
 import '../../controls/power_toggle.dart';
@@ -137,6 +138,28 @@ class PowerDeviceDetail extends StatelessWidget {
               label: l10n.temperature,
               value: status!.temperatureDisplay,
             ),
+            // Last updated
+            if (status!.lastUpdated != null) ...[
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.access_time,
+                    size: 14,
+                    color: AppColors.textHint,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${l10n.lastUpdated}: ${Formatters.timeAgo(status!.lastUpdated!, l10n)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textHint,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -202,7 +225,9 @@ class PowerDeviceDetail extends StatelessWidget {
             SparklineWidget(
               data: sparklineData,
               lineColor: sparklineColor ?? iconColor ?? device.displayColor,
-              height: 32,
+              height: 40,
+              showDots: true,
+              showHourLabels: true,
             ),
           ],
         ],

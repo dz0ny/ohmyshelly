@@ -167,7 +167,10 @@ class DeviceService {
         // Parse status from embedded 'status' field
         final statusJson = deviceJson['status'] as Map<String, dynamic>?;
         if (statusJson != null) {
-          statuses[device.id] = _parseDeviceStatus(statusJson, device.code);
+          // Add timestamp for API responses (used for WebSocket vs API precedence)
+          final statusWithTimestamp = Map<String, dynamic>.from(statusJson);
+          statusWithTimestamp['_updated'] = DateTime.now().toIso8601String();
+          statuses[device.id] = parseDeviceStatus(statusWithTimestamp, device.code);
         }
       }
     }
@@ -190,7 +193,9 @@ class DeviceService {
     return result.statuses;
   }
 
-  DeviceStatus _parseDeviceStatus(Map<String, dynamic> json, [String? deviceCode]) {
+  /// Parse device status from JSON.
+  /// Made public for reuse in WebSocket event handling.
+  DeviceStatus parseDeviceStatus(Map<String, dynamic> json, [String? deviceCode]) {
     // Determine device type from code or status data
     final code = deviceCode ??
         json['code'] as String? ??

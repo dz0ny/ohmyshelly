@@ -4,12 +4,12 @@
   "appName": "OhMyShelly",
   "appTagline": "Pametni dom, enostavno",
 
-  "onboardingTitle1": "Dobrodošli v OhMyShelly",
-  "onboardingDesc1": "Upravljajte vse svoje Shelly naprave na enem mestu",
-  "onboardingTitle2": "Spremljajte svoj dom",
-  "onboardingDesc2": "Sledite porabi energije, vremenu in stanju naprav v realnem času",
-  "onboardingTitle3": "Imejte nadzor",
-  "onboardingDesc3": "Vklopite ali izklopite naprave z enim dotikom, kjerkoli ste",
+  "onboardingTitle1": "Nadzorna plošča",
+  "onboardingDesc1": "Vse naprave na enem mestu. Spremljajte porabo energije, vremenske podatke in stanje naprav v realnem času. Organizirajte po sobah.",
+  "onboardingTitle2": "Podrobna statistika",
+  "onboardingDesc2": "Oglejte si zgodovinske grafe porabe in vremena. Spremljajte trende po dnevih, tednih, mesecih ali letih.",
+  "onboardingTitle3": "Urniki in avtomatizacija",
+  "onboardingDesc3": "Ustvarite urnike za samodejno vklapljanje ali izklapljanje naprav. Nastavite čas, izberite dneve in pustite, da dom deluje sam.",
   "getStarted": "Začni",
   "skip": "Preskoči",
   "next": "Naprej",
@@ -34,6 +34,7 @@
   "weatherStation": "Vremenska postaja",
   "gatewayDevice": "Prehod",
   "unknownDevice": "Naprava",
+  "otherDevices": "Drugo",
   "online": "Povezano",
   "offline": "Brez povezave",
   "on": "Vklopljeno",
@@ -103,6 +104,9 @@
   "lux": "lux",
 
   "settings": "Nastavitve",
+  "appearance": "Izgled",
+  "showDevicesTab": "Prikaži zavihek Naprave",
+  "showDevicesTabDesc": "Ko je izklopljeno, je prikazana samo nadzorna plošča",
   "language": "Jezik",
   "languageSystem": "Sistemska nastavitev",
   "languageEnglish": "Angleščina",
@@ -222,5 +226,84 @@
   "updateTapToInstall": "Tapni za namestitev",
   "updateInstall": "Namesti",
   "updateError": "Napaka pri posodobitvi",
-  "updateClose": "Zapri"
+  "updateClose": "Zapri",
+
+  "schedules": "Urniki",
+  "noSchedules": "Ni urnikov",
+  "addSchedule": "Dodaj urnik",
+  "editSchedule": "Uredi",
+  "deleteSchedule": "Izbriši",
+  "deleteScheduleConfirm": "Ali ste prepričani, da želite izbrisati ta urnik?",
+  "scheduleTime": "Čas",
+  "scheduleDays": "Dnevi",
+  "scheduleAction": "Dejanje",
+  "turnOn": "Vklopi",
+  "turnOff": "Izklopi",
+  "everyDay": "Vsak dan",
+  "weekdays": "Delovni dnevi",
+  "weekends": "Vikend",
+  "save": "Shrani",
+
+  "activity": "Aktivnost",
+  "noActivity": "Ni nedavne aktivnosti",
+  "sourceButton": "Gumb",
+  "sourceSchedule": "Urnik",
+  "sourceApp": "Aplikacija",
+  "sourceSystem": "Sistem",
+  "sourceUnknown": "Neznano",
+
+  "justNow": "Pravkar",
+  "minutesAgo": "{count, plural, =1{pred 1 minuto} =2{pred 2 minutama} few{pred {count} minutami} other{pred {count} minutami}}",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{count, plural, =1{pred 1 uro} =2{pred 2 urama} few{pred {count} urami} other{pred {count} urami}}",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterday": "Včeraj",
+  "daysAgo": "{count, plural, =1{pred 1 dnem} =2{pred 2 dnevoma} few{pred {count} dnevi} other{pred {count} dnevi}}",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "deviceInfo": "Podatki o napravi",
+  "name": "Ime",
+  "model": "Model",
+  "type": "Vrsta",
+  "generation": "Generacija",
+  "deviceId": "ID naprave",
+  "serial": "Serijska št.",
+  "room": "Soba",
+  "connection": "Povezava",
+  "status": "Stanje",
+  "wifiNetwork": "WiFi omrežje",
+  "ipAddress": "IP naslov",
+  "signalStrength": "Moč signala",
+  "signalExcellent": "Odličen",
+  "signalGood": "Dober",
+  "signalFair": "Zadovoljiv",
+  "signalWeak": "Šibek",
+  "signalUnknown": "Neznano",
+  "uptime": "Čas delovanja",
+  "ramFree": "Prosti RAM",
+  "deviceOffline": "Naprava ni povezana",
+
+  "tapForHistory": "Tapni za zgodovino",
+
+  "reorderDevices": "Razvrsti",
+  "reorderDevicesDone": "Končano",
+  "dragToReorder": "Povleci za prerazporeditev naprav"
 }

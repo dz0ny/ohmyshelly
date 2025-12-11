@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
+import '../../core/constants/app_colors.dart';
 import '../../providers/settings_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -21,9 +22,43 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          _buildAppearanceSection(context, l10n),
+          const Divider(height: 1),
           _buildLanguageSection(context, l10n),
         ],
       ),
+    );
+  }
+
+  Widget _buildAppearanceSection(BuildContext context, AppLocalizations l10n) {
+    return Consumer<SettingsProvider>(
+      builder: (context, settings, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                l10n.appearance,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+            SwitchListTile(
+              title: Text(l10n.showDevicesTab),
+              subtitle: Text(
+                l10n.showDevicesTabDesc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+              ),
+              value: settings.showDevicesTab,
+              onChanged: (value) => settings.setShowDevicesTab(value),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -8,11 +8,13 @@ import 'core/theme/app_theme.dart';
 import 'data/services/api_service.dart';
 import 'data/services/storage_service.dart';
 import 'data/services/update_service.dart';
+import 'data/services/websocket_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/device_provider.dart';
 import 'providers/dashboard_provider.dart';
 import 'providers/statistics_provider.dart';
 import 'providers/settings_provider.dart';
+import 'providers/schedule_provider.dart';
 import 'router/app_router.dart';
 
 void main() async {
@@ -41,6 +43,9 @@ void main() async {
   // Create API service
   final apiService = ApiService();
 
+  // Create WebSocket service for real-time updates
+  final webSocketService = WebSocketService();
+
   // Create settings provider and initialize
   final settingsProvider = SettingsProvider(storageService: storageService);
   await settingsProvider.init();
@@ -54,6 +59,7 @@ void main() async {
     OhMyShellyApp(
       storageService: storageService,
       apiService: apiService,
+      webSocketService: webSocketService,
       settingsProvider: settingsProvider,
     ),
   );
@@ -62,12 +68,14 @@ void main() async {
 class OhMyShellyApp extends StatelessWidget {
   final StorageService storageService;
   final ApiService apiService;
+  final WebSocketService webSocketService;
   final SettingsProvider settingsProvider;
 
   const OhMyShellyApp({
     super.key,
     required this.storageService,
     required this.apiService,
+    required this.webSocketService,
     required this.settingsProvider,
   });
 
@@ -90,9 +98,12 @@ class OhMyShellyApp extends StatelessWidget {
           ),
         ),
 
-        // Device provider
+        // Device provider with WebSocket support
         ChangeNotifierProvider<DeviceProvider>(
-          create: (context) => DeviceProvider(apiService: apiService),
+          create: (context) => DeviceProvider(
+            apiService: apiService,
+            webSocketService: webSocketService,
+          ),
         ),
 
         // Dashboard provider
@@ -103,6 +114,14 @@ class OhMyShellyApp extends StatelessWidget {
         // Statistics provider
         ChangeNotifierProvider<StatisticsProvider>(
           create: (context) => StatisticsProvider(apiService: apiService),
+        ),
+
+        // Schedule provider with WebSocket and API support
+        ChangeNotifierProvider<ScheduleProvider>(
+          create: (context) => ScheduleProvider(
+            webSocketService: webSocketService,
+            apiService: apiService,
+          ),
         ),
 
         // Update service (Android only)

@@ -136,6 +136,9 @@ class WeatherStatistics {
         minPressure: (data['min_pressure'] as num?)?.toDouble() ?? 0.0,
         maxPressure: (data['max_pressure'] as num?)?.toDouble() ?? 0.0,
         illuminance: (data['illuminance'] as num?)?.toDouble() ?? 0.0,
+        windSpeed: (data['wind_speed'] as num?)?.toDouble() ?? 0.0,
+        windGust: (data['wind_gust'] as num?)?.toDouble() ?? 0.0,
+        windDirection: (data['wind_direction'] as num?)?.toDouble() ?? 0.0,
       ));
     }
 
@@ -198,6 +201,9 @@ class WeatherDataPoint {
   final double minPressure;
   final double maxPressure;
   final double illuminance;
+  final double windSpeed;
+  final double windGust;
+  final double windDirection;
 
   WeatherDataPoint({
     required this.timestamp,
@@ -209,6 +215,9 @@ class WeatherDataPoint {
     required this.minPressure,
     required this.maxPressure,
     required this.illuminance,
+    this.windSpeed = 0.0,
+    this.windGust = 0.0,
+    this.windDirection = 0.0,
   });
 
   double get avgTemperature => (minTemperature + maxTemperature) / 2;

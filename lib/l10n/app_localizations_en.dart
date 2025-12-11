@@ -15,25 +15,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTagline => 'Smart Home Made Simple';
 
   @override
-  String get onboardingTitle1 => 'Welcome to OhMyShelly';
+  String get onboardingTitle1 => 'Your Smart Home Dashboard';
 
   @override
   String get onboardingDesc1 =>
-      'Control all your Shelly smart home devices from one place';
+      'See all your devices at a glance. Monitor power consumption, weather data, and device status in real-time. Organize by rooms.';
 
   @override
-  String get onboardingTitle2 => 'Monitor Your Home';
+  String get onboardingTitle2 => 'Detailed Statistics';
 
   @override
   String get onboardingDesc2 =>
-      'Track power usage, weather conditions, and device status in real-time';
+      'View historical charts for power usage and weather. Track trends by day, week, month, or year with beautiful graphs.';
 
   @override
-  String get onboardingTitle3 => 'Stay in Control';
+  String get onboardingTitle3 => 'Schedules & Automation';
 
   @override
   String get onboardingDesc3 =>
-      'Turn devices on or off with a single tap, anywhere you are';
+      'Create schedules to turn devices on or off automatically. Set times, pick days, and let your home run itself.';
 
   @override
   String get getStarted => 'Get Started';
@@ -97,6 +97,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unknownDevice => 'Device';
+
+  @override
+  String get otherDevices => 'Other';
 
   @override
   String get online => 'Connected';
@@ -277,6 +280,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get showDevicesTab => 'Show Devices Tab';
+
+  @override
+  String get showDevicesTabDesc => 'When disabled, only the Dashboard is shown';
 
   @override
   String get language => 'Language';
@@ -579,4 +591,185 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateClose => 'Close';
+
+  @override
+  String get schedules => 'Schedules';
+
+  @override
+  String get noSchedules => 'No schedules';
+
+  @override
+  String get addSchedule => 'Add Schedule';
+
+  @override
+  String get editSchedule => 'Edit';
+
+  @override
+  String get deleteSchedule => 'Delete';
+
+  @override
+  String get deleteScheduleConfirm =>
+      'Are you sure you want to delete this schedule?';
+
+  @override
+  String get scheduleTime => 'Time';
+
+  @override
+  String get scheduleDays => 'Days';
+
+  @override
+  String get scheduleAction => 'Action';
+
+  @override
+  String get turnOn => 'Turn On';
+
+  @override
+  String get turnOff => 'Turn Off';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get weekdays => 'Weekdays';
+
+  @override
+  String get weekends => 'Weekends';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get activity => 'Activity';
+
+  @override
+  String get noActivity => 'No recent activity';
+
+  @override
+  String get sourceButton => 'Button';
+
+  @override
+  String get sourceSchedule => 'Schedule';
+
+  @override
+  String get sourceApp => 'App';
+
+  @override
+  String get sourceSystem => 'System';
+
+  @override
+  String get sourceUnknown => 'Unknown';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deviceInfo => 'Device Information';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get model => 'Model';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get generation => 'Generation';
+
+  @override
+  String get deviceId => 'Device ID';
+
+  @override
+  String get serial => 'Serial';
+
+  @override
+  String get room => 'Room';
+
+  @override
+  String get connection => 'Connection';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get wifiNetwork => 'WiFi Network';
+
+  @override
+  String get ipAddress => 'IP Address';
+
+  @override
+  String get signalStrength => 'Signal Strength';
+
+  @override
+  String get signalExcellent => 'Excellent';
+
+  @override
+  String get signalGood => 'Good';
+
+  @override
+  String get signalFair => 'Fair';
+
+  @override
+  String get signalWeak => 'Weak';
+
+  @override
+  String get signalUnknown => 'Unknown';
+
+  @override
+  String get uptime => 'Uptime';
+
+  @override
+  String get ramFree => 'RAM Free';
+
+  @override
+  String get deviceOffline => 'Device is offline';
+
+  @override
+  String get tapForHistory => 'Tap for history';
+
+  @override
+  String get reorderDevices => 'Reorder';
+
+  @override
+  String get reorderDevicesDone => 'Done';
+
+  @override
+  String get dragToReorder => 'Drag to reorder devices';
 }

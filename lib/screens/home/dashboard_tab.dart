@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_icons.dart';
 import '../../providers/device_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../widgets/devices/power_device/power_device_dashboard_card.dart';
 import '../../widgets/devices/weather_station/weather_station_dashboard_card.dart';
 import '../../widgets/common/loading_indicator.dart';
@@ -12,8 +13,15 @@ import '../../widgets/common/error_card.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
 
-class DashboardTab extends StatelessWidget {
+class DashboardTab extends StatefulWidget {
   const DashboardTab({super.key});
+
+  @override
+  State<DashboardTab> createState() => _DashboardTabState();
+}
+
+class _DashboardTabState extends State<DashboardTab> {
+  bool _isReorderMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +31,38 @@ class DashboardTab extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.dashboard),
         actions: [
+          Consumer2<DeviceProvider, SettingsProvider>(
+            builder: (context, deviceProvider, settingsProvider, _) {
+              final displayDevices = deviceProvider.devices
+                  .where((d) => !d.isGateway)
+                  .toList();
+
+              if (displayDevices.isEmpty) {
+                return const SizedBox.shrink();
+              }
+
+              if (_isReorderMode) {
+                return TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isReorderMode = false;
+                    });
+                  },
+                  child: Text(l10n.reorderDevicesDone),
+                );
+              }
+
+              return IconButton(
+                icon: const Icon(AppIcons.reorder),
+                tooltip: l10n.reorderDevices,
+                onPressed: () {
+                  setState(() {
+                    _isReorderMode = true;
+                  });
+                },
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(AppIcons.settings),
             tooltip: l10n.settings,
@@ -35,8 +75,8 @@ class DashboardTab extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<DeviceProvider>(
-        builder: (context, deviceProvider, _) {
+      body: Consumer2<DeviceProvider, SettingsProvider>(
+        builder: (context, deviceProvider, settingsProvider, _) {
           if (deviceProvider.isLoading &&
               deviceProvider.state == DeviceLoadState.loading) {
             return LoadingIndicator(message: l10n.loadingDevices);
@@ -51,15 +91,31 @@ class DashboardTab extends StatelessWidget {
           }
 
           // Filter out gateways - only show devices with data (power, weather)
-          final displayDevices = deviceProvider.devices
+          final allDevices = deviceProvider.devices
               .where((d) => !d.isGateway)
               .toList();
 
-          if (displayDevices.isEmpty) {
+          if (allDevices.isEmpty) {
             return EmptyState(
               icon: AppIcons.dashboard,
               title: l10n.noDevices,
               message: l10n.noDevicesDesc,
+            );
+          }
+
+          // Sort devices based on saved order
+          final displayDevices = _sortDevices(
+            allDevices,
+            settingsProvider.dashboardDeviceOrder,
+          );
+
+          if (_isReorderMode) {
+            return _buildReorderableList(
+              context,
+              displayDevices,
+              deviceProvider,
+              settingsProvider,
+              l10n,
             );
           }
 
@@ -84,7 +140,136 @@ class DashboardTab extends StatelessWidget {
     );
   }
 
-  Widget _buildDeviceCard(Device device, DeviceStatus? status, DeviceProvider deviceProvider) {
+  List<Device> _sortDevices(List<Device> devices, List<String> savedOrder) {
+    if (savedOrder.isEmpty) {
+      return devices;
+    }
+
+    final deviceMap = {for (var d in devices) d.id: d};
+    final sortedDevices = <Device>[];
+
+    // Add devices in saved order
+    for (final id in savedOrder) {
+      final device = deviceMap.remove(id);
+      if (device != null) {
+        sortedDevices.add(device);
+      }
+    }
+
+    // Add any remaining devices (new devices not in saved order)
+    sortedDevices.addAll(deviceMap.values);
+
+    return sortedDevices;
+  }
+
+  Widget _buildReorderableList(
+    BuildContext context,
+    List<Device> devices,
+    DeviceProvider deviceProvider,
+    SettingsProvider settingsProvider,
+    AppLocalizations l10n,
+  ) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          child: Row(
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 16,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.dragToReorder,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ReorderableListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: devices.length,
+            onReorder: (oldIndex, newIndex) {
+              _onReorder(
+                oldIndex,
+                newIndex,
+                devices,
+                settingsProvider,
+              );
+            },
+            itemBuilder: (context, index) {
+              final device = devices[index];
+              final status = deviceProvider.getStatus(device.id);
+
+              return Padding(
+                key: ValueKey(device.id),
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildReorderableCard(device, status, deviceProvider, index),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onReorder(
+    int oldIndex,
+    int newIndex,
+    List<Device> devices,
+    SettingsProvider settingsProvider,
+  ) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final reorderedDevices = List<Device>.from(devices);
+    final device = reorderedDevices.removeAt(oldIndex);
+    reorderedDevices.insert(newIndex, device);
+
+    // Save the new order
+    final newOrder = reorderedDevices.map((d) => d.id).toList();
+    settingsProvider.setDashboardDeviceOrder(newOrder);
+  }
+
+  Widget _buildReorderableCard(
+    Device device,
+    DeviceStatus? status,
+    DeviceProvider deviceProvider,
+    int index,
+  ) {
+    return Row(
+      children: [
+        ReorderableDragStartListener(
+          index: index,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            child: Icon(
+              Icons.drag_handle,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        Expanded(
+          child: IgnorePointer(
+            child: _buildDeviceCard(device, status, deviceProvider),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeviceCard(
+    Device device,
+    DeviceStatus? status,
+    DeviceProvider deviceProvider,
+  ) {
     if (device.isPowerDevice) {
       return PowerDeviceDashboardCard(
         device: device,

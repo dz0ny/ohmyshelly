@@ -8,6 +8,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/device_detail/device_detail_screen.dart';
 import '../screens/device_settings/device_settings_screen.dart';
+import '../screens/schedules/schedules_screen.dart';
 import '../screens/statistics/statistics_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/profile/profile_screen.dart';
@@ -41,10 +42,16 @@ class AppRouter {
         // If still initializing, stay on current page
         if (!isInitialized) return null;
 
-        // If not authenticated, redirect to login (or onboarding if first launch)
+        // If first launch, show onboarding (even if authenticated - for restart feature)
+        if (auth.isFirstLaunch) {
+          if (isOnOnboarding) return null;
+          return '/onboarding';
+        }
+
+        // If not authenticated, redirect to login
         if (!isAuthenticated) {
-          if (isOnOnboarding || isOnLogin) return null;
-          return auth.isFirstLaunch ? '/onboarding' : '/login';
+          if (isOnLogin) return null;
+          return '/login';
         }
 
         // If authenticated but on auth pages, redirect to home
@@ -83,6 +90,13 @@ class AppRouter {
           builder: (context, state) {
             final deviceId = state.pathParameters['id']!;
             return DeviceSettingsScreen(deviceId: deviceId);
+          },
+        ),
+        GoRoute(
+          path: '/device/:id/schedules',
+          builder: (context, state) {
+            final deviceId = state.pathParameters['id']!;
+            return SchedulesScreen(deviceId: deviceId);
           },
         ),
         GoRoute(

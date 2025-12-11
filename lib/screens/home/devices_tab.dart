@@ -51,23 +51,90 @@ class DevicesTab extends StatelessWidget {
             );
           }
 
+          // Group devices by room
+          final devicesByRoom = _groupDevicesByRoom(deviceProvider.devices);
+          final roomNames = devicesByRoom.keys.toList();
+
           return RefreshIndicator(
             onRefresh: () => deviceProvider.refresh(),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: deviceProvider.devices.length,
-              itemBuilder: (context, index) {
-                final device = deviceProvider.devices[index];
-                final status = deviceProvider.getStatus(device.id);
+              itemCount: roomNames.length,
+              itemBuilder: (context, roomIndex) {
+                final roomName = roomNames[roomIndex];
+                final roomDevices = devicesByRoom[roomName]!;
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildDeviceCard(
-                    context,
-                    device,
-                    status,
-                    deviceProvider,
-                  ),
+                final isOtherRoom = roomName == '___OTHER___';
+                final displayRoomName = isOtherRoom ? l10n.otherDevices : roomName;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Room header
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: roomIndex == 0 ? 0 : 16,
+                        bottom: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isOtherRoom
+                                ? AppIcons.unknownDevice
+                                : Icons.room,
+                            size: 20,
+                            color: AppColors.textSecondary,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              displayRoomName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '${roomDevices.length}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Devices in this room
+                    ...roomDevices.map((device) {
+                      final status = deviceProvider.getStatus(device.id);
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildDeviceCard(
+                          context,
+                          device,
+                          status,
+                          deviceProvider,
+                        ),
+                      );
+                    }),
+                  ],
                 );
               },
             ),
@@ -75,6 +142,36 @@ class DevicesTab extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /// Groups devices by room name, with "Other" for devices without a room.
+  /// Rooms are sorted alphabetically, with "Other" always at the end.
+  Map<String, List<Device>> _groupDevicesByRoom(List<Device> devices) {
+    final Map<String, List<Device>> grouped = {};
+    const otherKey = '__other__'; // Internal key for sorting
+
+    for (final device in devices) {
+      final roomKey = device.roomName?.isNotEmpty == true
+          ? device.roomName!
+          : otherKey;
+      grouped.putIfAbsent(roomKey, () => []).add(device);
+    }
+
+    // Sort rooms alphabetically, keeping "Other" at the end
+    final sortedKeys = grouped.keys.toList()
+      ..sort((a, b) {
+        if (a == otherKey) return 1;
+        if (b == otherKey) return -1;
+        return a.toLowerCase().compareTo(b.toLowerCase());
+      });
+
+    // Rebuild map in sorted order, replacing internal key with localized name
+    final result = <String, List<Device>>{};
+    for (final key in sortedKeys) {
+      // We'll use a placeholder that gets replaced in the UI
+      result[key == otherKey ? '___OTHER___' : key] = grouped[key]!;
+    }
+    return result;
   }
 
   Widget _buildDeviceCard(

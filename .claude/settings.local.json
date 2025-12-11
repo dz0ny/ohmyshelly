@@ -12,7 +12,8 @@
       "Bash(flutter gen-l10n:*)",
       "Bash(grep:*)",
       "Bash(git -C /Users/dz0ny/gozdar log --oneline --all)",
-      "Bash(keytool:*)"
+      "Bash(keytool:*)",
+      "Bash(xargs:*)"
     ]
   }
 }

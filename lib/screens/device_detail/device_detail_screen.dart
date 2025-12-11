@@ -44,9 +44,16 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           appBar: AppBar(
             title: Text(device.name),
             actions: [
+              // Schedule icon only for power devices
+              if (device.isPowerDevice)
+                IconButton(
+                  icon: const Icon(AppIcons.schedule),
+                  tooltip: 'Schedules',
+                  onPressed: () => context.push('/device/${device.id}/schedules'),
+                ),
               IconButton(
-                icon: const Icon(AppIcons.settings),
-                tooltip: 'Settings',
+                icon: const Icon(AppIcons.info),
+                tooltip: 'Info',
                 onPressed: () => context.push('/device/${device.id}/settings'),
               ),
             ],
@@ -83,6 +90,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         status: status?.weatherStatus,
         temperatureHistory: deviceProvider.getTemperatureHistory(device.id),
         humidityHistory: deviceProvider.getHumidityHistory(device.id),
+        pressureHistory: deviceProvider.getPressureHistory(device.id),
       );
     } else if (device.isGateway) {
       return GatewayDetail(

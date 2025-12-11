@@ -105,10 +105,25 @@ class Formatters {
     return DateFormat('HH:mm').format(dt);
   }
 
-  static String timeAgo(DateTime dt) {
+  static String timeAgo(DateTime dt, [AppLocalizations? l10n]) {
     final now = DateTime.now();
     final difference = now.difference(dt);
 
+    if (l10n != null) {
+      if (difference.inMinutes < 1) {
+        return l10n.justNow;
+      } else if (difference.inMinutes < 60) {
+        return l10n.minutesAgo(difference.inMinutes);
+      } else if (difference.inHours < 24) {
+        return l10n.hoursAgo(difference.inHours);
+      } else if (difference.inDays < 7) {
+        return l10n.daysAgo(difference.inDays);
+      } else {
+        return date(dt);
+      }
+    }
+
+    // Fallback to English
     if (difference.inMinutes < 1) {
       return 'Just now';
     } else if (difference.inMinutes < 60) {

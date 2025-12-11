@@ -136,6 +136,10 @@ class PowerDeviceStatus {
   final double frequency;
   final double temperature;
   final double totalEnergy;
+  final String? ipAddress;
+  final int? rssi;
+  final String? ssid;
+  final int uptime;
   final DateTime? lastUpdated;
 
   PowerDeviceStatus({
@@ -146,6 +150,10 @@ class PowerDeviceStatus {
     required this.frequency,
     required this.temperature,
     required this.totalEnergy,
+    this.ipAddress,
+    this.rssi,
+    this.ssid,
+    this.uptime = 0,
     this.lastUpdated,
   });
 
@@ -157,10 +165,35 @@ class PowerDeviceStatus {
   String get totalEnergyDisplay => Formatters.energy(totalEnergy);
   String get frequencyDisplay => '${frequency.toStringAsFixed(1)} Hz';
 
+  String get uptimeDisplay {
+    if (uptime < 60) return '${uptime}s';
+    if (uptime < 3600) return '${(uptime / 60).floor()}m';
+    if (uptime < 86400) return '${(uptime / 3600).floor()}h';
+    return '${(uptime / 86400).floor()}d';
+  }
+
+  String get signalStrength {
+    if (rssi == null) return 'Unknown';
+    if (rssi! > -50) return 'Excellent';
+    if (rssi! > -60) return 'Good';
+    if (rssi! > -70) return 'Fair';
+    return 'Weak';
+  }
+
+  String signalStrengthLocalized(AppLocalizations l10n) {
+    if (rssi == null) return l10n.signalUnknown;
+    if (rssi! > -50) return l10n.signalExcellent;
+    if (rssi! > -60) return l10n.signalGood;
+    if (rssi! > -70) return l10n.signalFair;
+    return l10n.signalWeak;
+  }
+
   factory PowerDeviceStatus.fromJson(Map<String, dynamic> json) {
     final switchData = json['switch:0'] as Map<String, dynamic>? ?? {};
     final tempData = switchData['temperature'] as Map<String, dynamic>?;
     final aenergy = switchData['aenergy'] as Map<String, dynamic>?;
+    final wifi = json['wifi'] as Map<String, dynamic>?;
+    final sys = json['sys'] as Map<String, dynamic>?;
     final updatedStr = json['_updated'] as String?;
 
     return PowerDeviceStatus(
@@ -171,6 +204,10 @@ class PowerDeviceStatus {
       frequency: (switchData['freq'] as num?)?.toDouble() ?? 0.0,
       temperature: (tempData?['tC'] as num?)?.toDouble() ?? 0.0,
       totalEnergy: (aenergy?['total'] as num?)?.toDouble() ?? 0.0,
+      ipAddress: wifi?['sta_ip'] as String?,
+      rssi: wifi?['rssi'] as int?,
+      ssid: wifi?['ssid'] as String?,
+      uptime: sys?['uptime'] as int? ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
     );
   }
@@ -202,6 +239,7 @@ class WeatherStationStatus {
   final double batteryPercent;
   final double? batteryVoltage;
   final bool isInRange;
+  final int? rssi;
   final DateTime? lastUpdated;
 
   WeatherStationStatus({
@@ -218,6 +256,7 @@ class WeatherStationStatus {
     required this.batteryPercent,
     this.batteryVoltage,
     required this.isInRange,
+    this.rssi,
     this.lastUpdated,
   });
 
@@ -243,6 +282,22 @@ class WeatherStationStatus {
   String get solarIrradianceDisplay => Formatters.solarIrradiance(solarIrradiance);
 
   bool get isBatteryLow => batteryPercent < 20;
+
+  String get signalStrength {
+    if (rssi == null) return 'Unknown';
+    if (rssi! > -50) return 'Excellent';
+    if (rssi! > -60) return 'Good';
+    if (rssi! > -70) return 'Fair';
+    return 'Weak';
+  }
+
+  String signalStrengthLocalized(AppLocalizations l10n) {
+    if (rssi == null) return l10n.signalUnknown;
+    if (rssi! > -50) return l10n.signalExcellent;
+    if (rssi! > -60) return l10n.signalGood;
+    if (rssi! > -70) return l10n.signalFair;
+    return l10n.signalWeak;
+  }
 
   /// UV danger level based on WHO/EPA guidelines
   /// 0-2: Low, 3-5: Moderate, 6-7: High, 8-10: Very High, 11+: Extreme
@@ -291,6 +346,7 @@ class WeatherStationStatus {
     final reporter = json['reporter'] as Map<String, dynamic>?;
     final devicePower = json['devicepower:0'] as Map<String, dynamic>?;
     final battery = devicePower?['battery'] as Map<String, dynamic>?;
+    final wifi = json['wifi'] as Map<String, dynamic>?;
     final updatedStr = json['_updated'] as String?;
 
     return WeatherStationStatus(
@@ -307,6 +363,7 @@ class WeatherStationStatus {
       batteryPercent: (battery?['percent'] as num?)?.toDouble() ?? 0.0,
       batteryVoltage: (battery?['V'] as num?)?.toDouble(),
       isInRange: reporter?['inrange'] as bool? ?? false,
+      rssi: (reporter?['rssi'] as int?) ?? (wifi?['rssi'] as int?),
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
     );
   }
@@ -359,6 +416,14 @@ class GatewayStatus {
     if (rssi! > -60) return 'Good';
     if (rssi! > -70) return 'Fair';
     return 'Weak';
+  }
+
+  String signalStrengthLocalized(AppLocalizations l10n) {
+    if (rssi == null) return l10n.signalUnknown;
+    if (rssi! > -50) return l10n.signalExcellent;
+    if (rssi! > -60) return l10n.signalGood;
+    if (rssi! > -70) return l10n.signalFair;
+    return l10n.signalWeak;
   }
 
   factory GatewayStatus.fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../core/constants/app_colors.dart';
 
 /// A simple sparkline chart for showing trends in a compact space
 class SparklineWidget extends StatelessWidget {
@@ -7,6 +8,8 @@ class SparklineWidget extends StatelessWidget {
   final Color lineColor;
   final double height;
   final bool showGradient;
+  final bool showDots;
+  final bool showHourLabels;
 
   const SparklineWidget({
     super.key,
@@ -14,12 +17,14 @@ class SparklineWidget extends StatelessWidget {
     required this.lineColor,
     this.height = 40,
     this.showGradient = true,
+    this.showDots = false,
+    this.showHourLabels = false,
   });
 
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty || data.length < 2) {
-      return SizedBox(height: height);
+      return SizedBox(height: height + (showHourLabels ? 20 : 0));
     }
 
     final spots = data
@@ -46,12 +51,49 @@ class SparklineWidget extends StatelessWidget {
       effectiveMaxY = maxY + padding;
     }
 
+    // Calculate label interval based on data length
+    final labelInterval = _calculateLabelInterval(data.length);
+
     return SizedBox(
-      height: height,
+      height: height + (showHourLabels ? 20 : 0),
       child: LineChart(
         LineChartData(
           gridData: const FlGridData(show: false),
-          titlesData: const FlTitlesData(show: false),
+          titlesData: FlTitlesData(
+            show: showHourLabels,
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: showHourLabels,
+                reservedSize: 20,
+                interval: labelInterval,
+                getTitlesWidget: (value, meta) {
+                  final index = value.toInt();
+                  if (index < 0 || index >= data.length) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '${index}h',
+                      style: const TextStyle(
+                        fontSize: 9,
+                        color: AppColors.textHint,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
           borderData: FlBorderData(show: false),
           minY: effectiveMinY,
           maxY: effectiveMaxY,
@@ -64,7 +106,16 @@ class SparklineWidget extends StatelessWidget {
               color: lineColor,
               barWidth: 2,
               isStrokeCapRound: true,
-              dotData: const FlDotData(show: false),
+              dotData: FlDotData(
+                show: showDots,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 2,
+                    color: lineColor,
+                    strokeWidth: 0,
+                  );
+                },
+              ),
               belowBarData: showGradient
                   ? BarAreaData(
                       show: true,
@@ -83,5 +134,12 @@ class SparklineWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  double _calculateLabelInterval(int count) {
+    if (count <= 6) return 1;
+    if (count <= 12) return 2;
+    if (count <= 24) return 4;
+    return (count / 6).ceilToDouble();
   }
 }

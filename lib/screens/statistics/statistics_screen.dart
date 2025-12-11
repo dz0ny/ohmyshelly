@@ -309,24 +309,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             ))
         .toList();
 
-    // For "Day" (hour interval), use line chart
-    if (rangeType == DateRangeType.day) {
-      return LineChartWidget(
-        dataPoints: stats.dataPoints
-            .map((p) => ChartDataPoint(
-                  x: p.timestamp.millisecondsSinceEpoch.toDouble(),
-                  y: p.consumption,
-                  timestamp: p.timestamp,
-                ))
-            .toList(),
-        lineColor: AppColors.powerDevice,
-        unit: 'Wh',
-        rangeType: rangeType,
-        selectedDate: selectedDate,
-      );
-    }
-
-    // For week/month/year, use bar chart
+    // Use bar chart for all power statistics (day/week/month/year)
     return BarChartWidget(
       dataPoints: dataPoints,
       barColor: AppColors.powerDevice,
@@ -450,7 +433,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         break;
 
       case WeatherMetric.wind:
-        // Wind doesn't have data in statistics, show message
+        // Shelly API doesn't provide historical wind data
         return Center(
           child: Text(
             l10n.windHistoryNotAvailable,

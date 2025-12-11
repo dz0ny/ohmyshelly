@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../data/models/device_status.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Detail view for gateways - shows connection info
 class GatewayDetail extends StatelessWidget {
@@ -13,6 +14,7 @@ class GatewayDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Card(
@@ -33,34 +35,34 @@ class GatewayDetail extends StatelessWidget {
                 if (status != null) ...[
                   _buildInfoRow(
                     'Cloud',
-                    status!.cloudConnected ? 'Connected' : 'Disconnected',
+                    status!.cloudConnected ? l10n.online : l10n.offline,
                     status!.cloudConnected ? AppColors.success : AppColors.error,
                   ),
                   const Divider(height: 24),
                   _buildInfoRow(
-                    'IP Address',
+                    l10n.ipAddress,
                     status!.ipAddress ?? 'N/A',
                   ),
                   const Divider(height: 24),
                   _buildInfoRow(
-                    'WiFi Network',
+                    l10n.wifiNetwork,
                     status!.ssid ?? 'N/A',
                   ),
                   const Divider(height: 24),
                   _buildInfoRow(
-                    'Signal Strength',
-                    status!.signalStrength,
+                    l10n.signalStrength,
+                    status!.signalStrengthLocalized(l10n),
                   ),
                   const Divider(height: 24),
                   _buildInfoRow(
-                    'Uptime',
+                    l10n.uptime,
                     status!.uptimeDisplay,
                   ),
                 ] else ...[
-                  const Center(
+                  Center(
                     child: Text(
-                      'No status data available',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      l10n.noDataAvailable,
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                   ),
                 ],

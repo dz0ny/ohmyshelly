@@ -113,6 +113,13 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Reset onboarding (for re-showing onboarding flow)
+  Future<void> resetOnboarding() async {
+    await _storageService.resetOnboarding();
+    _isFirstLaunch = true;
+    notifyListeners();
+  }
+
   // Clear error
   void clearError() {
     _error = null;

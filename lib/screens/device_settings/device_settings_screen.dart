@@ -34,77 +34,57 @@ class DeviceSettingsScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(l10n.settings),
+            title: Text(l10n.deviceInfo),
           ),
           body: ListView(
             children: [
               // Device Info Section
-              _buildSectionHeader('Device Information'),
-              _buildInfoTile('Name', device.name),
-              _buildInfoTile('Model', device.code),
-              _buildInfoTile('Type', DeviceTypeHelper.friendlyName(device.type, l10n)),
-              _buildInfoTile('Generation', device.gen.isNotEmpty ? device.gen : '-'),
-              _buildInfoTile('Device ID', device.id),
+              _buildSectionHeader(l10n.deviceInfo),
+              _buildInfoTile(l10n.name, device.name),
+              _buildInfoTile(l10n.model, device.code),
+              _buildInfoTile(l10n.type, DeviceTypeHelper.friendlyName(device.type, l10n)),
+              _buildInfoTile(l10n.generation, device.gen.isNotEmpty ? device.gen : '-'),
+              _buildInfoTile(l10n.deviceId, device.id),
               if (device.serial != null)
-                _buildInfoTile('Serial', device.serial.toString()),
+                _buildInfoTile(l10n.serial, device.serial.toString()),
               if (device.roomName != null)
-                _buildInfoTile('Room', device.roomName!),
+                _buildInfoTile(l10n.room, device.roomName!),
 
               const SizedBox(height: 8),
 
               // Connection Status Section
-              _buildSectionHeader('Connection'),
+              _buildSectionHeader(l10n.connection),
               _buildInfoTile(
-                'Status',
+                l10n.status,
                 device.isOnline ? l10n.online : l10n.offline,
                 valueColor: device.isOnline ? AppColors.success : AppColors.error,
               ),
               if (status?.rawJson != null) ...[
                 if (status!.rawJson['wifi'] != null) ...[
                   _buildInfoTile(
-                    'WiFi Network',
+                    l10n.wifiNetwork,
                     status.rawJson['wifi']['ssid'] as String? ?? '-',
                   ),
                   _buildInfoTile(
-                    'IP Address',
+                    l10n.ipAddress,
                     status.rawJson['wifi']['sta_ip'] as String? ?? '-',
                   ),
                   _buildInfoTile(
-                    'Signal Strength',
+                    l10n.signalStrength,
                     '${status.rawJson['wifi']['rssi'] ?? '-'} dBm',
                   ),
                 ],
                 if (status.rawJson['sys'] != null) ...[
                   _buildInfoTile(
-                    'Uptime',
+                    l10n.uptime,
                     _formatUptime(status.rawJson['sys']['uptime'] as int? ?? 0),
                   ),
                   _buildInfoTile(
-                    'RAM Free',
+                    l10n.ramFree,
                     _formatBytes(status.rawJson['sys']['ram_free'] as int? ?? 0),
                   ),
                 ],
               ],
-
-              const SizedBox(height: 8),
-
-              // Settings Section
-              _buildSectionHeader('Settings'),
-              // TODO: These toggles would need backend support
-              _buildSwitchTile(
-                'Show in Dashboard',
-                'Display this device on the dashboard',
-                true, // This would come from device settings
-                (value) {
-                  // TODO: Implement when backend supports it
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Setting saved'),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                },
-              ),
 
               const SizedBox(height: 24),
             ],
@@ -145,26 +125,6 @@ class DeviceSettingsScreen extends StatelessWidget {
           color: valueColor ?? AppColors.textPrimary,
         ),
       ),
-    );
-  }
-
-  Widget _buildSwitchTile(
-    String title,
-    String subtitle,
-    bool value,
-    ValueChanged<bool> onChanged,
-  ) {
-    return SwitchListTile(
-      title: Text(title),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(
-          fontSize: 12,
-          color: AppColors.textSecondary,
-        ),
-      ),
-      value: value,
-      onChanged: onChanged,
     );
   }
 
