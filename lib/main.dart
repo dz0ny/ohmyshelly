@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ohmyshelly/l10n/app_localizations.dart';
+import 'core/theme/app_theme.dart';
+import 'data/services/api_service.dart';
+import 'data/services/storage_service.dart';
+import 'providers/auth_provider.dart';
+import 'providers/device_provider.dart';
+import 'providers/dashboard_provider.dart';
+import 'providers/statistics_provider.dart';
+import 'providers/settings_provider.dart';
+import 'router/app_router.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Set system UI overlay style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+
+  // Initialize storage service
+  final storageService = StorageService();
+  await storageService.init();
+
+  // Create API service
+  final apiService = ApiService();
+
+  // Create settings provider and initialize
+  final settingsProvider = SettingsProvider(storageService: storageService);
+  await settingsProvider.init();
+
+  runApp(
+    OhMyShellyApp(
+      storageService: storageService,
+      apiService: apiService,
+      settingsProvider: settingsProvider,
+    ),
+  );
+}
+
+class OhMyShellyApp extends StatelessWidget {
+  final StorageService storageService;
+  final ApiService apiService;
+  final SettingsProvider settingsProvider;
+
+  const OhMyShellyApp({
+    super.key,
+    required this.storageService,
+    required this.apiService,
+    required this.settingsProvider,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        // Services
+        Provider<StorageService>.value(value: storageService),
+        Provider<ApiService>.value(value: apiService),
+
+        // Settings provider
+        ChangeNotifierProvider<SettingsProvider>.value(value: settingsProvider),
+
+        // Auth provider
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(
+            storageService: storageService,
+            apiService: apiService,
+          ),
+        ),
+
+        // Device provider
+        ChangeNotifierProvider<DeviceProvider>(
+          create: (context) => DeviceProvider(apiService: apiService),
+        ),
+
+        // Dashboard provider
+        ChangeNotifierProvider<DashboardProvider>(
+          create: (context) => DashboardProvider(),
+        ),
+
+        // Statistics provider
+        ChangeNotifierProvider<StatisticsProvider>(
+          create: (context) => StatisticsProvider(apiService: apiService),
+        ),
+      ],
+      child: const _AppWithRouter(),
+    );
+  }
+}
+
+class _AppWithRouter extends StatefulWidget {
+  const _AppWithRouter();
+
+  @override
+  State<_AppWithRouter> createState() => _AppWithRouterState();
+}
+
+class _AppWithRouterState extends State<_AppWithRouter> {
+  late final AppRouter _appRouter;
+
+  @override
+  void initState() {
+    super.initState();
+    _appRouter = AppRouter(context.read<AuthProvider>());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<SettingsProvider>(
+      builder: (context, settings, _) {
+        return MaterialApp.router(
+          title: 'OhMyShelly',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          routerConfig: _appRouter.router,
+          locale: settings.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+        );
+      },
+    );
+  }
+}

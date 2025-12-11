@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import '../screens/splash/splash_screen.dart';
+import '../screens/onboarding/onboarding_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/device_detail/device_detail_screen.dart';
+import '../screens/device_settings/device_settings_screen.dart';
+import '../screens/statistics/statistics_screen.dart';
+import '../screens/settings/settings_screen.dart';
+import '../screens/profile/profile_screen.dart';
+
+class AppRouter {
+  final GlobalKey<NavigatorState> _rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'root');
+
+  late final GoRouter router;
+
+  AppRouter(AuthProvider authProvider) {
+    router = GoRouter(
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: '/splash',
+      debugLogDiagnostics: true,
+      refreshListenable: authProvider,
+      redirect: (context, state) {
+        final auth = context.read<AuthProvider>();
+        final isAuthenticated = auth.isAuthenticated;
+        final isInitialized = auth.state != AuthState.initial &&
+            auth.state != AuthState.loading;
+
+        final currentPath = state.matchedLocation;
+        final isOnSplash = currentPath == '/splash';
+        final isOnOnboarding = currentPath == '/onboarding';
+        final isOnLogin = currentPath == '/login';
+
+        // Let splash screen handle initial routing
+        if (isOnSplash) return null;
+
+        // If still initializing, stay on current page
+        if (!isInitialized) return null;
+
+        // If not authenticated, redirect to login (or onboarding if first launch)
+        if (!isAuthenticated) {
+          if (isOnOnboarding || isOnLogin) return null;
+          return auth.isFirstLaunch ? '/onboarding' : '/login';
+        }
+
+        // If authenticated but on auth pages, redirect to home
+        if (isAuthenticated && (isOnOnboarding || isOnLogin)) {
+          return '/home';
+        }
+
+        return null;
+      },
+      routes: [
+        GoRoute(
+          path: '/splash',
+          builder: (context, state) => const SplashScreen(),
+        ),
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => const OnboardingScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/device/:id',
+          builder: (context, state) {
+            final deviceId = state.pathParameters['id']!;
+            return DeviceDetailScreen(deviceId: deviceId);
+          },
+        ),
+        GoRoute(
+          path: '/device/:id/settings',
+          builder: (context, state) {
+            final deviceId = state.pathParameters['id']!;
+            return DeviceSettingsScreen(deviceId: deviceId);
+          },
+        ),
+        GoRoute(
+          path: '/statistics/:id',
+          builder: (context, state) {
+            final deviceId = state.pathParameters['id']!;
+            final deviceType = state.uri.queryParameters['type'] ?? 'power';
+            final metric = state.uri.queryParameters['metric'];
+            return StatisticsScreen(
+              deviceId: deviceId,
+              deviceType: deviceType,
+              metric: metric,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+      ],
+      errorBuilder: (context, state) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                'Page not found',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              Text(state.matchedLocation),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => context.go('/home'),
+                child: const Text('Go Home'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

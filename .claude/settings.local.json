@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(flutter-development)",
+      "Bash(cat:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(flutter pub get:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter build:*)",
+      "Bash(find:*)",
+      "Bash(flutter gen-l10n:*)"
+    ]
+  }
+}
