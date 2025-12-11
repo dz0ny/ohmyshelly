@@ -205,5 +205,22 @@
   "batteryFull": "Full",
   "batteryGood": "Good",
   "batteryLow": "Low",
-  "batteryCritical": "Critical"
+  "batteryCritical": "Critical",
+
+  "updateAvailable": "Update available",
+  "updateVersion": "Version {version}",
+  "@updateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDownload": "Download",
+  "updateDownloading": "Downloading update...",
+  "updateReady": "Update ready",
+  "updateTapToInstall": "Tap to install",
+  "updateInstall": "Install",
+  "updateError": "Update error",
+  "updateClose": "Close"
 }

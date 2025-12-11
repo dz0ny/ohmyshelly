@@ -551,4 +551,33 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get batteryCritical => 'Kritična';
+
+  @override
+  String get updateAvailable => 'Nova posodobitev na voljo';
+
+  @override
+  String updateVersion(String version) {
+    return 'Verzija $version';
+  }
+
+  @override
+  String get updateDownload => 'Prenesi';
+
+  @override
+  String get updateDownloading => 'Prenašanje posodobitve...';
+
+  @override
+  String get updateReady => 'Posodobitev pripravljena';
+
+  @override
+  String get updateTapToInstall => 'Tapni za namestitev';
+
+  @override
+  String get updateInstall => 'Namesti';
+
+  @override
+  String get updateError => 'Napaka pri posodobitvi';
+
+  @override
+  String get updateClose => 'Zapri';
 }

@@ -1177,6 +1177,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Critical'**
   String get batteryCritical;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailable;
+
+  /// No description provided for @updateVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String updateVersion(String version);
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get updateDownload;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update...'**
+  String get updateDownloading;
+
+  /// No description provided for @updateReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Update ready'**
+  String get updateReady;
+
+  /// No description provided for @updateTapToInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to install'**
+  String get updateTapToInstall;
+
+  /// No description provided for @updateInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get updateInstall;
+
+  /// No description provided for @updateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Update error'**
+  String get updateError;
+
+  /// No description provided for @updateClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get updateClose;
 }
 
 class _AppLocalizationsDelegate

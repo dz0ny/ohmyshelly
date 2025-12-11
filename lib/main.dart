@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:ohmyshelly/l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'data/services/api_service.dart';
 import 'data/services/storage_service.dart';
+import 'data/services/update_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/device_provider.dart';
 import 'providers/dashboard_provider.dart';
@@ -42,6 +44,11 @@ void main() async {
   // Create settings provider and initialize
   final settingsProvider = SettingsProvider(storageService: storageService);
   await settingsProvider.init();
+
+  // Initialize update service (Android only)
+  if (Platform.isAndroid) {
+    await UpdateService().init();
+  }
 
   runApp(
     OhMyShellyApp(
@@ -97,6 +104,9 @@ class OhMyShellyApp extends StatelessWidget {
         ChangeNotifierProvider<StatisticsProvider>(
           create: (context) => StatisticsProvider(apiService: apiService),
         ),
+
+        // Update service (Android only)
+        ChangeNotifierProvider<UpdateService>.value(value: UpdateService()),
       ],
       child: const _AppWithRouter(),
     );

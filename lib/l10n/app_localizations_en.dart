@@ -550,4 +550,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get batteryCritical => 'Critical';
+
+  @override
+  String get updateAvailable => 'Update available';
+
+  @override
+  String updateVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get updateDownload => 'Download';
+
+  @override
+  String get updateDownloading => 'Downloading update...';
+
+  @override
+  String get updateReady => 'Update ready';
+
+  @override
+  String get updateTapToInstall => 'Tap to install';
+
+  @override
+  String get updateInstall => 'Install';
+
+  @override
+  String get updateError => 'Update error';
+
+  @override
+  String get updateClose => 'Close';
 }

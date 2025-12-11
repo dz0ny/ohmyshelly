@@ -205,5 +205,22 @@
   "batteryFull": "Polna",
   "batteryGood": "Dobra",
   "batteryLow": "Nizka",
-  "batteryCritical": "Kritična"
+  "batteryCritical": "Kritična",
+
+  "updateAvailable": "Nova posodobitev na voljo",
+  "updateVersion": "Verzija {version}",
+  "@updateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDownload": "Prenesi",
+  "updateDownloading": "Prenašanje posodobitve...",
+  "updateReady": "Posodobitev pripravljena",
+  "updateTapToInstall": "Tapni za namestitev",
+  "updateInstall": "Namesti",
+  "updateError": "Napaka pri posodobitvi",
+  "updateClose": "Zapri"
 }

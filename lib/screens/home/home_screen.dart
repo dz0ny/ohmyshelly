@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_icons.dart';
+import '../../data/services/update_service.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/dashboard_provider.dart';
+import '../../widgets/common/update_banner.dart';
 import 'devices_tab.dart';
 import 'dashboard_tab.dart';
 
@@ -25,6 +28,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     // Defer to avoid setState during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeData();
+      // Check for updates on Android
+      if (Platform.isAndroid) {
+        context.read<UpdateService>().checkForUpdate();
+      }
     });
   }
 
@@ -66,11 +73,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: const [
-          DashboardTab(),
-          DevicesTab(),
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _currentIndex,
+            children: const [
+              DashboardTab(),
+              DevicesTab(),
+            ],
+          ),
+          // Update banner overlay (Android only)
+          if (Platform.isAndroid)
+            UpdateBanner(
+              updateService: context.read<UpdateService>(),
+            ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
