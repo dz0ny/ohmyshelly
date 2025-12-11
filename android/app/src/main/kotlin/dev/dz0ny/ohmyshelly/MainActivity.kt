@@ -1,4 +1,4 @@
-package com.example.ohmyshelly
+package dev.dz0ny.ohmyshelly
 
 import io.flutter.embedding.android.FlutterActivity
 
