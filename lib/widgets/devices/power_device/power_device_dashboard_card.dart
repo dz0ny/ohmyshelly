@@ -70,6 +70,17 @@ class PowerDeviceDashboardCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
+              // Room name (small muted)
+              if (device.roomName != null && device.roomName!.isNotEmpty)
+                Text(
+                  device.roomName!,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: colorScheme.outline,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               // Device name (label)
               Text(
                 device.name,
@@ -81,22 +92,13 @@ class PowerDeviceDashboardCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              // Power value or status text
+              // Power value (only if power monitoring available)
               Row(
                 children: [
                   Expanded(
                     child: hasPower
                         ? _buildPowerDisplay(context)
-                        : Text(
-                            isOnline
-                                ? (isOn ? l10n.on : l10n.off)
-                                : l10n.offline,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: _getValueColor(colorScheme, isOn, isOnline),
-                            ),
-                          ),
+                        : const SizedBox.shrink(), // Status already shown in badge
                   ),
                   Icon(
                     Icons.chevron_right_rounded,
@@ -199,15 +201,5 @@ class PowerDeviceDashboardCard extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Color _getValueColor(ColorScheme colorScheme, bool isOn, bool isOnline) {
-    if (!isOnline) {
-      return colorScheme.outline;
-    }
-    if (isOn) {
-      return _deviceColor;
-    }
-    return colorScheme.onSurfaceVariant;
   }
 }
