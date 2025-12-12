@@ -1,7 +1,8 @@
 # OhMyShelly
 
-A Flutter mobile app for monitoring and controlling **Shelly smart home devices**.  
-Includes live dashboards, device management, and detailed power & weather statistics.
+A **simpler alternative** to the official Shelly app for monitoring your smart home devices.
+
+Unlike the configuration-heavy official app, OhMyShelly focuses on what matters most: **big, readable widgets** that show your data at a glance. Technical details stay hidden until you need them — toggle them on when you want more control, or keep things clean and simple.
 
 [![Download](https://img.shields.io/github/v/release/dz0ny/ohmyshelly?label=Download&style=for-the-badge)](https://github.com/dz0ny/ohmyshelly/releases)
 
@@ -33,8 +34,10 @@ Includes live dashboards, device management, and detailed power & weather statis
 
 ## Features
 
+- 📊 **Big, readable widgets** — see your data at a glance
+- 🙈 **Clutter-free** — technical details hidden until you need them
+- 🎚️ **Toggles & scenes** — reveal advanced controls when you want them
 - 🔐 Shelly Cloud authentication
-- 📊 Live device dashboard
 - ⚡ Power consumption statistics
 - 🌤️ Weather station charts
 - 🔄 Auto-refresh + pull-to-refresh
