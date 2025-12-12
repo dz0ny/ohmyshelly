@@ -22,7 +22,6 @@ Unlike the configuration-heavy official app, OhMyShelly focuses on what matters 
 <p align="center">
 <img width="240" src="https://github.com/user-attachments/assets/837594bd-675f-4200-ab10-9a37e917f74a" />
 <img width="240" src="https://github.com/user-attachments/assets/7817d248-6f35-4c94-b37c-f90925220a1a" />
-<img width="240" src="https://github.com/user-attachments/assets/2c6c5724-47ea-445f-a653-b539cd455206" />
 <img width="240" src="https://github.com/user-attachments/assets/1c8fd6b0-ceb8-438f-bc4b-63fae89b52dd" />
 <img width="240" src="https://github.com/user-attachments/assets/031e90ad-faec-4e41-a2ff-4752de40bf18" />
 <img width="240" src="https://github.com/user-attachments/assets/5b66f475-e0ff-47af-85a1-dd28bd4eb18c" />
