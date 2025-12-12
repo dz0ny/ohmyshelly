@@ -22,8 +22,21 @@ class AppColors {
   static const Color powerDevice = Color(0xFFFF9800);
   static const Color weatherStation = Color(0xFF00BCD4);
   static const Color gateway = Color(0xFF9C27B0);
-  static const Color heating = Color(0xFFE53935); // Red/orange for heating devices
   static const Color scene = Color(0xFF7E57C2); // Purple for scenes
+
+  // Appliance type colors (relay_usage)
+  static const Color heating = Color(0xFFE53935); // Red for heating
+  static const Color lighting = Color(0xFFFFC107); // Amber for lighting
+  static const Color entertainment = Color(0xFF673AB7); // Deep purple for entertainment
+  static const Color refrigeration = Color(0xFF03A9F4); // Light blue for refrigeration
+  static const Color laundry = Color(0xFF00BCD4); // Cyan for laundry
+  static const Color cooking = Color(0xFFFF5722); // Deep orange for cooking
+  static const Color poolAndGarden = Color(0xFF4CAF50); // Green for pool/garden
+  static const Color electricVehicle = Color(0xFF8BC34A); // Light green for EV
+  static const Color ventilation = Color(0xFF607D8B); // Blue grey for ventilation
+  static const Color waterHeater = Color(0xFFFF7043); // Deep orange for water heater
+  static const Color roller = Color(0xFF795548); // Brown for roller
+  static const Color garageDoor = Color(0xFF546E7A); // Blue grey for garage
 
   // On/Off states
   static const Color deviceOn = Color(0xFF4CAF50);

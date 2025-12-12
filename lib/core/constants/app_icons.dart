@@ -8,7 +8,37 @@ class AppIcons {
   static const IconData weatherStation = Icons.wb_sunny_rounded;
   static const IconData gateway = Icons.router_rounded;
   static const IconData unknownDevice = Icons.devices_other_rounded;
+
+  // Appliance types (relay_usage)
   static const IconData heating = Icons.local_fire_department_rounded;
+  static const IconData lighting = Icons.lightbulb_rounded;
+  static const IconData entertainment = Icons.tv_rounded;
+  static const IconData refrigeration = Icons.kitchen_rounded;
+  static const IconData laundry = Icons.local_laundry_service_rounded;
+  static const IconData cooking = Icons.soup_kitchen_rounded;
+  static const IconData poolAndGarden = Icons.pool_rounded;
+  static const IconData electricVehicle = Icons.electric_car_rounded;
+  static const IconData ventilation = Icons.air_rounded;
+  static const IconData waterHeater = Icons.hot_tub_rounded;
+  static const IconData roller = Icons.blinds_rounded;
+  static const IconData garageDoor = Icons.garage_rounded;
+  static const IconData gate = Icons.fence_rounded;
+  static const IconData door = Icons.door_front_door_rounded;
+  static const IconData socket = Icons.power_rounded;
+  static const IconData fan = Icons.mode_fan_off_rounded;
+  static const IconData pump = Icons.water_rounded;
+  static const IconData irrigation = Icons.grass_rounded;
+  static const IconData security = Icons.security_rounded;
+  static const IconData alarm = Icons.crisis_alert_rounded;
+  static const IconData camera = Icons.videocam_rounded;
+  static const IconData lock = Icons.lock_rounded;
+  static const IconData boiler = Icons.water_drop_rounded;
+  static const IconData airConditioner = Icons.ac_unit_rounded;
+  static const IconData coffeeMaker = Icons.coffee_rounded;
+  static const IconData dishwasher = Icons.countertops_rounded;
+  static const IconData dryer = Icons.dry_cleaning_rounded;
+  static const IconData washer = Icons.local_laundry_service_rounded;
+  static const IconData other = Icons.devices_other_rounded;
 
   // Power metrics
   static const IconData power = Icons.bolt_rounded;

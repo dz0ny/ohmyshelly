@@ -747,10 +747,34 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save => 'Speichern';
 
   @override
+  String get autoUpdateSchedule => 'Auto-Update';
+
+  @override
+  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+
+  @override
+  String get systemSchedule => 'System';
+
+  @override
+  String get userSchedules => 'User Schedules';
+
+  @override
   String get activity => 'Aktivität';
 
   @override
   String get noActivity => 'Keine aktuelle Aktivität';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get noRecentActivity => 'No recent activity';
+
+  @override
+  String get turnedOn => 'Turned on';
+
+  @override
+  String get turnedOff => 'Turned off';
 
   @override
   String get sourceButton => 'Taste';

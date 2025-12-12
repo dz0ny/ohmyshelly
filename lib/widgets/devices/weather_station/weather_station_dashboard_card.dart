@@ -61,9 +61,11 @@ class WeatherStationDashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    // Get trends (null for now since we don't have historical data)
-    final tempTrend = status?.getTemperatureTrend(null);
-    final humidityTrend = status?.getHumidityTrend(null);
+    // Get trends using most recent historical values
+    final lastValidTemp = temperatureHistory.where((t) => t != 0.0).lastOrNull;
+    final lastValidHumidity = humidityHistory.where((h) => h != 0.0).lastOrNull;
+    final tempTrend = status?.getTemperatureTrend(lastValidTemp);
+    final humidityTrend = status?.getHumidityTrend(lastValidHumidity);
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -139,6 +141,17 @@ class WeatherStationDashboardCard extends StatelessWidget {
                     ),
                 ],
               ),
+              // Feels like (only show if different from actual temp by more than 1°C)
+              if (status != null && device.isOnline && (status!.feelsLike - status!.temperature).abs() > 1) ...[
+                const SizedBox(height: 4),
+                Text(
+                  '${l10n.feelsLike} ${status!.feelsLikeShort}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.outline,
+                  ),
+                ),
+              ],
               // Temperature sparkline
               if (status != null && device.isOnline && temperatureHistory.length >= 2) ...[
                 const SizedBox(height: 8),

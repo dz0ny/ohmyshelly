@@ -52,12 +52,20 @@ class PowerDeviceDetail extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    PowerToggle(
-                      isOn: isOn,
-                      isLoading: isToggling,
-                      size: 100,
-                      onChanged: null, // Handled by card tap
-                    ),
+                    if (device.isPushButton)
+                      PushButton(
+                        isOn: isOn,
+                        isLoading: isToggling,
+                        size: 100,
+                        onPressed: null, // Handled by card tap
+                      )
+                    else
+                      PowerToggle(
+                        isOn: isOn,
+                        isLoading: isToggling,
+                        size: 100,
+                        onChanged: null, // Handled by card tap
+                      ),
                     const SizedBox(width: 28),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

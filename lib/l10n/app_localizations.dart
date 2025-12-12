@@ -1611,6 +1611,30 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
+  /// No description provided for @autoUpdateSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Update'**
+  String get autoUpdateSchedule;
+
+  /// No description provided for @autoUpdateScheduleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware updates at midnight'**
+  String get autoUpdateScheduleDesc;
+
+  /// No description provided for @systemSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemSchedule;
+
+  /// No description provided for @userSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'User Schedules'**
+  String get userSchedules;
+
   /// No description provided for @activity.
   ///
   /// In en, this message translates to:
@@ -1622,6 +1646,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recent activity'**
   String get noActivity;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// No description provided for @noRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noRecentActivity;
+
+  /// No description provided for @turnedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turned on'**
+  String get turnedOn;
+
+  /// No description provided for @turnedOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turned off'**
+  String get turnedOff;
 
   /// No description provided for @sourceButton.
   ///

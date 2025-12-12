@@ -9,6 +9,7 @@ import '../../data/models/schedule.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/schedule_provider.dart';
 import '../../widgets/schedule/schedule_list_tile.dart';
+import '../../widgets/schedule/update_schedule_list_tile.dart';
 import '../../widgets/schedule/schedule_editor_sheet.dart';
 import '../../widgets/schedule/action_log_list.dart';
 
@@ -207,6 +208,12 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
       );
     }
 
+    // Separate user schedules (power) from system schedules (firmware update)
+    final userSchedules =
+        schedules.where((s) => s.type == ScheduleType.power).toList();
+    final systemSchedules =
+        schedules.where((s) => s.type == ScheduleType.firmwareUpdate).toList();
+
     if (schedules.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(48),
@@ -243,27 +250,68 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: schedules.map((schedule) => ScheduleListTile(
-        schedule: schedule,
-        isLoading: _loadingScheduleIds.contains(schedule.id),
-        onToggle: (enabled) => _toggleSchedule(
-          scheduleProvider,
-          schedule,
-          enabled,
-        ),
-        onEdit: () => _editSchedule(
-          context,
-          l10n,
-          scheduleProvider,
-          schedule,
-        ),
-        onDelete: () => _deleteSchedule(
-          context,
-          l10n,
-          scheduleProvider,
-          schedule,
-        ),
-      )).toList(),
+      children: [
+        // System schedules (firmware update)
+        if (systemSchedules.isNotEmpty) ...[
+          _buildSectionHeader(l10n.systemSchedule),
+          ...systemSchedules.map(
+            (schedule) => UpdateScheduleListTile(
+              schedule: schedule,
+              isLoading: _loadingScheduleIds.contains(schedule.id),
+              onToggle: (enabled) => _toggleSchedule(
+                scheduleProvider,
+                schedule,
+                enabled,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+
+        // User schedules (power toggle)
+        if (userSchedules.isNotEmpty) ...[
+          if (systemSchedules.isNotEmpty) _buildSectionHeader(l10n.userSchedules),
+          ...userSchedules.map(
+            (schedule) => ScheduleListTile(
+              schedule: schedule,
+              isLoading: _loadingScheduleIds.contains(schedule.id),
+              onToggle: (enabled) => _toggleSchedule(
+                scheduleProvider,
+                schedule,
+                enabled,
+              ),
+              onEdit: () => _editSchedule(
+                context,
+                l10n,
+                scheduleProvider,
+                schedule,
+              ),
+              onDelete: () => _deleteSchedule(
+                context,
+                l10n,
+                scheduleProvider,
+                schedule,
+              ),
+            ),
+          ),
+        ],
+
+        // Show empty state only if no user schedules but system schedules exist
+        if (userSchedules.isEmpty && systemSchedules.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Center(
+              child: FilledButton.icon(
+                onPressed: () => _addSchedule(context, l10n, scheduleProvider),
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(l10n.addSchedule),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

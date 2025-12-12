@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../data/models/schedule.dart';
@@ -23,11 +24,25 @@ class ScheduleProvider extends ChangeNotifier {
   final Map<String, List<ActionLogEntry>> _actionLogs = {};
   static const int _maxActionLogEntries = 20;
 
+  // Subscription to action log events from DeviceProvider
+  StreamSubscription<({String deviceId, ActionLogEntry entry})>? _actionLogSubscription;
+
   ScheduleProvider({
     required WebSocketService webSocketService,
     required ApiService apiService,
   })  : _webSocketService = webSocketService,
         _apiService = apiService;
+
+  /// Subscribe to action log events from DeviceProvider.
+  /// Call this after both providers are created.
+  void subscribeToActionLogEvents(
+    Stream<({String deviceId, ActionLogEntry entry})> eventStream,
+  ) {
+    _actionLogSubscription?.cancel();
+    _actionLogSubscription = eventStream.listen((event) {
+      addActionLogEntry(event.deviceId, event.entry);
+    });
+  }
 
   /// Set API credentials for event log fetching.
   void setCredentials(String? apiUrl, String? token) {

@@ -746,10 +746,34 @@ class AppLocalizationsSl extends AppLocalizations {
   String get save => 'Shrani';
 
   @override
+  String get autoUpdateSchedule => 'Auto-Update';
+
+  @override
+  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+
+  @override
+  String get systemSchedule => 'System';
+
+  @override
+  String get userSchedules => 'User Schedules';
+
+  @override
   String get activity => 'Aktivnost';
 
   @override
   String get noActivity => 'Ni nedavne aktivnosti';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get noRecentActivity => 'No recent activity';
+
+  @override
+  String get turnedOn => 'Turned on';
+
+  @override
+  String get turnedOff => 'Turned off';
 
   @override
   String get sourceButton => 'Gumb';

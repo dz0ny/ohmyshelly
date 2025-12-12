@@ -16,7 +16,9 @@
       "Bash(xargs:*)",
       "WebSearch",
       "Bash(mkdir:*)",
-      "WebFetch(domain:shelly-api-docs.shelly.cloud)"
+      "WebFetch(domain:shelly-api-docs.shelly.cloud)",
+      "WebFetch(domain:pub.dev)",
+      "Bash(flutter pub upgrade:*)"
     ]
   }
 }

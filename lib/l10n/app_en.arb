@@ -279,8 +279,17 @@
   "weekends": "Weekends",
   "save": "Save",
 
+  "autoUpdateSchedule": "Auto-Update",
+  "autoUpdateScheduleDesc": "Firmware updates at midnight",
+  "systemSchedule": "System",
+  "userSchedules": "User Schedules",
+
   "activity": "Activity",
   "noActivity": "No recent activity",
+  "recentActivity": "Recent Activity",
+  "noRecentActivity": "No recent activity",
+  "turnedOn": "Turned on",
+  "turnedOff": "Turned off",
   "sourceButton": "Button",
   "sourceSchedule": "Schedule",
   "sourceApp": "App",

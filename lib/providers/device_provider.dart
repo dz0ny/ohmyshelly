@@ -661,6 +661,10 @@ class DeviceProvider extends ChangeNotifier {
   Future<bool> toggleDevice(String deviceId, bool turnOn) async {
     if (_apiUrl == null || _token == null) return false;
 
+    // Check if device is a pushbutton (momentary switch)
+    final device = _devices.where((d) => d.id == deviceId).firstOrNull;
+    final isPushButton = device?.isPushButton ?? false;
+
     try {
       bool success = false;
 
@@ -676,10 +680,19 @@ class DeviceProvider extends ChangeNotifier {
 
       if (!success) return false;
 
-      // Register pending toggle to prevent WebSocket flicker
+      // For pushbutton devices, don't register pending toggle or do optimistic update
+      // because the state immediately returns to OFF after the command
+      if (isPushButton) {
+        if (kDebugMode) {
+          debugPrint('[DeviceProvider] Pushbutton toggle sent for $deviceId, no state tracking');
+        }
+        return true;
+      }
+
+      // Register pending toggle to prevent WebSocket flicker (toggle switches only)
       _pendingToggles[deviceId] = (targetState: turnOn, time: DateTime.now());
 
-      // Optimistically update local state
+      // Optimistically update local state (toggle switches only)
       final status = _deviceStatuses[deviceId];
       final powerStatus = status?.powerStatus;
       if (status != null && powerStatus != null) {

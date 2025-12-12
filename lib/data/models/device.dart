@@ -1,7 +1,34 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/utils/device_type_helper.dart';
+
+/// Input mode for switch devices - describes how the physical input affects the relay
+enum SwitchInputMode {
+  /// Input state directly controls output (input ON = output ON)
+  follow,
+  /// Input toggle causes output toggle (flip/edge switch behavior)
+  flip,
+  /// Momentary button - each press toggles output
+  momentary,
+  /// Input is detached from output (doesn't affect relay)
+  detached,
+  /// PIR sensor mode - triggers ON with auto-off timer
+  activate,
+  /// Unknown or not applicable
+  unknown,
+}
+
+/// Type of physical input connected to the device
+enum InputType {
+  /// Push button (momentary switch)
+  button,
+  /// Toggle switch (maintains position)
+  toggleSwitch,
+  /// Unknown or not applicable
+  unknown,
+}
 
 class Device {
   final String id;
@@ -16,6 +43,8 @@ class Device {
   final int? serial;
   final String? icon; // FontAwesome icon from API (e.g., "fat fa-heat")
   final String? relayUsage; // Usage type (e.g., "heating")
+  final SwitchInputMode inputMode; // How input affects relay (follow, flip, momentary, detached)
+  final InputType inputType; // Type of physical input (button, switch)
 
   Device({
     required this.id,
@@ -30,6 +59,8 @@ class Device {
     this.serial,
     this.icon,
     this.relayUsage,
+    this.inputMode = SwitchInputMode.unknown,
+    this.inputType = InputType.unknown,
   });
 
   bool get isPowerDevice => type == DeviceType.powerSwitch;
@@ -37,6 +68,15 @@ class Device {
   bool get isGateway => type == DeviceType.gateway;
   bool get canToggle => DeviceTypeHelper.canToggle(type);
   bool get hasStatistics => DeviceTypeHelper.hasStatistics(type);
+
+  /// Check if device has a push button connected
+  bool get isPushButton => inputType == InputType.button;
+
+  /// Check if device has a toggle switch connected
+  bool get isToggleSwitch => inputType == InputType.toggleSwitch;
+
+  /// Check if input is detached from relay output
+  bool get isDetached => inputMode == SwitchInputMode.detached;
 
   /// Check if device is used for heating
   bool get isHeating => relayUsage == 'heating';
@@ -48,9 +88,48 @@ class Device {
   IconData get displayIcon {
     if (isWeatherStation) return AppIcons.weatherStation;
     if (isGateway) return AppIcons.gateway;
-    if (isHeating) return AppIcons.heating;
+
+    // Map relay_usage to icons
+    if (relayUsage != null) {
+      final icon = _getIconForRelayUsage(relayUsage!);
+      if (icon != null) return icon;
+    }
+
     if (isPowerDevice || isPlug) return AppIcons.powerDevice;
     return AppIcons.unknownDevice;
+  }
+
+  /// Get icon for relay_usage value
+  static IconData? _getIconForRelayUsage(String usage) {
+    return switch (usage) {
+      'heating' => AppIcons.heating,
+      'lighting' || 'light' => AppIcons.lighting,
+      'garage_door' => AppIcons.garageDoor,
+      'gate' => AppIcons.gate,
+      'door' => AppIcons.door,
+      'socket' || 'plug' => AppIcons.socket,
+      'roller' || 'blinds' || 'shutter' => AppIcons.roller,
+      'fan' || 'ventilation' => AppIcons.ventilation,
+      'pump' => AppIcons.pump,
+      'irrigation' || 'garden' => AppIcons.irrigation,
+      'pool' || 'pool_and_garden' => AppIcons.poolAndGarden,
+      'entertainment' || 'tv' => AppIcons.entertainment,
+      'refrigeration' || 'fridge' => AppIcons.refrigeration,
+      'laundry' || 'washer' => AppIcons.laundry,
+      'dryer' => AppIcons.dryer,
+      'cooking' || 'oven' || 'stove' => AppIcons.cooking,
+      'electric_vehicle' || 'ev_charger' => AppIcons.electricVehicle,
+      'water_heater' || 'boiler' => AppIcons.waterHeater,
+      'air_conditioner' || 'ac' || 'hvac' => AppIcons.airConditioner,
+      'coffee_maker' || 'coffee' => AppIcons.coffeeMaker,
+      'dishwasher' => AppIcons.dishwasher,
+      'security' => AppIcons.security,
+      'alarm' => AppIcons.alarm,
+      'camera' => AppIcons.camera,
+      'lock' => AppIcons.lock,
+      'other' => AppIcons.other,
+      _ => null,
+    };
   }
 
   /// Get the appropriate color for this device based on type and usage
@@ -87,8 +166,10 @@ class Device {
       name = sysDevice?['name'] as String?;
     }
 
+    // Parse switch settings for name and input mode
+    final switchSettings = settings?['switch:0'] as Map<String, dynamic>?;
+
     if (name == null || name.isEmpty) {
-      final switchSettings = settings?['switch:0'] as Map<String, dynamic>?;
       name = switchSettings?['name'] as String?;
     }
 
@@ -108,6 +189,20 @@ class Device {
     // Get serial from status
     final serial = status?['serial'] as int?;
 
+    // Parse input mode from switch:0 settings (in_mode)
+    final inModeStr = switchSettings?['in_mode'] as String?;
+    final inputMode = _parseInputMode(inModeStr);
+
+    // Parse input type from input:0 settings (type)
+    final inputSettings = settings?['input:0'] as Map<String, dynamic>?;
+    final inputTypeStr = inputSettings?['type'] as String?;
+    final inputType = _parseInputType(inputTypeStr);
+
+    // Debug logging for input detection
+    if (kDebugMode && (inModeStr != null || inputTypeStr != null)) {
+      debugPrint('[Device] $id: in_mode=$inModeStr, input_type=$inputTypeStr -> inputMode=$inputMode, inputType=$inputType');
+    }
+
     return Device(
       id: id,
       name: name,
@@ -117,7 +212,42 @@ class Device {
       gen: gen,
       isOnline: online == 1,
       serial: serial,
+      inputMode: inputMode,
+      inputType: inputType,
     );
+  }
+
+  /// Parse input mode string from API to enum
+  static SwitchInputMode _parseInputMode(String? mode) {
+    if (mode == null) return SwitchInputMode.unknown;
+    switch (mode.toLowerCase()) {
+      case 'follow':
+        return SwitchInputMode.follow;
+      case 'flip':
+      case 'edge':
+        return SwitchInputMode.flip;
+      case 'momentary':
+        return SwitchInputMode.momentary;
+      case 'detached':
+        return SwitchInputMode.detached;
+      case 'activate':
+        return SwitchInputMode.activate;
+      default:
+        return SwitchInputMode.unknown;
+    }
+  }
+
+  /// Parse input type string from API to enum
+  static InputType _parseInputType(String? type) {
+    if (type == null) return InputType.unknown;
+    switch (type.toLowerCase()) {
+      case 'button':
+        return InputType.button;
+      case 'switch':
+        return InputType.toggleSwitch;
+      default:
+        return InputType.unknown;
+    }
   }
 
   /// Format app name to be more readable (e.g., "PlugSG3" -> "Plug S G3")
@@ -190,6 +320,8 @@ class Device {
     int? serial,
     String? icon,
     String? relayUsage,
+    SwitchInputMode? inputMode,
+    InputType? inputType,
   }) {
     return Device(
       id: id ?? this.id,
@@ -204,6 +336,8 @@ class Device {
       serial: serial ?? this.serial,
       icon: icon ?? this.icon,
       relayUsage: relayUsage ?? this.relayUsage,
+      inputMode: inputMode ?? this.inputMode,
+      inputType: inputType ?? this.inputType,
     );
   }
 
@@ -222,12 +356,16 @@ class Device {
       'serial': serial,
       'icon': icon,
       'relayUsage': relayUsage,
+      'inputMode': inputMode.index,
+      'inputType': inputType.index,
     };
   }
 
   /// Create from cached JSON
   factory Device.fromCacheJson(Map<String, dynamic> json) {
     final code = json['code'] as String? ?? '';
+    final inputModeIndex = json['inputMode'] as int?;
+    final inputTypeIndex = json['inputType'] as int?;
     return Device(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? 'Unknown Device',
@@ -241,6 +379,12 @@ class Device {
       serial: json['serial'] as int?,
       icon: json['icon'] as String?,
       relayUsage: json['relayUsage'] as String?,
+      inputMode: inputModeIndex != null && inputModeIndex < SwitchInputMode.values.length
+          ? SwitchInputMode.values[inputModeIndex]
+          : SwitchInputMode.unknown,
+      inputType: inputTypeIndex != null && inputTypeIndex < InputType.values.length
+          ? InputType.values[inputTypeIndex]
+          : InputType.unknown,
     );
   }
 

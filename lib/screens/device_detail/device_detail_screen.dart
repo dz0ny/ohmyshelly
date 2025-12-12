@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/utils/device_type_helper.dart';
+import '../../data/models/action_log.dart';
 import '../../data/models/device.dart';
 import '../../providers/device_provider.dart';
+import '../../providers/schedule_provider.dart';
 import '../../widgets/devices/power_device/power_device_detail.dart';
 import '../../widgets/devices/power_device/relay_detail.dart';
 import '../../widgets/devices/weather_station/weather_station_detail.dart';
@@ -27,11 +31,48 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   bool _isToggling = false;
   // Cache power monitoring detection to avoid flickering between widgets
   bool? _hasPowerMonitoring;
+  bool _eventLogFetched = false;
+  StreamSubscription<({String deviceId, ActionLogEntry entry})>? _actionLogSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch event log and subscribe to real-time updates
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchEventLogIfNeeded();
+      _subscribeToActionLogEvents();
+    });
+  }
+
+  @override
+  void dispose() {
+    _actionLogSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _fetchEventLogIfNeeded() {
+    if (_eventLogFetched) return;
+    _eventLogFetched = true;
+
+    final scheduleProvider = context.read<ScheduleProvider>();
+    scheduleProvider.fetchEventLog(widget.deviceId, limit: 20);
+  }
+
+  void _subscribeToActionLogEvents() {
+    final deviceProvider = context.read<DeviceProvider>();
+    final scheduleProvider = context.read<ScheduleProvider>();
+
+    _actionLogSubscription = deviceProvider.actionLogEvents.listen((event) {
+      if (event.deviceId == widget.deviceId) {
+        scheduleProvider.addActionLogEntry(event.deviceId, event.entry);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DeviceProvider>(
-      builder: (context, deviceProvider, _) {
+    return Consumer2<DeviceProvider, ScheduleProvider>(
+      builder: (context, deviceProvider, scheduleProvider, _) {
         final device = deviceProvider.devices.firstWhere(
           (d) => d.id == widget.deviceId,
           orElse: () => Device(
@@ -43,6 +84,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           ),
         );
         final status = deviceProvider.getStatus(widget.deviceId);
+        final actionLog = scheduleProvider.getActionLog(widget.deviceId);
 
         final colorScheme = Theme.of(context).colorScheme;
 
@@ -79,11 +121,14 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             ],
           ),
           body: RefreshIndicator(
-            onRefresh: () => deviceProvider.refresh(),
+            onRefresh: () async {
+              await deviceProvider.refresh();
+              await scheduleProvider.fetchEventLog(widget.deviceId, limit: 20);
+            },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(16),
-              child: _buildDeviceContent(device, status, deviceProvider),
+              child: _buildDeviceContent(device, status, deviceProvider, actionLog),
             ),
           ),
         );
@@ -95,6 +140,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     Device device,
     dynamic status,
     DeviceProvider deviceProvider,
+    List<ActionLogEntry> actionLog,
   ) {
     if (device.isPowerDevice) {
       final powerStatus = status?.powerStatus;
@@ -124,6 +170,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           status: powerStatus,
           isToggling: _isToggling,
           onToggle: (turnOn) => _handleToggle(deviceProvider, device.id, turnOn),
+          actionLog: actionLog,
         );
       }
     } else if (device.isWeatherStation) {

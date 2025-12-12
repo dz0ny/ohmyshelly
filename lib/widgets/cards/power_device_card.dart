@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_icons.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
@@ -61,17 +60,17 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Device icon
+                  // Device icon based on relay_usage
                   Container(
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: AppColors.powerDevice.withValues(alpha: 0.1),
+                      color: widget.device.displayColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
-                      AppIcons.powerDevice,
-                      color: AppColors.powerDevice,
+                    child: Icon(
+                      widget.device.displayIcon,
+                      color: widget.device.displayColor,
                       size: 24,
                     ),
                   ),
@@ -121,14 +120,23 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
 
                   const SizedBox(width: 12),
 
-                  // Toggle switch
-                  PowerToggleCompact(
-                    isOn: isOn,
-                    isLoading: _isToggling,
-                    onChanged: widget.device.isOnline && widget.onToggle != null
-                        ? _handleToggle
-                        : null,
-                  ),
+                  // Toggle switch or push button based on device input type
+                  if (widget.device.isPushButton)
+                    PushButtonCompact(
+                      isOn: isOn,
+                      isLoading: _isToggling,
+                      onPressed: widget.device.isOnline && widget.onToggle != null
+                          ? () => _handleToggle(!isOn)
+                          : null,
+                    )
+                  else
+                    PowerToggleCompact(
+                      isOn: isOn,
+                      isLoading: _isToggling,
+                      onChanged: widget.device.isOnline && widget.onToggle != null
+                          ? _handleToggle
+                          : null,
+                    ),
                 ],
               ),
             ),

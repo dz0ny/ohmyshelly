@@ -64,7 +64,11 @@ class WeatherStationDetail extends StatelessWidget {
 
   Widget _buildHeroCard(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tempTrend = status!.getTemperatureTrend(null);
+    // Calculate trend using most recent non-zero historical value
+    final lastValidTemp = temperatureHistory
+        .where((t) => t != 0.0)
+        .lastOrNull;
+    final tempTrend = status!.getTemperatureTrend(lastValidTemp);
 
     return Card(
       elevation: 0,
@@ -147,24 +151,45 @@ class WeatherStationDetail extends StatelessWidget {
                     showHourLabels: true,
                   ),
                   const SizedBox(height: 12),
-                  // Min/Max pills
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildMinMaxPill(
-                        icon: Icons.arrow_downward_rounded,
-                        value:
-                            '${temperatureHistory.reduce((a, b) => a < b ? a : b).toStringAsFixed(1)}°',
-                        color: AppColors.info,
-                      ),
-                      const SizedBox(width: 16),
-                      _buildMinMaxPill(
-                        icon: Icons.arrow_upward_rounded,
-                        value:
-                            '${temperatureHistory.reduce((a, b) => a > b ? a : b).toStringAsFixed(1)}°',
-                        color: AppColors.error,
-                      ),
-                    ],
+                  // Min/Max pills - include current temperature with historical data
+                  Builder(
+                    builder: (context) {
+                      // Filter out 0.0 placeholder values and include current temp
+                      final validTemps = temperatureHistory.where((t) => t != 0.0).toList();
+                      // Add current temperature to ensure it's included in min/max
+                      validTemps.add(status!.temperature);
+                      if (validTemps.isEmpty) return const SizedBox.shrink();
+                      final minTemp = validTemps.reduce((a, b) => a < b ? a : b);
+                      final maxTemp = validTemps.reduce((a, b) => a > b ? a : b);
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildMinMaxPill(
+                                icon: Icons.arrow_downward_rounded,
+                                value: '${minTemp.toStringAsFixed(1)}°',
+                                color: AppColors.info,
+                              ),
+                              const SizedBox(width: 16),
+                              _buildMinMaxPill(
+                                icon: Icons.arrow_upward_rounded,
+                                value: '${maxTemp.toStringAsFixed(1)}°',
+                                color: AppColors.error,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.today,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: colorScheme.outline,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
                 const SizedBox(height: 8),
@@ -264,13 +289,11 @@ class WeatherStationDetail extends StatelessWidget {
   }
 
   Widget _buildQuickStats(BuildContext context, AppLocalizations l10n) {
-    final humidityTrend = status!.getHumidityTrend(null);
-
-    // Calculate pressure trend from history
-    // Compare current pressure with the first reading (start of day) to show day trend
-    final pressureTrend = pressureHistory.isNotEmpty
-        ? status!.getPressureTrend(pressureHistory.first)
-        : ValueTrend.stable;
+    // Calculate trends using most recent non-zero historical values
+    final lastValidHumidity = humidityHistory.where((h) => h != 0.0).lastOrNull;
+    final lastValidPressure = pressureHistory.where((p) => p != 0.0).lastOrNull;
+    final humidityTrend = status!.getHumidityTrend(lastValidHumidity);
+    final pressureTrend = status!.getPressureTrend(lastValidPressure);
 
     return IntrinsicHeight(
       child: Row(

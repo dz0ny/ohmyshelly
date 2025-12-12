@@ -1,3 +1,15 @@
+/// Types of scheduled actions on a Shelly device.
+enum ScheduleType {
+  /// Power toggle schedule (switch.set)
+  power,
+
+  /// Firmware update schedule (Shelly.Update)
+  firmwareUpdate,
+
+  /// Unknown or other schedule type
+  other,
+}
+
 /// Represents a scheduled action on a Shelly device.
 ///
 /// Schedules are stored on the device and execute RPC calls at specified times.
@@ -13,6 +25,36 @@ class Schedule {
     required this.timespec,
     required this.calls,
   });
+
+  /// Get the type of this schedule based on its calls.
+  ScheduleType get type {
+    for (final call in calls) {
+      if (call.method == 'switch.set') {
+        return ScheduleType.power;
+      }
+      if (call.method == 'Shelly.Update') {
+        return ScheduleType.firmwareUpdate;
+      }
+    }
+    return ScheduleType.other;
+  }
+
+  /// Whether this is a user-created schedule (can be edited/deleted).
+  bool get isUserSchedule => type == ScheduleType.power;
+
+  /// Whether this is a system-managed schedule (should not be edited).
+  bool get isSystemSchedule => type == ScheduleType.firmwareUpdate;
+
+  /// Get firmware update stage if this is an update schedule.
+  String? get updateStage {
+    if (type != ScheduleType.firmwareUpdate) return null;
+    for (final call in calls) {
+      if (call.method == 'Shelly.Update') {
+        return call.params['stage'] as String?;
+      }
+    }
+    return null;
+  }
 
   /// Parse from Shelly schedule.list response.
   factory Schedule.fromJson(Map<String, dynamic> json) {
