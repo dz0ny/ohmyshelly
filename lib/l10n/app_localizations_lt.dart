@@ -920,4 +920,28 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Paleidžiama...';
+
+  @override
+  String get hideFromDashboard => 'Slėpti nuo valdymo skydo';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Įrenginys bus rodomas tik skirtuke Įrenginiai';
+
+  @override
+  String get unsupportedDevice => 'Nepalaikomas įrenginys';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Įrenginio tipas \"$code\" dar nepalaikomas. Neapdoroti duomenys rodomi žemiau.';
+  }
+
+  @override
+  String get deviceData => 'Įrenginio duomenys';
+
+  @override
+  String get copyJson => 'Kopijuoti JSON';
+
+  @override
+  String get copiedToClipboard => 'Nukopijuota į iškarpinę';
 }

@@ -915,4 +915,28 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Käivitatakse...';
+
+  @override
+  String get hideFromDashboard => 'Peida töölaualt';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Seade kuvatakse ainult vahekaardil Seadmed';
+
+  @override
+  String get unsupportedDevice => 'Toetamata seade';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Seadme tüüp \"$code\" pole veel toetatud. Töötlemata andmed kuvatakse allpool.';
+  }
+
+  @override
+  String get deviceData => 'Seadme andmed';
+
+  @override
+  String get copyJson => 'Kopeeri JSON';
+
+  @override
+  String get copiedToClipboard => 'Kopeeritud lõikelauale';
 }

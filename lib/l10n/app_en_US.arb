@@ -295,5 +295,13 @@
   "sceneDisabled": "Disabled",
   "loadingScenes": "Loading scenes...",
   "runScene": "Run",
-  "sceneRunning": "Running..."
+  "sceneRunning": "Running...",
+
+  "hideFromDashboard": "Hide from Dashboard",
+  "hideFromDashboardDesc": "Device will only appear in the Devices tab",
+  "unsupportedDevice": "Unsupported Device",
+  "unsupportedDeviceDesc": "Device type \"{code}\" is not yet supported. The raw data is shown below.",
+  "deviceData": "Device Data",
+  "copyJson": "Copy JSON",
+  "copiedToClipboard": "Copied to clipboard"
 }

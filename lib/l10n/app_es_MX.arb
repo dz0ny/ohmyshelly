@@ -295,5 +295,13 @@
   "sceneDisabled": "Deshabilitada",
   "loadingScenes": "Cargando escenas...",
   "runScene": "Ejecutar",
-  "sceneRunning": "Ejecutando..."
+  "sceneRunning": "Ejecutando...",
+
+  "hideFromDashboard": "Ocultar del tablero",
+  "hideFromDashboardDesc": "El dispositivo solo aparecerá en la pestaña Dispositivos",
+  "unsupportedDevice": "Dispositivo no compatible",
+  "unsupportedDeviceDesc": "El tipo de dispositivo \"{code}\" aún no es compatible. Los datos sin procesar se muestran a continuación.",
+  "deviceData": "Datos del dispositivo",
+  "copyJson": "Copiar JSON",
+  "copiedToClipboard": "Copiado al portapapeles"
 }

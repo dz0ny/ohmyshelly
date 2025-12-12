@@ -5,6 +5,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/utils/device_type_helper.dart';
 import '../../data/models/device.dart';
 import '../../providers/device_provider.dart';
+import '../../providers/settings_provider.dart';
 
 class DeviceSettingsScreen extends StatelessWidget {
   final String deviceId;
@@ -18,8 +19,8 @@ class DeviceSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Consumer<DeviceProvider>(
-      builder: (context, deviceProvider, _) {
+    return Consumer2<DeviceProvider, SettingsProvider>(
+      builder: (context, deviceProvider, settingsProvider, _) {
         final device = deviceProvider.devices.firstWhere(
           (d) => d.id == deviceId,
           orElse: () => Device(
@@ -31,6 +32,7 @@ class DeviceSettingsScreen extends StatelessWidget {
           ),
         );
         final status = deviceProvider.getStatus(deviceId);
+        final isExcludedFromDashboard = settingsProvider.isDeviceExcludedFromDashboard(deviceId);
 
         return Scaffold(
           appBar: AppBar(
@@ -99,6 +101,19 @@ class DeviceSettingsScreen extends StatelessWidget {
                   ),
                 ],
               ],
+
+              const SizedBox(height: 8),
+
+              // Settings Section
+              _buildSectionHeader(l10n.settings),
+              SwitchListTile(
+                title: Text(l10n.hideFromDashboard),
+                subtitle: Text(l10n.hideFromDashboardDesc),
+                value: isExcludedFromDashboard,
+                onChanged: (value) {
+                  settingsProvider.setDeviceExcludedFromDashboard(deviceId, value);
+                },
+              ),
 
               const SizedBox(height: 24),
             ],

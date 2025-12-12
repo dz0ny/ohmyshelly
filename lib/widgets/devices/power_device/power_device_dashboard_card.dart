@@ -74,8 +74,8 @@ class PowerDeviceDashboardCard extends StatelessWidget {
                   _buildSwitchStatus(context, isOn, l10n),
                 ],
               ),
-              // Power usage
-              if (status != null && device.isOnline) ...[
+              // Power usage - only show if device has power monitoring
+              if (status != null && device.isOnline && status!.hasPowerMonitoring) ...[
                 const SizedBox(height: 16),
                 _buildPowerDisplay(context, l10n),
               ],

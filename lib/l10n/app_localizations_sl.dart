@@ -921,4 +921,28 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Izvajanje...';
+
+  @override
+  String get hideFromDashboard => 'Skrij z nadzorne plošče';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Naprava bo prikazana samo v zavihku Naprave';
+
+  @override
+  String get unsupportedDevice => 'Nepodprta naprava';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Tip naprave \"$code\" še ni podprt. Surovi podatki so prikazani spodaj.';
+  }
+
+  @override
+  String get deviceData => 'Podatki naprave';
+
+  @override
+  String get copyJson => 'Kopiraj JSON';
+
+  @override
+  String get copiedToClipboard => 'Kopirano v odložišče';
 }

@@ -27,6 +27,7 @@ class DeviceTypeHelper {
         upperCode.startsWith('S1PM') ||    // Shelly 1PM
         upperCode.startsWith('S2PM') ||    // Shelly 2PM
         upperCode.startsWith('SPRO') ||    // Shelly Pro
+        upperCode.startsWith('S4SW') ||    // Shelly Gen 4 Switch
         upperCode.contains('PLUG') ||
         upperCode.contains('SWITCH') ||
         upperCode.contains('RELAY') ||

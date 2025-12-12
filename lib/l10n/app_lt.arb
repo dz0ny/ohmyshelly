@@ -295,5 +295,13 @@
   "sceneDisabled": "Išjungta",
   "loadingScenes": "Įkeliamos scenos...",
   "runScene": "Paleisti",
-  "sceneRunning": "Paleidžiama..."
+  "sceneRunning": "Paleidžiama...",
+
+  "hideFromDashboard": "Slėpti nuo valdymo skydo",
+  "hideFromDashboardDesc": "Įrenginys bus rodomas tik skirtuke Įrenginiai",
+  "unsupportedDevice": "Nepalaikomas įrenginys",
+  "unsupportedDeviceDesc": "Įrenginio tipas \"{code}\" dar nepalaikomas. Neapdoroti duomenys rodomi žemiau.",
+  "deviceData": "Įrenginio duomenys",
+  "copyJson": "Kopijuoti JSON",
+  "copiedToClipboard": "Nukopijuota į iškarpinę"
 }

@@ -353,5 +353,13 @@
   "sceneDisabled": "Onemogočeno",
   "loadingScenes": "Nalaganje avtomatizacij...",
   "runScene": "Zaženi",
-  "sceneRunning": "Izvajanje..."
+  "sceneRunning": "Izvajanje...",
+
+  "hideFromDashboard": "Skrij z nadzorne plošče",
+  "hideFromDashboardDesc": "Naprava bo prikazana samo v zavihku Naprave",
+  "unsupportedDevice": "Nepodprta naprava",
+  "unsupportedDeviceDesc": "Tip naprave \"{code}\" še ni podprt. Surovi podatki so prikazani spodaj.",
+  "deviceData": "Podatki naprave",
+  "copyJson": "Kopiraj JSON",
+  "copiedToClipboard": "Kopirano v odložišče"
 }

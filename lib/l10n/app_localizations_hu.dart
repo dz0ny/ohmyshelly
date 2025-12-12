@@ -917,4 +917,28 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Futtatás...';
+
+  @override
+  String get hideFromDashboard => 'Elrejtés az irányítópultról';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Az eszköz csak az Eszközök fülön jelenik meg';
+
+  @override
+  String get unsupportedDevice => 'Nem támogatott eszköz';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'A(z) \"$code\" eszköztípus még nem támogatott. A nyers adatok alább láthatók.';
+  }
+
+  @override
+  String get deviceData => 'Eszközadatok';
+
+  @override
+  String get copyJson => 'JSON másolása';
+
+  @override
+  String get copiedToClipboard => 'Vágólapra másolva';
 }

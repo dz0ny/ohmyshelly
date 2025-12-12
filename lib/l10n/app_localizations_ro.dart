@@ -917,4 +917,28 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Se execută...';
+
+  @override
+  String get hideFromDashboard => 'Ascunde de pe panou';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Dispozitivul va apărea doar în fila Dispozitive';
+
+  @override
+  String get unsupportedDevice => 'Dispozitiv neacceptat';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Tipul de dispozitiv \"$code\" nu este încă acceptat. Datele brute sunt afișate mai jos.';
+  }
+
+  @override
+  String get deviceData => 'Date dispozitiv';
+
+  @override
+  String get copyJson => 'Copiază JSON';
+
+  @override
+  String get copiedToClipboard => 'Copiat în clipboard';
 }

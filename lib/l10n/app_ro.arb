@@ -295,5 +295,13 @@
   "sceneDisabled": "Dezactivat",
   "loadingScenes": "Se încarcă scenele...",
   "runScene": "Execută",
-  "sceneRunning": "Se execută..."
+  "sceneRunning": "Se execută...",
+
+  "hideFromDashboard": "Ascunde de pe panou",
+  "hideFromDashboardDesc": "Dispozitivul va apărea doar în fila Dispozitive",
+  "unsupportedDevice": "Dispozitiv neacceptat",
+  "unsupportedDeviceDesc": "Tipul de dispozitiv \"{code}\" nu este încă acceptat. Datele brute sunt afișate mai jos.",
+  "deviceData": "Date dispozitiv",
+  "copyJson": "Copiază JSON",
+  "copiedToClipboard": "Copiat în clipboard"
 }

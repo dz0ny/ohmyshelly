@@ -8,6 +8,7 @@ import '../../providers/device_provider.dart';
 import '../../widgets/devices/power_device/power_device_detail.dart';
 import '../../widgets/devices/weather_station/weather_station_detail.dart';
 import '../../widgets/devices/gateway/gateway_detail.dart';
+import '../../widgets/devices/unknown/unknown_device_detail.dart';
 
 class DeviceDetailScreen extends StatefulWidget {
   final String deviceId;
@@ -101,8 +102,10 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       );
     }
 
-    return const Center(
-      child: Text('Unknown device type'),
+    // Unknown/unsupported device - show raw JSON
+    return UnknownDeviceDetail(
+      deviceCode: device.code,
+      rawJson: status?.rawJson,
     );
   }
 

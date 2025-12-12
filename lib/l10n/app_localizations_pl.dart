@@ -919,4 +919,28 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Uruchamianie...';
+
+  @override
+  String get hideFromDashboard => 'Ukryj z pulpitu';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Urządzenie będzie widoczne tylko w zakładce Urządzenia';
+
+  @override
+  String get unsupportedDevice => 'Nieobsługiwane urządzenie';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Typ urządzenia \"$code\" nie jest jeszcze obsługiwany. Surowe dane są wyświetlone poniżej.';
+  }
+
+  @override
+  String get deviceData => 'Dane urządzenia';
+
+  @override
+  String get copyJson => 'Kopiuj JSON';
+
+  @override
+  String get copiedToClipboard => 'Skopiowano do schowka';
 }

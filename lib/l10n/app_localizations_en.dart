@@ -913,6 +913,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Running...';
+
+  @override
+  String get hideFromDashboard => 'Hide from Dashboard';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Device will only appear in the Devices tab';
+
+  @override
+  String get unsupportedDevice => 'Unsupported Device';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Device type \"$code\" is not yet supported. The raw data is shown below.';
+  }
+
+  @override
+  String get deviceData => 'Device Data';
+
+  @override
+  String get copyJson => 'Copy JSON';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -1824,4 +1848,28 @@ class AppLocalizationsEnUs extends AppLocalizationsEn {
 
   @override
   String get sceneRunning => 'Running...';
+
+  @override
+  String get hideFromDashboard => 'Hide from Dashboard';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Device will only appear in the Devices tab';
+
+  @override
+  String get unsupportedDevice => 'Unsupported Device';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Device type \"$code\" is not yet supported. The raw data is shown below.';
+  }
+
+  @override
+  String get deviceData => 'Device Data';
+
+  @override
+  String get copyJson => 'Copy JSON';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
 }

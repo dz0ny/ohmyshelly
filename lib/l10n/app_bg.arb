@@ -295,5 +295,13 @@
   "sceneDisabled": "Деактивирана",
   "loadingScenes": "Зареждане на сцени...",
   "runScene": "Изпълни",
-  "sceneRunning": "Изпълнява се..."
+  "sceneRunning": "Изпълнява се...",
+
+  "hideFromDashboard": "Скрий от таблото",
+  "hideFromDashboardDesc": "Устройството ще се показва само в раздел Устройства",
+  "unsupportedDevice": "Неподдържано устройство",
+  "unsupportedDeviceDesc": "Типът устройство \"{code}\" все още не се поддържа. Необработените данни са показани по-долу.",
+  "deviceData": "Данни за устройството",
+  "copyJson": "Копирай JSON",
+  "copiedToClipboard": "Копирано в клипборда"
 }

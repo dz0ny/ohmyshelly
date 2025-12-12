@@ -295,5 +295,13 @@
   "sceneDisabled": "Вимкнено",
   "loadingScenes": "Завантаження сцен...",
   "runScene": "Запустити",
-  "sceneRunning": "Виконується..."
+  "sceneRunning": "Виконується...",
+
+  "hideFromDashboard": "Сховати з панелі",
+  "hideFromDashboardDesc": "Пристрій відображатиметься лише на вкладці Пристрої",
+  "unsupportedDevice": "Непідтримуваний пристрій",
+  "unsupportedDeviceDesc": "Тип пристрою \"{code}\" поки не підтримується. Необроблені дані показано нижче.",
+  "deviceData": "Дані пристрою",
+  "copyJson": "Копіювати JSON",
+  "copiedToClipboard": "Скопійовано до буфера обміну"
 }

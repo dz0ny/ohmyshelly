@@ -295,5 +295,13 @@
   "sceneDisabled": "Zakázaná",
   "loadingScenes": "Načítanie scén...",
   "runScene": "Spustiť",
-  "sceneRunning": "Spúšťanie..."
+  "sceneRunning": "Spúšťanie...",
+
+  "hideFromDashboard": "Skryť z nástenky",
+  "hideFromDashboardDesc": "Zariadenie sa zobrazí iba na záložke Zariadenia",
+  "unsupportedDevice": "Nepodporované zariadenie",
+  "unsupportedDeviceDesc": "Typ zariadenia \"{code}\" zatiaľ nie je podporovaný. Nespracované údaje sú zobrazené nižšie.",
+  "deviceData": "Údaje zariadenia",
+  "copyJson": "Kopírovať JSON",
+  "copiedToClipboard": "Skopírované do schránky"
 }

@@ -1904,6 +1904,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Running...'**
   String get sceneRunning;
+
+  /// No description provided for @hideFromDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide from Dashboard'**
+  String get hideFromDashboard;
+
+  /// No description provided for @hideFromDashboardDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Device will only appear in the Devices tab'**
+  String get hideFromDashboardDesc;
+
+  /// No description provided for @unsupportedDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported Device'**
+  String get unsupportedDevice;
+
+  /// No description provided for @unsupportedDeviceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Device type \"{code}\" is not yet supported. The raw data is shown below.'**
+  String unsupportedDeviceDesc(String code);
+
+  /// No description provided for @deviceData.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Data'**
+  String get deviceData;
+
+  /// No description provided for @copyJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy JSON'**
+  String get copyJson;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
 }
 
 class _AppLocalizationsDelegate

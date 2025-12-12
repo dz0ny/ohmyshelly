@@ -916,4 +916,28 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Wordt uitgevoerd...';
+
+  @override
+  String get hideFromDashboard => 'Verbergen van dashboard';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Apparaat verschijnt alleen in het tabblad Apparaten';
+
+  @override
+  String get unsupportedDevice => 'Niet-ondersteund apparaat';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Apparaattype \"$code\" wordt nog niet ondersteund. De ruwe gegevens worden hieronder weergegeven.';
+  }
+
+  @override
+  String get deviceData => 'Apparaatgegevens';
+
+  @override
+  String get copyJson => 'JSON kopiëren';
+
+  @override
+  String get copiedToClipboard => 'Gekopieerd naar klembord';
 }

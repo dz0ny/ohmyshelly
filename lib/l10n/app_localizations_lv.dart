@@ -916,4 +916,27 @@ class AppLocalizationsLv extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Palaiž...';
+
+  @override
+  String get hideFromDashboard => 'Paslēpt no paneļa';
+
+  @override
+  String get hideFromDashboardDesc => 'Ierīce būs redzama tikai cilnē Ierīces';
+
+  @override
+  String get unsupportedDevice => 'Neatbalstīta ierīce';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Ierīces tips \"$code\" vēl nav atbalstīts. Neapstrādātie dati tiek parādīti zemāk.';
+  }
+
+  @override
+  String get deviceData => 'Ierīces dati';
+
+  @override
+  String get copyJson => 'Kopēt JSON';
+
+  @override
+  String get copiedToClipboard => 'Nokopēts starpliktuvē';
 }

@@ -295,5 +295,13 @@
   "sceneDisabled": "Keelatud",
   "loadingScenes": "Laaditakse stseene...",
   "runScene": "Käivita",
-  "sceneRunning": "Käivitatakse..."
+  "sceneRunning": "Käivitatakse...",
+
+  "hideFromDashboard": "Peida töölaualt",
+  "hideFromDashboardDesc": "Seade kuvatakse ainult vahekaardil Seadmed",
+  "unsupportedDevice": "Toetamata seade",
+  "unsupportedDeviceDesc": "Seadme tüüp \"{code}\" pole veel toetatud. Töötlemata andmed kuvatakse allpool.",
+  "deviceData": "Seadme andmed",
+  "copyJson": "Kopeeri JSON",
+  "copiedToClipboard": "Kopeeritud lõikelauale"
 }

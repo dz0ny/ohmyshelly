@@ -13,7 +13,10 @@
       "Bash(grep:*)",
       "Bash(git -C /Users/dz0ny/gozdar log --oneline --all)",
       "Bash(keytool:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:shelly-api-docs.shelly.cloud)"
     ]
   }
 }

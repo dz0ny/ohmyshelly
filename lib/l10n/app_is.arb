@@ -295,5 +295,13 @@
   "sceneDisabled": "Óvirkt",
   "loadingScenes": "Hleð atriðum...",
   "runScene": "Keyra",
-  "sceneRunning": "Keyri..."
+  "sceneRunning": "Keyri...",
+
+  "hideFromDashboard": "Fela af stjórnborði",
+  "hideFromDashboardDesc": "Tækið birtist aðeins í Tæki-flipanum",
+  "unsupportedDevice": "Óstutt tæki",
+  "unsupportedDeviceDesc": "Tækisgerð \"{code}\" er ekki enn studd. Hrágögnin eru sýnd hér að neðan.",
+  "deviceData": "Tækjagögn",
+  "copyJson": "Afrita JSON",
+  "copiedToClipboard": "Afritað á klippiborð"
 }

@@ -295,5 +295,13 @@
   "sceneDisabled": "Atspējots",
   "loadingScenes": "Ielādē ainas...",
   "runScene": "Palaist",
-  "sceneRunning": "Palaiž..."
+  "sceneRunning": "Palaiž...",
+
+  "hideFromDashboard": "Paslēpt no paneļa",
+  "hideFromDashboardDesc": "Ierīce būs redzama tikai cilnē Ierīces",
+  "unsupportedDevice": "Neatbalstīta ierīce",
+  "unsupportedDeviceDesc": "Ierīces tips \"{code}\" vēl nav atbalstīts. Neapstrādātie dati tiek parādīti zemāk.",
+  "deviceData": "Ierīces dati",
+  "copyJson": "Kopēt JSON",
+  "copiedToClipboard": "Nokopēts starpliktuvē"
 }

@@ -915,4 +915,27 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Suoritetaan...';
+
+  @override
+  String get hideFromDashboard => 'Piilota hallintapaneelista';
+
+  @override
+  String get hideFromDashboardDesc => 'Laite näkyy vain Laitteet-välilehdessä';
+
+  @override
+  String get unsupportedDevice => 'Ei-tuettu laite';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Laitetyyppiä \"$code\" ei vielä tueta. Raakatiedot näytetään alla.';
+  }
+
+  @override
+  String get deviceData => 'Laitteen tiedot';
+
+  @override
+  String get copyJson => 'Kopioi JSON';
+
+  @override
+  String get copiedToClipboard => 'Kopioitu leikepöydälle';
 }

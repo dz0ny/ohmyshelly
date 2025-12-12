@@ -295,5 +295,13 @@
   "sceneDisabled": "Onemogućeno",
   "loadingScenes": "Učitavanje scena...",
   "runScene": "Pokreni",
-  "sceneRunning": "Pokretanje..."
+  "sceneRunning": "Pokretanje...",
+
+  "hideFromDashboard": "Sakrij s nadzorne ploče",
+  "hideFromDashboardDesc": "Uređaj će se prikazivati samo na kartici Uređaji",
+  "unsupportedDevice": "Nepodržani uređaj",
+  "unsupportedDeviceDesc": "Vrsta uređaja \"{code}\" još nije podržana. Neobrađeni podaci prikazani su ispod.",
+  "deviceData": "Podaci uređaja",
+  "copyJson": "Kopiraj JSON",
+  "copiedToClipboard": "Kopirano u međuspremnik"
 }

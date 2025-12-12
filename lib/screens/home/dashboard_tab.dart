@@ -67,9 +67,10 @@ class _DashboardTabState extends State<DashboardTab> {
             );
           }
 
-          // Filter out gateways - only show devices with data (power, weather)
+          // Filter out gateways and excluded devices
+          final excludedDevices = settingsProvider.dashboardExcludedDevices;
           final allDevices = deviceProvider.devices
-              .where((d) => !d.isGateway)
+              .where((d) => !d.isGateway && !excludedDevices.contains(d.id))
               .toList();
 
           if (allDevices.isEmpty) {

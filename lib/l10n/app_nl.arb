@@ -295,5 +295,13 @@
   "sceneDisabled": "Uitgeschakeld",
   "loadingScenes": "Scènes laden...",
   "runScene": "Uitvoeren",
-  "sceneRunning": "Wordt uitgevoerd..."
+  "sceneRunning": "Wordt uitgevoerd...",
+
+  "hideFromDashboard": "Verbergen van dashboard",
+  "hideFromDashboardDesc": "Apparaat verschijnt alleen in het tabblad Apparaten",
+  "unsupportedDevice": "Niet-ondersteund apparaat",
+  "unsupportedDeviceDesc": "Apparaattype \"{code}\" wordt nog niet ondersteund. De ruwe gegevens worden hieronder weergegeven.",
+  "deviceData": "Apparaatgegevens",
+  "copyJson": "JSON kopiëren",
+  "copiedToClipboard": "Gekopieerd naar klembord"
 }

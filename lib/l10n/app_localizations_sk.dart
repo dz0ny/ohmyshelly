@@ -918,4 +918,28 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Spúšťanie...';
+
+  @override
+  String get hideFromDashboard => 'Skryť z nástenky';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Zariadenie sa zobrazí iba na záložke Zariadenia';
+
+  @override
+  String get unsupportedDevice => 'Nepodporované zariadenie';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Typ zariadenia \"$code\" zatiaľ nie je podporovaný. Nespracované údaje sú zobrazené nižšie.';
+  }
+
+  @override
+  String get deviceData => 'Údaje zariadenia';
+
+  @override
+  String get copyJson => 'Kopírovať JSON';
+
+  @override
+  String get copiedToClipboard => 'Skopírované do schránky';
 }

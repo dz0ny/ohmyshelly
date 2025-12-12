@@ -920,4 +920,28 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Εκτέλεση...';
+
+  @override
+  String get hideFromDashboard => 'Απόκρυψη από τον πίνακα';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Η συσκευή θα εμφανίζεται μόνο στην καρτέλα Συσκευές';
+
+  @override
+  String get unsupportedDevice => 'Μη υποστηριζόμενη συσκευή';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Ο τύπος συσκευής \"$code\" δεν υποστηρίζεται ακόμα. Τα ακατέργαστα δεδομένα εμφανίζονται παρακάτω.';
+  }
+
+  @override
+  String get deviceData => 'Δεδομένα συσκευής';
+
+  @override
+  String get copyJson => 'Αντιγραφή JSON';
+
+  @override
+  String get copiedToClipboard => 'Αντιγράφηκε στο πρόχειρο';
 }

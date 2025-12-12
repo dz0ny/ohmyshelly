@@ -915,4 +915,28 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Изпълнява се...';
+
+  @override
+  String get hideFromDashboard => 'Скрий от таблото';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Устройството ще се показва само в раздел Устройства';
+
+  @override
+  String get unsupportedDevice => 'Неподдържано устройство';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Типът устройство \"$code\" все още не се поддържа. Необработените данни са показани по-долу.';
+  }
+
+  @override
+  String get deviceData => 'Данни за устройството';
+
+  @override
+  String get copyJson => 'Копирай JSON';
+
+  @override
+  String get copiedToClipboard => 'Копирано в клипборда';
 }

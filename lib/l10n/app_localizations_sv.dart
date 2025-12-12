@@ -915,4 +915,27 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Kör...';
+
+  @override
+  String get hideFromDashboard => 'Dölj från instrumentpanel';
+
+  @override
+  String get hideFromDashboardDesc => 'Enheten visas endast i fliken Enheter';
+
+  @override
+  String get unsupportedDevice => 'Enhet stöds inte';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Enhetstyp \"$code\" stöds inte ännu. Rådata visas nedan.';
+  }
+
+  @override
+  String get deviceData => 'Enhetsdata';
+
+  @override
+  String get copyJson => 'Kopiera JSON';
+
+  @override
+  String get copiedToClipboard => 'Kopierat till urklipp';
 }

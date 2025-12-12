@@ -918,6 +918,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Ejecutando...';
+
+  @override
+  String get hideFromDashboard => 'Ocultar del panel';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'El dispositivo solo aparecerá en la pestaña Dispositivos';
+
+  @override
+  String get unsupportedDevice => 'Dispositivo no compatible';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'El tipo de dispositivo \"$code\" aún no es compatible. Los datos sin procesar se muestran a continuación.';
+  }
+
+  @override
+  String get deviceData => 'Datos del dispositivo';
+
+  @override
+  String get copyJson => 'Copiar JSON';
+
+  @override
+  String get copiedToClipboard => 'Copiado al portapapeles';
 }
 
 /// The translations for Spanish Castilian, as used in Mexico (`es_MX`).
@@ -1834,4 +1858,28 @@ class AppLocalizationsEsMx extends AppLocalizationsEs {
 
   @override
   String get sceneRunning => 'Ejecutando...';
+
+  @override
+  String get hideFromDashboard => 'Ocultar del tablero';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'El dispositivo solo aparecerá en la pestaña Dispositivos';
+
+  @override
+  String get unsupportedDevice => 'Dispositivo no compatible';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'El tipo de dispositivo \"$code\" aún no es compatible. Los datos sin procesar se muestran a continuación.';
+  }
+
+  @override
+  String get deviceData => 'Datos del dispositivo';
+
+  @override
+  String get copyJson => 'Copiar JSON';
+
+  @override
+  String get copiedToClipboard => 'Copiado al portapapeles';
 }

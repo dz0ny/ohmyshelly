@@ -12,6 +12,7 @@ class StorageService {
   static const String _showDevicesTabKey = 'show_devices_tab';
   static const String _showScenesTabKey = 'show_scenes_tab';
   static const String _dashboardDeviceOrderKey = 'dashboard_device_order';
+  static const String _dashboardExcludedDevicesKey = 'dashboard_excluded_devices';
 
   Future<void> init() async {
     _storage = const FlutterSecureStorage(
@@ -128,6 +129,23 @@ class StorageService {
   Future<void> setDashboardDeviceOrder(List<String> deviceIds) async {
     final encoded = jsonEncode(deviceIds);
     await _storage.write(key: _dashboardDeviceOrderKey, value: encoded);
+  }
+
+  // Dashboard excluded devices (list of device IDs to hide from dashboard)
+  Future<List<String>> getDashboardExcludedDevices() async {
+    final value = await _storage.read(key: _dashboardExcludedDevicesKey);
+    if (value == null || value.isEmpty) return [];
+    try {
+      final List<dynamic> decoded = jsonDecode(value);
+      return decoded.cast<String>();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> setDashboardExcludedDevices(List<String> deviceIds) async {
+    final encoded = jsonEncode(deviceIds);
+    await _storage.write(key: _dashboardExcludedDevicesKey, value: encoded);
   }
 
   // Clear all data (for logout)

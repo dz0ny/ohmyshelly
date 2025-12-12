@@ -10,6 +10,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _showScenesTab = false;
   bool _isInitialized = false;
   List<String> _dashboardDeviceOrder = [];
+  List<String> _dashboardExcludedDevices = [];
 
   SettingsProvider({required StorageService storageService})
       : _storageService = storageService;
@@ -20,6 +21,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get showScenesTab => _showScenesTab;
   bool get isInitialized => _isInitialized;
   List<String> get dashboardDeviceOrder => _dashboardDeviceOrder;
+  List<String> get dashboardExcludedDevices => _dashboardExcludedDevices;
 
   Future<void> init() async {
     final languageCode = await _storageService.getLanguageCode();
@@ -31,6 +33,7 @@ class SettingsProvider extends ChangeNotifier {
     _showDevicesTab = await _storageService.getShowDevicesTab();
     _showScenesTab = await _storageService.getShowScenesTab();
     _dashboardDeviceOrder = await _storageService.getDashboardDeviceOrder();
+    _dashboardExcludedDevices = await _storageService.getDashboardExcludedDevices();
     _isInitialized = true;
     notifyListeners();
   }
@@ -88,6 +91,24 @@ class SettingsProvider extends ChangeNotifier {
   Future<void> setDashboardDeviceOrder(List<String> deviceIds) async {
     _dashboardDeviceOrder = deviceIds;
     await _storageService.setDashboardDeviceOrder(deviceIds);
+    notifyListeners();
+  }
+
+  /// Check if a device is excluded from dashboard
+  bool isDeviceExcludedFromDashboard(String deviceId) {
+    return _dashboardExcludedDevices.contains(deviceId);
+  }
+
+  /// Toggle device exclusion from dashboard
+  Future<void> setDeviceExcludedFromDashboard(String deviceId, bool excluded) async {
+    if (excluded) {
+      if (!_dashboardExcludedDevices.contains(deviceId)) {
+        _dashboardExcludedDevices = [..._dashboardExcludedDevices, deviceId];
+      }
+    } else {
+      _dashboardExcludedDevices = _dashboardExcludedDevices.where((id) => id != deviceId).toList();
+    }
+    await _storageService.setDashboardExcludedDevices(_dashboardExcludedDevices);
     notifyListeners();
   }
 }

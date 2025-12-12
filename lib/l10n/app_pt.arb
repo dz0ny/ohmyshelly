@@ -295,5 +295,13 @@
   "sceneDisabled": "Desativada",
   "loadingScenes": "Carregando cenas...",
   "runScene": "Executar",
-  "sceneRunning": "Executando..."
+  "sceneRunning": "Executando...",
+
+  "hideFromDashboard": "Ocultar do painel",
+  "hideFromDashboardDesc": "O dispositivo aparecerá apenas na aba Dispositivos",
+  "unsupportedDevice": "Dispositivo não suportado",
+  "unsupportedDeviceDesc": "O tipo de dispositivo \"{code}\" ainda não é suportado. Os dados brutos são mostrados abaixo.",
+  "deviceData": "Dados do dispositivo",
+  "copyJson": "Copiar JSON",
+  "copiedToClipboard": "Copiado para a área de transferência"
 }

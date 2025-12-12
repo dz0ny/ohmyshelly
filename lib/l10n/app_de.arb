@@ -295,5 +295,13 @@
   "sceneDisabled": "Deaktiviert",
   "loadingScenes": "Szenen werden geladen...",
   "runScene": "Ausführen",
-  "sceneRunning": "Wird ausgeführt..."
+  "sceneRunning": "Wird ausgeführt...",
+
+  "hideFromDashboard": "Vom Dashboard ausblenden",
+  "hideFromDashboardDesc": "Gerät wird nur im Geräte-Tab angezeigt",
+  "unsupportedDevice": "Nicht unterstütztes Gerät",
+  "unsupportedDeviceDesc": "Gerätetyp \"{code}\" wird noch nicht unterstützt. Die Rohdaten werden unten angezeigt.",
+  "deviceData": "Gerätedaten",
+  "copyJson": "JSON kopieren",
+  "copiedToClipboard": "In Zwischenablage kopiert"
 }

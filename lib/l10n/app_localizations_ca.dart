@@ -919,4 +919,28 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Executant...';
+
+  @override
+  String get hideFromDashboard => 'Amagar del tauler';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'El dispositiu només apareixerà a la pestanya Dispositius';
+
+  @override
+  String get unsupportedDevice => 'Dispositiu no compatible';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'El tipus de dispositiu \"$code\" encara no és compatible. Les dades sense processar es mostren a continuació.';
+  }
+
+  @override
+  String get deviceData => 'Dades del dispositiu';
+
+  @override
+  String get copyJson => 'Copiar JSON';
+
+  @override
+  String get copiedToClipboard => 'Copiat al porta-retalls';
 }

@@ -295,5 +295,13 @@
   "sceneDisabled": "Wyłączona",
   "loadingScenes": "Ładowanie scen...",
   "runScene": "Uruchom",
-  "sceneRunning": "Uruchamianie..."
+  "sceneRunning": "Uruchamianie...",
+
+  "hideFromDashboard": "Ukryj z pulpitu",
+  "hideFromDashboardDesc": "Urządzenie będzie widoczne tylko w zakładce Urządzenia",
+  "unsupportedDevice": "Nieobsługiwane urządzenie",
+  "unsupportedDeviceDesc": "Typ urządzenia \"{code}\" nie jest jeszcze obsługiwany. Surowe dane są wyświetlone poniżej.",
+  "deviceData": "Dane urządzenia",
+  "copyJson": "Kopiuj JSON",
+  "copiedToClipboard": "Skopiowano do schowka"
 }

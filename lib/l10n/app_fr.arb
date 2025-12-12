@@ -295,5 +295,13 @@
   "sceneDisabled": "Désactivé",
   "loadingScenes": "Chargement des scènes...",
   "runScene": "Exécuter",
-  "sceneRunning": "En cours d'exécution..."
+  "sceneRunning": "En cours d'exécution...",
+
+  "hideFromDashboard": "Masquer du tableau de bord",
+  "hideFromDashboardDesc": "L'appareil n'apparaîtra que dans l'onglet Appareils",
+  "unsupportedDevice": "Appareil non pris en charge",
+  "unsupportedDeviceDesc": "Le type d'appareil \"{code}\" n'est pas encore pris en charge. Les données brutes sont affichées ci-dessous.",
+  "deviceData": "Données de l'appareil",
+  "copyJson": "Copier JSON",
+  "copiedToClipboard": "Copié dans le presse-papiers"
 }

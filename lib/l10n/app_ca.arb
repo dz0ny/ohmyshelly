@@ -295,5 +295,13 @@
   "sceneDisabled": "Desactivada",
   "loadingScenes": "Carregant escenes...",
   "runScene": "Executar",
-  "sceneRunning": "Executant..."
+  "sceneRunning": "Executant...",
+
+  "hideFromDashboard": "Amagar del tauler",
+  "hideFromDashboardDesc": "El dispositiu només apareixerà a la pestanya Dispositius",
+  "unsupportedDevice": "Dispositiu no compatible",
+  "unsupportedDeviceDesc": "El tipus de dispositiu \"{code}\" encara no és compatible. Les dades sense processar es mostren a continuació.",
+  "deviceData": "Dades del dispositiu",
+  "copyJson": "Copiar JSON",
+  "copiedToClipboard": "Copiat al porta-retalls"
 }

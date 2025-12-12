@@ -922,4 +922,28 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Виконується...';
+
+  @override
+  String get hideFromDashboard => 'Сховати з панелі';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Пристрій відображатиметься лише на вкладці Пристрої';
+
+  @override
+  String get unsupportedDevice => 'Непідтримуваний пристрій';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Тип пристрою \"$code\" поки не підтримується. Необроблені дані показано нижче.';
+  }
+
+  @override
+  String get deviceData => 'Дані пристрою';
+
+  @override
+  String get copyJson => 'Копіювати JSON';
+
+  @override
+  String get copiedToClipboard => 'Скопійовано до буфера обміну';
 }

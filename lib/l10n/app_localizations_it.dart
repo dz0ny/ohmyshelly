@@ -918,4 +918,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sceneRunning => 'In esecuzione...';
+
+  @override
+  String get hideFromDashboard => 'Nascondi dalla dashboard';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Il dispositivo apparirà solo nella scheda Dispositivi';
+
+  @override
+  String get unsupportedDevice => 'Dispositivo non supportato';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Il tipo di dispositivo \"$code\" non è ancora supportato. I dati grezzi sono mostrati di seguito.';
+  }
+
+  @override
+  String get deviceData => 'Dati dispositivo';
+
+  @override
+  String get copyJson => 'Copia JSON';
+
+  @override
+  String get copiedToClipboard => 'Copiato negli appunti';
 }

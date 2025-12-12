@@ -295,5 +295,13 @@
   "sceneDisabled": "Απενεργοποιημένη",
   "loadingScenes": "Φόρτωση σκηνών...",
   "runScene": "Εκτέλεση",
-  "sceneRunning": "Εκτέλεση..."
+  "sceneRunning": "Εκτέλεση...",
+
+  "hideFromDashboard": "Απόκρυψη από τον πίνακα",
+  "hideFromDashboardDesc": "Η συσκευή θα εμφανίζεται μόνο στην καρτέλα Συσκευές",
+  "unsupportedDevice": "Μη υποστηριζόμενη συσκευή",
+  "unsupportedDeviceDesc": "Ο τύπος συσκευής \"{code}\" δεν υποστηρίζεται ακόμα. Τα ακατέργαστα δεδομένα εμφανίζονται παρακάτω.",
+  "deviceData": "Δεδομένα συσκευής",
+  "copyJson": "Αντιγραφή JSON",
+  "copiedToClipboard": "Αντιγράφηκε στο πρόχειρο"
 }

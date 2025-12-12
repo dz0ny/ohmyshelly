@@ -922,4 +922,28 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Покретање...';
+
+  @override
+  String get hideFromDashboard => 'Сакриј са контролне табле';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Уређај ће бити приказан само у картици Уређаји';
+
+  @override
+  String get unsupportedDevice => 'Неподржани уређај';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Тип уређаја \"$code\" још није подржан. Необрађени подаци су приказани испод.';
+  }
+
+  @override
+  String get deviceData => 'Подаци уређаја';
+
+  @override
+  String get copyJson => 'Копирај JSON';
+
+  @override
+  String get copiedToClipboard => 'Копирано у привремену меморију';
 }

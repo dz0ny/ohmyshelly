@@ -919,4 +919,28 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Spouštění...';
+
+  @override
+  String get hideFromDashboard => 'Skrýt z nástěnky';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'Zařízení se zobrazí pouze na záložce Zařízení';
+
+  @override
+  String get unsupportedDevice => 'Nepodporované zařízení';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Typ zařízení \"$code\" zatím není podporován. Nezpracovaná data jsou zobrazena níže.';
+  }
+
+  @override
+  String get deviceData => 'Data zařízení';
+
+  @override
+  String get copyJson => 'Kopírovat JSON';
+
+  @override
+  String get copiedToClipboard => 'Zkopírováno do schránky';
 }

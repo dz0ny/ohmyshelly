@@ -295,5 +295,13 @@
   "sceneDisabled": "Pois Käytöstä",
   "loadingScenes": "Ladataan kohtauksia...",
   "runScene": "Suorita",
-  "sceneRunning": "Suoritetaan..."
+  "sceneRunning": "Suoritetaan...",
+
+  "hideFromDashboard": "Piilota hallintapaneelista",
+  "hideFromDashboardDesc": "Laite näkyy vain Laitteet-välilehdessä",
+  "unsupportedDevice": "Ei-tuettu laite",
+  "unsupportedDeviceDesc": "Laitetyyppiä \"{code}\" ei vielä tueta. Raakatiedot näytetään alla.",
+  "deviceData": "Laitteen tiedot",
+  "copyJson": "Kopioi JSON",
+  "copiedToClipboard": "Kopioitu leikepöydälle"
 }

@@ -295,5 +295,13 @@
   "sceneDisabled": "Inaktiverad",
   "loadingScenes": "Laddar scener...",
   "runScene": "Kör",
-  "sceneRunning": "Kör..."
+  "sceneRunning": "Kör...",
+
+  "hideFromDashboard": "Dölj från instrumentpanel",
+  "hideFromDashboardDesc": "Enheten visas endast i fliken Enheter",
+  "unsupportedDevice": "Enhet stöds inte",
+  "unsupportedDeviceDesc": "Enhetstyp \"{code}\" stöds inte ännu. Rådata visas nedan.",
+  "deviceData": "Enhetsdata",
+  "copyJson": "Kopiera JSON",
+  "copiedToClipboard": "Kopierat till urklipp"
 }

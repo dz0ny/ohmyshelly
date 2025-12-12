@@ -295,5 +295,13 @@
   "sceneDisabled": "Letiltva",
   "loadingScenes": "Jelenetek betöltése...",
   "runScene": "Futtatás",
-  "sceneRunning": "Futtatás..."
+  "sceneRunning": "Futtatás...",
+
+  "hideFromDashboard": "Elrejtés az irányítópultról",
+  "hideFromDashboardDesc": "Az eszköz csak az Eszközök fülön jelenik meg",
+  "unsupportedDevice": "Nem támogatott eszköz",
+  "unsupportedDeviceDesc": "A(z) \"{code}\" eszköztípus még nem támogatott. A nyers adatok alább láthatók.",
+  "deviceData": "Eszközadatok",
+  "copyJson": "JSON másolása",
+  "copiedToClipboard": "Vágólapra másolva"
 }

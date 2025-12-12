@@ -919,6 +919,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sceneRunning => 'En cours d\'exécution...';
+
+  @override
+  String get hideFromDashboard => 'Masquer du tableau de bord';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'L\'appareil n\'apparaîtra que dans l\'onglet Appareils';
+
+  @override
+  String get unsupportedDevice => 'Appareil non pris en charge';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Le type d\'appareil \"$code\" n\'est pas encore pris en charge. Les données brutes sont affichées ci-dessous.';
+  }
+
+  @override
+  String get deviceData => 'Données de l\'appareil';
+
+  @override
+  String get copyJson => 'Copier JSON';
+
+  @override
+  String get copiedToClipboard => 'Copié dans le presse-papiers';
 }
 
 /// The translations for French, as used in Canada (`fr_CA`).
@@ -1836,4 +1860,28 @@ class AppLocalizationsFrCa extends AppLocalizationsFr {
 
   @override
   String get sceneRunning => 'En cours d\'exécution...';
+
+  @override
+  String get hideFromDashboard => 'Masquer du tableau de bord';
+
+  @override
+  String get hideFromDashboardDesc =>
+      'L\'appareil n\'apparaîtra que dans l\'onglet Appareils';
+
+  @override
+  String get unsupportedDevice => 'Appareil non pris en charge';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Le type d\'appareil \"$code\" n\'est pas encore pris en charge. Les données brutes sont affichées ci-dessous.';
+  }
+
+  @override
+  String get deviceData => 'Données de l\'appareil';
+
+  @override
+  String get copyJson => 'Copier JSON';
+
+  @override
+  String get copiedToClipboard => 'Copié dans le presse-papiers';
 }

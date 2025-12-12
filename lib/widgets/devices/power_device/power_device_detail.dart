@@ -96,6 +96,8 @@ class PowerDeviceDetail extends StatelessWidget {
 
   Widget _buildStatsCard(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
+    final hasPowerMonitoring = status!.hasPowerMonitoring;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -103,7 +105,7 @@ class PowerDeviceDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.power,
+              hasPowerMonitoring ? l10n.power : l10n.status,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -111,35 +113,38 @@ class PowerDeviceDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Power - tappable for history with sparkline
-            _buildDetailTile(
-              context: context,
-              icon: AppIcons.power,
-              label: l10n.power,
-              value: status!.powerDisplay,
-              iconColor: device.displayColor,
-              onTap: () => _navigateToHistory(context, 'power'),
-              sparklineData: powerHistory,
-              sparklineColor: device.displayColor,
-            ),
-            const SizedBox(height: 16),
-            // Voltage
-            _buildDetailTile(
-              context: context,
-              icon: AppIcons.voltage,
-              label: l10n.voltage,
-              value: status!.voltageDisplay,
-            ),
-            const SizedBox(height: 16),
-            // Current
-            _buildDetailTile(
-              context: context,
-              icon: AppIcons.current,
-              label: l10n.current,
-              value: status!.currentDisplay,
-            ),
-            const SizedBox(height: 16),
-            // Relay Temperature
+            // Power metrics - only show if power monitoring is available
+            if (hasPowerMonitoring) ...[
+              // Power - tappable for history with sparkline
+              _buildDetailTile(
+                context: context,
+                icon: AppIcons.power,
+                label: l10n.power,
+                value: status!.powerDisplay,
+                iconColor: device.displayColor,
+                onTap: () => _navigateToHistory(context, 'power'),
+                sparklineData: powerHistory,
+                sparklineColor: device.displayColor,
+              ),
+              const SizedBox(height: 16),
+              // Voltage
+              _buildDetailTile(
+                context: context,
+                icon: AppIcons.voltage,
+                label: l10n.voltage,
+                value: status!.voltageDisplay,
+              ),
+              const SizedBox(height: 16),
+              // Current
+              _buildDetailTile(
+                context: context,
+                icon: AppIcons.current,
+                label: l10n.current,
+                value: status!.currentDisplay,
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Relay Temperature - always show if available
             _buildDetailTile(
               context: context,
               icon: AppIcons.temperature,

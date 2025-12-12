@@ -295,5 +295,13 @@
   "sceneDisabled": "Deaktivert",
   "loadingScenes": "Laster scener...",
   "runScene": "Kjør",
-  "sceneRunning": "Kjører..."
+  "sceneRunning": "Kjører...",
+
+  "hideFromDashboard": "Skjul fra dashbord",
+  "hideFromDashboardDesc": "Enheten vises kun i Enheter-fanen",
+  "unsupportedDevice": "Ustøttet enhet",
+  "unsupportedDeviceDesc": "Enhetstype \"{code}\" støttes ikke ennå. Rådata vises nedenfor.",
+  "deviceData": "Enhetsdata",
+  "copyJson": "Kopier JSON",
+  "copiedToClipboard": "Kopiert til utklippstavle"
 }

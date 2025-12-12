@@ -917,4 +917,27 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Wird ausgeführt...';
+
+  @override
+  String get hideFromDashboard => 'Vom Dashboard ausblenden';
+
+  @override
+  String get hideFromDashboardDesc => 'Gerät wird nur im Geräte-Tab angezeigt';
+
+  @override
+  String get unsupportedDevice => 'Nicht unterstütztes Gerät';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Gerätetyp \"$code\" wird noch nicht unterstützt. Die Rohdaten werden unten angezeigt.';
+  }
+
+  @override
+  String get deviceData => 'Gerätedaten';
+
+  @override
+  String get copyJson => 'JSON kopieren';
+
+  @override
+  String get copiedToClipboard => 'In Zwischenablage kopiert';
 }

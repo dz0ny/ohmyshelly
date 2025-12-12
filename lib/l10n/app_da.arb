@@ -295,5 +295,13 @@
   "sceneDisabled": "Deaktiveret",
   "loadingScenes": "Indlæser scener...",
   "runScene": "Kør",
-  "sceneRunning": "Kører..."
+  "sceneRunning": "Kører...",
+
+  "hideFromDashboard": "Skjul fra dashboard",
+  "hideFromDashboardDesc": "Enheden vises kun i fanen Enheder",
+  "unsupportedDevice": "Ikke-understøttet enhed",
+  "unsupportedDeviceDesc": "Enhedstype \"{code}\" understøttes ikke endnu. Rå data vises nedenfor.",
+  "deviceData": "Enhedsdata",
+  "copyJson": "Kopiér JSON",
+  "copiedToClipboard": "Kopieret til udklipsholder"
 }

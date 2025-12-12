@@ -143,6 +143,7 @@ class PowerDeviceStatus {
   final int uptime;
   final DateTime? lastUpdated;
   final String? firmwareVersion;
+  final bool hasPowerMonitoring;
 
   PowerDeviceStatus({
     required this.isOn,
@@ -158,6 +159,7 @@ class PowerDeviceStatus {
     this.uptime = 0,
     this.lastUpdated,
     this.firmwareVersion,
+    this.hasPowerMonitoring = true,
   });
 
   // User-friendly formatted values
@@ -199,6 +201,11 @@ class PowerDeviceStatus {
     final sys = json['sys'] as Map<String, dynamic>?;
     final updatedStr = json['_updated'] as String?;
 
+    // Detect if power monitoring is available (has apower, voltage, or current)
+    final hasPowerMonitoring = switchData.containsKey('apower') ||
+        switchData.containsKey('voltage') ||
+        switchData.containsKey('current');
+
     return PowerDeviceStatus(
       isOn: switchData['output'] as bool? ?? false,
       power: (switchData['apower'] as num?)?.toDouble() ?? 0.0,
@@ -213,6 +220,7 @@ class PowerDeviceStatus {
       uptime: sys?['uptime'] as int? ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
       firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
+      hasPowerMonitoring: hasPowerMonitoring,
     );
   }
 
@@ -237,6 +245,7 @@ class PowerDeviceStatus {
       frequency: 0,
       temperature: 0,
       totalEnergy: 0,
+      hasPowerMonitoring: true,
     );
   }
 }

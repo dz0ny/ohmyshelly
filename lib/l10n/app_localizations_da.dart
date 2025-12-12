@@ -914,4 +914,27 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Kører...';
+
+  @override
+  String get hideFromDashboard => 'Skjul fra dashboard';
+
+  @override
+  String get hideFromDashboardDesc => 'Enheden vises kun i fanen Enheder';
+
+  @override
+  String get unsupportedDevice => 'Ikke-understøttet enhed';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Enhedstype \"$code\" understøttes ikke endnu. Rå data vises nedenfor.';
+  }
+
+  @override
+  String get deviceData => 'Enhedsdata';
+
+  @override
+  String get copyJson => 'Kopiér JSON';
+
+  @override
+  String get copiedToClipboard => 'Kopieret til udklipsholder';
 }

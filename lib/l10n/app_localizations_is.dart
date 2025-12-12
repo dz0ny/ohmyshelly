@@ -914,4 +914,27 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get sceneRunning => 'Keyri...';
+
+  @override
+  String get hideFromDashboard => 'Fela af stjórnborði';
+
+  @override
+  String get hideFromDashboardDesc => 'Tækið birtist aðeins í Tæki-flipanum';
+
+  @override
+  String get unsupportedDevice => 'Óstutt tæki';
+
+  @override
+  String unsupportedDeviceDesc(String code) {
+    return 'Tækisgerð \"$code\" er ekki enn studd. Hrágögnin eru sýnd hér að neðan.';
+  }
+
+  @override
+  String get deviceData => 'Tækjagögn';
+
+  @override
+  String get copyJson => 'Afrita JSON';
+
+  @override
+  String get copiedToClipboard => 'Afritað á klippiborð';
 }
