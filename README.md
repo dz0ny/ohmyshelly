@@ -20,14 +20,15 @@ Unlike the configuration-heavy official app, OhMyShelly focuses on what matters 
 ## Screenshots
 
 <p align="center">
-<img width="240" src="https://github.com/user-attachments/assets/2355832a-ce10-4f7b-8cbb-2670f5d0fa36" />
-<img width="240" src="https://github.com/user-attachments/assets/d0015b95-8067-47cd-84b0-c088c4ac2359" />
-<img width="240" src="https://github.com/user-attachments/assets/f8e92014-6c46-4efb-99ba-e159e1715313" />
-<img width="240" src="https://github.com/user-attachments/assets/d5427bfc-6b1a-4263-a187-4a06346e3836" />
-<img width="240" src="https://github.com/user-attachments/assets/0b40e026-eae1-4886-92ca-9eb03b813c58" />
-<img width="240" src="https://github.com/user-attachments/assets/fac9e2f0-9c60-4baf-9710-f5b3d72d414c" />
-<img width="240" src="https://github.com/user-attachments/assets/96f59839-c733-4718-8e17-a32e3e88b290" />
-<img width="240" src="https://github.com/user-attachments/assets/a7bfc1da-33a0-457d-b498-10c8e1d24eff" />
+<img width="240" src="https://github.com/user-attachments/assets/837594bd-675f-4200-ab10-9a37e917f74a" />
+<img width="240" src="https://github.com/user-attachments/assets/7817d248-6f35-4c94-b37c-f90925220a1a" />
+<img width="240" src="https://github.com/user-attachments/assets/2c6c5724-47ea-445f-a653-b539cd455206" />
+<img width="240" src="https://github.com/user-attachments/assets/1c8fd6b0-ceb8-438f-bc4b-63fae89b52dd" />
+<img width="240" src="https://github.com/user-attachments/assets/031e90ad-faec-4e41-a2ff-4752de40bf18" />
+<img width="240" src="https://github.com/user-attachments/assets/5b66f475-e0ff-47af-85a1-dd28bd4eb18c" />
+<img width="240" src="https://github.com/user-attachments/assets/73b9dc9d-a942-4878-9be6-3f859a8f7eea" />
+<img width="240" src="https://github.com/user-attachments/assets/151637fc-4947-4f68-876f-31468284e95a" />
+<img width="240" src="https://github.com/user-attachments/assets/a6c8bcef-37d2-48e1-b853-eac2f6c1a93e" />
 </p>
 
 ---
