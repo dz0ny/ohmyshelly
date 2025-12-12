@@ -99,27 +99,100 @@ class _DashboardTabState extends State<DashboardTab> {
 
           return RefreshIndicator(
             onRefresh: () => deviceProvider.refresh(),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: displayDevices.length + 1, // +1 for reorder button
-              itemBuilder: (context, index) {
-                // Reorder button at the end
-                if (index == displayDevices.length) {
-                  return _buildReorderButton(context, l10n);
-                }
-
-                final device = displayDevices[index];
-                final status = deviceProvider.getStatus(device.id);
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildDeviceCard(device, status, deviceProvider),
-                );
-              },
+            child: _buildDeviceGrid(
+              context,
+              displayDevices,
+              deviceProvider,
+              l10n,
             ),
           );
         },
       ),
+    );
+  }
+
+  /// Build the device grid respecting the saved order.
+  /// Power devices are displayed 2-per-row, weather stations full-width.
+  /// Consecutive power devices are grouped into rows.
+  Widget _buildDeviceGrid(
+    BuildContext context,
+    List<Device> devices,
+    DeviceProvider deviceProvider,
+    AppLocalizations l10n,
+  ) {
+    final List<Widget> children = [];
+    int i = 0;
+
+    while (i < devices.length) {
+      final device = devices[i];
+
+      if (device.isWeatherStation) {
+        // Weather station: full-width
+        final status = deviceProvider.getStatus(device.id);
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: WeatherStationDashboardCard(
+              device: device,
+              status: status?.weatherStatus,
+              temperatureHistory: deviceProvider.getTemperatureHistory(device.id),
+              humidityHistory: deviceProvider.getHumidityHistory(device.id),
+            ),
+          ),
+        );
+        i++;
+      } else {
+        // Power device: check if next device is also a power device for pairing
+        final device1 = device;
+        final status1 = deviceProvider.getStatus(device1.id);
+
+        // Look ahead for another power device to pair
+        Device? device2;
+        DeviceStatus? status2;
+        if (i + 1 < devices.length && !devices[i + 1].isWeatherStation) {
+          device2 = devices[i + 1];
+          status2 = deviceProvider.getStatus(device2.id);
+        }
+
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: PowerDeviceDashboardCard(
+                      device: device1,
+                      status: status1?.powerStatus,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: device2 != null
+                        ? PowerDeviceDashboardCard(
+                            device: device2,
+                            status: status2?.powerStatus,
+                          )
+                        : const SizedBox(), // Empty placeholder for odd count
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        // Move index: +2 if paired, +1 if single
+        i += device2 != null ? 2 : 1;
+      }
+    }
+
+    // Add reorder button at the end
+    children.add(_buildReorderButton(context, l10n));
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: children,
     );
   }
 

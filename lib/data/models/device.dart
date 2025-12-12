@@ -207,6 +207,43 @@ class Device {
     );
   }
 
+  /// Convert to JSON for caching
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'code': code,
+      'type': type.index,
+      'deviceType': deviceType,
+      'gen': gen,
+      'isOnline': isOnline,
+      'roomName': roomName,
+      'roomId': roomId,
+      'serial': serial,
+      'icon': icon,
+      'relayUsage': relayUsage,
+    };
+  }
+
+  /// Create from cached JSON
+  factory Device.fromCacheJson(Map<String, dynamic> json) {
+    final code = json['code'] as String? ?? '';
+    return Device(
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? 'Unknown Device',
+      code: code,
+      type: DeviceType.values[json['type'] as int? ?? 0],
+      deviceType: json['deviceType'] as String? ?? '',
+      gen: json['gen'] as String? ?? '',
+      isOnline: json['isOnline'] as bool? ?? false,
+      roomName: json['roomName'] as String?,
+      roomId: json['roomId'] as String?,
+      serial: json['serial'] as int?,
+      icon: json['icon'] as String?,
+      relayUsage: json['relayUsage'] as String?,
+    );
+  }
+
   @override
   String toString() {
     return 'Device(id: $id, name: $name, type: $type, online: $isOnline)';

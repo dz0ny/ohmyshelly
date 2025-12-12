@@ -97,7 +97,7 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
                         Row(
                           children: [
                             StatusBadge(isOnline: widget.device.isOnline),
-                            if (widget.status != null) ...[
+                            if (widget.status != null && widget.status!.hasPowerMonitoring) ...[
                               const SizedBox(width: 12),
                               Icon(
                                 AppIcons.power,

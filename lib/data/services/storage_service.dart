@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user.dart';
+import '../models/device.dart';
 import '../models/local_device_info.dart';
 
 class StorageService {
@@ -176,6 +177,32 @@ class StorageService {
 
   Future<void> clearLocalDeviceInfo() async {
     await _storage.delete(key: _localDeviceInfoKey);
+  }
+
+  // Cached devices (for offline mode)
+  static const String _cachedDevicesKey = 'cached_devices';
+
+  Future<void> saveCachedDevices(List<Device> devices) async {
+    final encoded = jsonEncode(devices.map((d) => d.toJson()).toList());
+    await _storage.write(key: _cachedDevicesKey, value: encoded);
+  }
+
+  Future<List<Device>> getCachedDevices() async {
+    final json = await _storage.read(key: _cachedDevicesKey);
+    if (json == null) return [];
+
+    try {
+      final data = jsonDecode(json) as List<dynamic>;
+      return data
+          .map((d) => Device.fromCacheJson(d as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> clearCachedDevices() async {
+    await _storage.delete(key: _cachedDevicesKey);
   }
 
   // Clear all data (for logout)

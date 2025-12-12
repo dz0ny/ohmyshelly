@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_icons.dart';
@@ -7,28 +6,21 @@ import '../../../core/utils/formatters.dart';
 import '../../../data/models/device.dart';
 import '../../../data/models/device_status.dart';
 import '../../controls/power_toggle.dart';
-import '../../charts/sparkline_widget.dart';
 
-/// Detail view for power devices - shows toggle and stats
-class PowerDeviceDetail extends StatelessWidget {
+/// Detail view for simple relay devices without power monitoring
+class RelayDetail extends StatelessWidget {
   final Device device;
   final PowerDeviceStatus? status;
   final bool isToggling;
   final ValueChanged<bool>? onToggle;
-  final List<double> powerHistory;
 
-  const PowerDeviceDetail({
+  const RelayDetail({
     super.key,
     required this.device,
     this.status,
     this.isToggling = false,
     this.onToggle,
-    this.powerHistory = const [],
   });
-
-  void _navigateToHistory(BuildContext context, String metric) {
-    context.push('/statistics/${device.id}?type=power&metric=$metric');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,16 +79,15 @@ class PowerDeviceDetail extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Stats list (line by line, tappable for history)
-          if (status != null) _buildStatsCard(context, l10n),
+          // Simple status card (no power metrics)
+          if (status != null) _buildStatusCard(context, l10n),
         ],
       ),
     );
   }
 
-  Widget _buildStatsCard(BuildContext context, AppLocalizations l10n) {
+  Widget _buildStatusCard(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
-    final hasPowerMonitoring = status!.hasPowerMonitoring;
 
     return Card(
       child: Padding(
@@ -105,7 +96,7 @@ class PowerDeviceDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              hasPowerMonitoring ? l10n.power : l10n.status,
+              l10n.status,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -113,38 +104,7 @@ class PowerDeviceDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Power metrics - only show if power monitoring is available
-            if (hasPowerMonitoring) ...[
-              // Power - tappable for history with sparkline
-              _buildDetailTile(
-                context: context,
-                icon: AppIcons.power,
-                label: l10n.power,
-                value: status!.powerDisplay,
-                iconColor: device.displayColor,
-                onTap: () => _navigateToHistory(context, 'power'),
-                sparklineData: powerHistory,
-                sparklineColor: device.displayColor,
-              ),
-              const SizedBox(height: 16),
-              // Voltage
-              _buildDetailTile(
-                context: context,
-                icon: AppIcons.voltage,
-                label: l10n.voltage,
-                value: status!.voltageDisplay,
-              ),
-              const SizedBox(height: 16),
-              // Current
-              _buildDetailTile(
-                context: context,
-                icon: AppIcons.current,
-                label: l10n.current,
-                value: status!.currentDisplay,
-              ),
-              const SizedBox(height: 16),
-            ],
-            // Relay Temperature - always show if available
+            // Relay Temperature
             _buildDetailTile(
               context: context,
               icon: AppIcons.temperature,
@@ -184,77 +144,43 @@ class PowerDeviceDetail extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
-    Color? iconColor,
-    VoidCallback? onTap,
-    List<double>? sparklineData,
-    Color? sparklineColor,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tile = Container(
+    return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 24, color: iconColor ?? colorScheme.onSurfaceVariant),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      value,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
+          Icon(icon, size: 24, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              if (onTap != null)
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: colorScheme.outline,
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
-            ],
-          ),
-          // Sparkline chart if data is available
-          if (sparklineData != null && sparklineData.length >= 2) ...[
-            const SizedBox(height: 12),
-            SparklineWidget(
-              data: sparklineData,
-              lineColor: sparklineColor ?? iconColor ?? device.displayColor,
-              height: 40,
-              showDots: true,
-              showHourLabels: true,
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );
-
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: tile,
-      );
-    }
-    return tile;
   }
 }

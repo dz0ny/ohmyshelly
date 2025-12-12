@@ -10,6 +10,7 @@ import '../data/services/device_service.dart';
 import '../data/services/api_service.dart';
 import '../data/services/websocket_service.dart';
 import '../data/services/connection_manager.dart';
+import '../data/services/storage_service.dart';
 import '../core/utils/device_type_helper.dart';
 
 enum DeviceLoadState {
@@ -23,6 +24,7 @@ class DeviceProvider extends ChangeNotifier {
   final DeviceService _deviceService;
   final WebSocketService? _webSocketService;
   final ConnectionManager? _connectionManager;
+  final StorageService? _storageService;
   String? _apiUrl;
   String? _token;
 
@@ -32,6 +34,7 @@ class DeviceProvider extends ChangeNotifier {
   String? _error;
   Timer? _refreshTimer;
   bool _isRefreshing = false;
+  bool _isOffline = false;
 
   // History for sparkline charts (from statistics API)
   final Map<String, List<double>> _temperatureHistory = {};
@@ -58,15 +61,21 @@ class DeviceProvider extends ChangeNotifier {
   final Map<String, DateTime> _wsUpdateTimes = {};
   static const Duration _wsProtectionWindow = Duration(seconds: 10);
 
+  // Track recent toggle operations to prevent WebSocket flicker
+  final Map<String, ({bool targetState, DateTime time})> _pendingToggles = {};
+  static const Duration _toggleProtectionWindow = Duration(seconds: 2);
+
   static const Duration _refreshInterval = Duration(minutes: 1);
 
   DeviceProvider({
     required ApiService apiService,
     WebSocketService? webSocketService,
     ConnectionManager? connectionManager,
+    StorageService? storageService,
   })  : _deviceService = DeviceService(apiService),
         _webSocketService = webSocketService,
-        _connectionManager = connectionManager;
+        _connectionManager = connectionManager,
+        _storageService = storageService;
 
   // Getters
   List<Device> get devices => _devices;
@@ -75,6 +84,7 @@ class DeviceProvider extends ChangeNotifier {
   String? get error => _error;
   bool get isLoading => _state == DeviceLoadState.loading;
   bool get isRefreshing => _isRefreshing;
+  bool get isOffline => _isOffline;
 
   // Filtered device lists
   List<Device> get powerDevices =>
@@ -336,11 +346,29 @@ class DeviceProvider extends ChangeNotifier {
     // Check for output state change and emit action log event
     _checkOutputChange(event.deviceId, event.status, status);
 
+    // Check if this is a confirmation of a recent toggle (to prevent flicker)
+    final pendingToggle = _pendingToggles[event.deviceId];
+    final now = DateTime.now();
+    if (pendingToggle != null &&
+        now.difference(pendingToggle.time) < _toggleProtectionWindow) {
+      final wsIsOn = status.powerStatus?.isOn;
+      if (wsIsOn == pendingToggle.targetState) {
+        // WebSocket confirms our toggle - clear pending and skip UI update
+        _pendingToggles.remove(event.deviceId);
+        _deviceStatuses[event.deviceId] = status;
+        _wsUpdateTimes[event.deviceId] = now;
+        if (kDebugMode) {
+          debugPrint('[DeviceProvider] Toggle confirmed for ${event.deviceId}, skipping UI update');
+        }
+        return; // Skip notifyListeners to prevent flicker
+      }
+    }
+
     // Update device status
     _deviceStatuses[event.deviceId] = status;
 
     // Track WebSocket update time for API protection
-    _wsUpdateTimes[event.deviceId] = DateTime.now();
+    _wsUpdateTimes[event.deviceId] = now;
 
     // Update device online status if available
     final deviceIndex = _devices.indexWhere((d) => d.id == event.deviceId);
@@ -427,6 +455,10 @@ class DeviceProvider extends ChangeNotifier {
       final result = await _deviceService.fetchDevicesWithStatuses(_apiUrl!, _token!);
       _devices = result.devices;
       _deviceStatuses = result.statuses;
+      _isOffline = false;
+
+      // Cache devices for offline mode
+      _storageService?.saveCachedDevices(result.devices);
 
       // Register device IPs with ConnectionManager for local connections
       _registerDeviceIpsFromStatuses(result.statuses);
@@ -440,14 +472,62 @@ class DeviceProvider extends ChangeNotifier {
       // Fetch history for sparklines (non-blocking)
       _fetchAllHistories();
     } on ApiException catch (e) {
-      _error = e.friendlyMessage;
-      _state = DeviceLoadState.error;
-      notifyListeners();
+      // Try offline mode with cached devices
+      await _tryOfflineMode(e.friendlyMessage);
     } catch (e) {
-      _error = 'Failed to load devices';
+      // Try offline mode with cached devices
+      await _tryOfflineMode('Failed to load devices');
+    }
+  }
+
+  /// Try to enter offline mode with cached devices
+  Future<void> _tryOfflineMode(String cloudError) async {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Cloud failed: $cloudError, trying offline mode...');
+    }
+
+    final cachedDevices = await _storageService?.getCachedDevices();
+    if (cachedDevices != null && cachedDevices.isNotEmpty) {
+      _devices = cachedDevices;
+      _isOffline = true;
+      _state = DeviceLoadState.loaded;
+      _error = null;
+
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Offline mode: loaded ${cachedDevices.length} cached devices');
+      }
+
+      notifyListeners();
+
+      // Probe local devices to establish connections
+      await _probeLocalDevices();
+
+      // Update device online status based on local reachability
+      _updateDeviceOnlineStatusFromLocal();
+    } else {
+      _error = cloudError;
       _state = DeviceLoadState.error;
+      _isOffline = false;
       notifyListeners();
     }
+  }
+
+  /// Update device online status based on local connection state
+  void _updateDeviceOnlineStatusFromLocal() {
+    final connectionManager = _connectionManager;
+    if (connectionManager == null) return;
+
+    for (int i = 0; i < _devices.length; i++) {
+      final device = _devices[i];
+      final localInfo = connectionManager.getLocalInfo(device.id);
+      final isLocallyReachable = localInfo?.state == LocalConnectionState.connected;
+
+      // In offline mode, device is "online" if locally reachable
+      if (device.isOnline != isLocallyReachable) {
+        _devices[i] = device.copyWith(isOnline: isLocallyReachable);
+      }
+    }
+    notifyListeners();
   }
 
   /// Extract and register device IPs from cloud API responses
@@ -480,9 +560,11 @@ class DeviceProvider extends ChangeNotifier {
     if (connectionManager == null) return;
 
     try {
-      await connectionManager.probeLocalDevices();
-      // Notify listeners so UI can update connection indicators
-      notifyListeners();
+      final stateChanged = await connectionManager.probeLocalDevices();
+      // Only notify if state actually changed to avoid UI flicker
+      if (stateChanged) {
+        notifyListeners();
+      }
     } catch (e) {
       // Probe failure is non-fatal
       if (kDebugMode) {
@@ -594,6 +676,9 @@ class DeviceProvider extends ChangeNotifier {
 
       if (!success) return false;
 
+      // Register pending toggle to prevent WebSocket flicker
+      _pendingToggles[deviceId] = (targetState: turnOn, time: DateTime.now());
+
       // Optimistically update local state
       final status = _deviceStatuses[deviceId];
       final powerStatus = status?.powerStatus;
@@ -608,7 +693,13 @@ class DeviceProvider extends ChangeNotifier {
             frequency: powerStatus.frequency,
             temperature: powerStatus.temperature,
             totalEnergy: powerStatus.totalEnergy,
+            ipAddress: powerStatus.ipAddress,
+            rssi: powerStatus.rssi,
+            ssid: powerStatus.ssid,
+            uptime: powerStatus.uptime,
             lastUpdated: DateTime.now(),
+            firmwareVersion: powerStatus.firmwareVersion,
+            hasPowerMonitoring: powerStatus.hasPowerMonitoring,
           ),
           weatherStatus: status.weatherStatus,
           gatewayStatus: status.gatewayStatus,

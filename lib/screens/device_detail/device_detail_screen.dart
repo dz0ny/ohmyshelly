@@ -6,6 +6,7 @@ import '../../core/utils/device_type_helper.dart';
 import '../../data/models/device.dart';
 import '../../providers/device_provider.dart';
 import '../../widgets/devices/power_device/power_device_detail.dart';
+import '../../widgets/devices/power_device/relay_detail.dart';
 import '../../widgets/devices/weather_station/weather_station_detail.dart';
 import '../../widgets/devices/gateway/gateway_detail.dart';
 import '../../widgets/devices/unknown/unknown_device_detail.dart';
@@ -24,6 +25,8 @@ class DeviceDetailScreen extends StatefulWidget {
 
 class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   bool _isToggling = false;
+  // Cache power monitoring detection to avoid flickering between widgets
+  bool? _hasPowerMonitoring;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +44,25 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         );
         final status = deviceProvider.getStatus(widget.deviceId);
 
+        final colorScheme = Theme.of(context).colorScheme;
+
         return Scaffold(
           appBar: AppBar(
-            title: Text(device.name),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (device.roomName != null && device.roomName!.isNotEmpty)
+                  Text(
+                    device.roomName!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                Text(device.name),
+              ],
+            ),
             actions: [
               // Schedule icon only for power devices
               if (device.isPowerDevice)
@@ -78,13 +97,35 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     DeviceProvider deviceProvider,
   ) {
     if (device.isPowerDevice) {
-      return PowerDeviceDetail(
-        device: device,
-        status: status?.powerStatus,
-        isToggling: _isToggling,
-        onToggle: (turnOn) => _handleToggle(deviceProvider, device.id, turnOn),
-        powerHistory: deviceProvider.getPowerHistory(device.id),
-      );
+      final powerStatus = status?.powerStatus;
+
+      // Cache power monitoring detection - once detected, remember it
+      // This prevents flickering between RelayDetail and PowerDeviceDetail
+      if (powerStatus != null && _hasPowerMonitoring == null) {
+        _hasPowerMonitoring = powerStatus.hasPowerMonitoring;
+      }
+
+      // Predict from device code if not yet detected from status
+      // Plugs (code contains "PL") typically have power monitoring
+      final predictedHasPowerMonitoring = device.code.contains('PL');
+      final usePowerMonitoring = _hasPowerMonitoring ?? predictedHasPowerMonitoring;
+
+      if (usePowerMonitoring) {
+        return PowerDeviceDetail(
+          device: device,
+          status: powerStatus,
+          isToggling: _isToggling,
+          onToggle: (turnOn) => _handleToggle(deviceProvider, device.id, turnOn),
+          powerHistory: deviceProvider.getPowerHistory(device.id),
+        );
+      } else {
+        return RelayDetail(
+          device: device,
+          status: powerStatus,
+          isToggling: _isToggling,
+          onToggle: (turnOn) => _handleToggle(deviceProvider, device.id, turnOn),
+        );
+      }
     } else if (device.isWeatherStation) {
       return WeatherStationDetail(
         deviceId: device.id,

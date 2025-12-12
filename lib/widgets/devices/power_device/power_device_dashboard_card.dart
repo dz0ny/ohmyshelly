@@ -6,7 +6,8 @@ import '../../../core/constants/app_icons.dart';
 import '../../../data/models/device.dart';
 import '../../../data/models/device_status.dart';
 
-/// Dashboard card for power devices - shows current power and switch status (read-only)
+/// Compact dashboard tile for power devices - designed for 2-column grid layout
+/// Shows device icon, name, ON/OFF status badge, and power consumption
 class PowerDeviceDashboardCard extends StatelessWidget {
   final Device device;
   final PowerDeviceStatus? status;
@@ -28,57 +29,82 @@ class PowerDeviceDashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final isOn = status?.isOn ?? false;
+    final isOnline = device.isOnline;
+    final hasPower = status != null && isOnline && status!.hasPowerMonitoring;
 
     return Card(
-      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: InkWell(
         onTap: onTap ?? () => context.push('/device/${device.id}'),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row
+              // Header row: icon badge + ON/OFF status badge
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Icon badge
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 34,
+                    height: 34,
                     decoration: BoxDecoration(
-                      color: _deviceColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: _deviceColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       _deviceIcon,
                       color: _deviceColor,
-                      size: 22,
+                      size: 18,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      device.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  // Switch status indicator
-                  _buildSwitchStatus(context, isOn, l10n),
+                  // ON/OFF status badge
+                  _buildStatusBadge(context, isOn, isOnline, l10n),
                 ],
               ),
-              // Power usage - only show if device has power monitoring
-              if (status != null && device.isOnline && status!.hasPowerMonitoring) ...[
-                const SizedBox(height: 16),
-                _buildPowerDisplay(context, l10n),
-              ],
+              const SizedBox(height: 12),
+              // Device name (label)
+              Text(
+                device.name,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              // Power value or status text
+              Row(
+                children: [
+                  Expanded(
+                    child: hasPower
+                        ? _buildPowerDisplay(context)
+                        : Text(
+                            isOnline
+                                ? (isOn ? l10n.on : l10n.off)
+                                : l10n.offline,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: _getValueColor(colorScheme, isOn, isOnline),
+                            ),
+                          ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 20,
+                    color: colorScheme.outline,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -86,33 +112,57 @@ class PowerDeviceDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSwitchStatus(BuildContext context, bool isOn, AppLocalizations l10n) {
+  Widget _buildStatusBadge(
+    BuildContext context,
+    bool isOn,
+    bool isOnline,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    if (!isOnline) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          l10n.offline,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: colorScheme.outline,
+          ),
+        ),
+      );
+    }
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isOn
             ? AppColors.deviceOn.withValues(alpha: 0.1)
             : colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(
               color: isOn ? AppColors.deviceOn : colorScheme.outline,
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 4),
           Text(
             isOn ? l10n.on : l10n.off,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
               color: isOn ? AppColors.deviceOn : colorScheme.onSurfaceVariant,
             ),
           ),
@@ -121,40 +171,43 @@ class PowerDeviceDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPowerDisplay(BuildContext context, AppLocalizations l10n) {
+  Widget _buildPowerDisplay(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            AppIcons.power,
-            size: 20,
-            color: _deviceColor,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            l10n.currentPowerUsage,
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
+    final isOn = status?.isOn ?? false;
+
+    return Row(
+      children: [
+        Icon(
+          AppIcons.power,
+          size: 16,
+          color: isOn ? _deviceColor : colorScheme.outline,
+        ),
+        const SizedBox(width: 6),
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              status!.powerDisplay,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: isOn ? _deviceColor : colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
-          const Spacer(),
-          Text(
-            status!.powerDisplay,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: _deviceColor,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  Color _getValueColor(ColorScheme colorScheme, bool isOn, bool isOnline) {
+    if (!isOnline) {
+      return colorScheme.outline;
+    }
+    if (isOn) {
+      return _deviceColor;
+    }
+    return colorScheme.onSurfaceVariant;
   }
 }

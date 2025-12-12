@@ -123,6 +123,7 @@ class OhMyShellyApp extends StatelessWidget {
             apiService: apiService,
             webSocketService: webSocketService,
             connectionManager: connectionManager,
+            storageService: storageService,
           ),
         ),
 

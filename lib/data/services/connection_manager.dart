@@ -239,10 +239,7 @@ class ConnectionManager {
           debugPrint('[ConnMgr] Trying local toggle for $deviceId @ ${localInfo.localIp}:${localInfo.localPort}');
         }
 
-        _updateLocalInfoState(
-          deviceId,
-          LocalConnectionState.connecting,
-        );
+        // Don't set 'connecting' state here to avoid UI flicker
 
         await _localService.setSwitch(
           localInfo.localIp!,
@@ -250,12 +247,17 @@ class ConnectionManager {
           port: localInfo.localPort,
         );
 
-        // Mark as connected on success
-        _updateLocalInfoState(
-          deviceId,
-          LocalConnectionState.connected,
-          success: true,
-        );
+        // Mark as connected on success (only if not already connected)
+        if (localInfo.state != LocalConnectionState.connected) {
+          _updateLocalInfoState(
+            deviceId,
+            LocalConnectionState.connected,
+            success: true,
+          );
+        } else {
+          // Just update success timestamp without state change
+          _updateLocalInfoTimestamp(deviceId, success: true);
+        }
 
         if (kDebugMode) {
           debugPrint('[ConnMgr] ✓ Local toggle $action succeeded for $deviceId');
@@ -338,8 +340,8 @@ class ConnectionManager {
   }
 
   /// Probe all known devices to check local reachability
-  /// Runs in parallel for speed, returns map of deviceId -> isReachable
-  Future<Map<String, bool>> probeLocalDevices() async {
+  /// Runs in parallel for speed, returns true if any state changed
+  Future<bool> probeLocalDevices() async {
     final devicesToProbe = _localInfoCache.entries
         .where((e) => e.value.canTryLocal && e.value.shouldRetryLocal)
         .toList();
@@ -348,7 +350,7 @@ class ConnectionManager {
       if (kDebugMode) {
         debugPrint('[ConnMgr] No devices to probe');
       }
-      return {};
+      return false;
     }
 
     if (kDebugMode) {
@@ -356,28 +358,34 @@ class ConnectionManager {
     }
 
     final results = <String, bool>{};
+    var stateChanged = false;
     final stopwatch = Stopwatch()..start();
 
     // Probe all devices in parallel
+    // Don't set intermediate 'connecting' state to avoid UI flicker
     await Future.wait(
       devicesToProbe.map((entry) async {
         final deviceId = entry.key;
         final info = entry.value;
+        final previousState = info.state;
 
         try {
-          _updateLocalInfoState(deviceId, LocalConnectionState.connecting);
-
           final reachable = await _localService.isReachable(
             info.localIp!,
             info.localPort,
           );
 
           results[deviceId] = reachable;
-          _updateLocalInfoState(
-            deviceId,
-            reachable ? LocalConnectionState.connected : LocalConnectionState.unreachable,
-            success: reachable,
-          );
+          final newState = reachable ? LocalConnectionState.connected : LocalConnectionState.unreachable;
+
+          // Only update if state actually changed
+          if (previousState != newState) {
+            _updateLocalInfoState(deviceId, newState, success: reachable);
+            stateChanged = true;
+          } else {
+            // Just update timestamp
+            _updateLocalInfoTimestamp(deviceId, success: reachable);
+          }
 
           if (kDebugMode) {
             final status = reachable ? '✓' : '✗';
@@ -385,11 +393,11 @@ class ConnectionManager {
           }
         } catch (e) {
           results[deviceId] = false;
-          _updateLocalInfoState(
-            deviceId,
-            LocalConnectionState.unreachable,
-            success: false,
-          );
+          // Only update if state changed
+          if (previousState != LocalConnectionState.unreachable) {
+            _updateLocalInfoState(deviceId, LocalConnectionState.unreachable, success: false);
+            stateChanged = true;
+          }
           if (kDebugMode) {
             debugPrint('[ConnMgr] ✗ Probe $deviceId failed: $e');
           }
@@ -400,10 +408,10 @@ class ConnectionManager {
     stopwatch.stop();
     if (kDebugMode) {
       final reachableCount = results.values.where((r) => r).length;
-      debugPrint('[ConnMgr] Probe complete: $reachableCount/${results.length} reachable (${stopwatch.elapsedMilliseconds}ms)');
+      debugPrint('[ConnMgr] Probe complete: $reachableCount/${results.length} reachable (${stopwatch.elapsedMilliseconds}ms), stateChanged=$stateChanged');
     }
 
-    return results;
+    return stateChanged;
   }
 
   void _updateLocalInfoState(
@@ -422,6 +430,20 @@ class ConnectionManager {
     );
 
     _persistLocalInfo(normalizedId);
+  }
+
+  /// Update only the timestamp without changing state (to avoid UI flicker)
+  void _updateLocalInfoTimestamp(String deviceId, {required bool success}) {
+    final normalizedId = deviceId.toLowerCase();
+    final existing = _localInfoCache[normalizedId];
+    if (existing == null) return;
+
+    _localInfoCache[normalizedId] = existing.copyWith(
+      lastLocalSuccess: success ? DateTime.now() : null,
+      lastLocalFailure: !success ? DateTime.now() : null,
+    );
+
+    // Don't persist on every toggle to reduce I/O
   }
 
   Future<void> _loadPersistedLocalInfo() async {
