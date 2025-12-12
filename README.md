@@ -11,8 +11,8 @@ Includes live dashboards, device management, and detailed power & weather statis
 
 📱 **[Download Latest Release](https://github.com/dz0ny/ohmyshelly/releases)**
 
-- **Android**: Download the `.apk` file from releases
-- **iOS**: Build from source (see instructions below)
+- **Android**: Download the `.apk` file from [releases](https://github.com/dz0ny/ohmyshelly/releases)
+- **iOS**: Join the [TestFlight Beta](https://testflight.apple.com/join/FZa9eAv6)
 
 ---
 
