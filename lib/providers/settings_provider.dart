@@ -5,7 +5,9 @@ class SettingsProvider extends ChangeNotifier {
   final StorageService _storageService;
 
   Locale? _locale;
+  ThemeMode _themeMode = ThemeMode.system;
   bool _showDevicesTab = true;
+  bool _showScenesTab = false;
   bool _isInitialized = false;
   List<String> _dashboardDeviceOrder = [];
 
@@ -13,7 +15,9 @@ class SettingsProvider extends ChangeNotifier {
       : _storageService = storageService;
 
   Locale? get locale => _locale;
+  ThemeMode get themeMode => _themeMode;
   bool get showDevicesTab => _showDevicesTab;
+  bool get showScenesTab => _showScenesTab;
   bool get isInitialized => _isInitialized;
   List<String> get dashboardDeviceOrder => _dashboardDeviceOrder;
 
@@ -22,10 +26,35 @@ class SettingsProvider extends ChangeNotifier {
     if (languageCode != null) {
       _locale = Locale(languageCode);
     }
+    final themeModeStr = await _storageService.getThemeMode();
+    _themeMode = _themeModeFromString(themeModeStr);
     _showDevicesTab = await _storageService.getShowDevicesTab();
+    _showScenesTab = await _storageService.getShowScenesTab();
     _dashboardDeviceOrder = await _storageService.getDashboardDeviceOrder();
     _isInitialized = true;
     notifyListeners();
+  }
+
+  ThemeMode _themeModeFromString(String? value) {
+    switch (value) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
+
+  String? _themeModeToString(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return 'light';
+      case ThemeMode.dark:
+        return 'dark';
+      case ThemeMode.system:
+        return null;
+    }
   }
 
   Future<void> setLocale(Locale? locale) async {
@@ -34,9 +63,21 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setThemeMode(ThemeMode mode) async {
+    _themeMode = mode;
+    await _storageService.setThemeMode(_themeModeToString(mode));
+    notifyListeners();
+  }
+
   Future<void> setShowDevicesTab(bool show) async {
     _showDevicesTab = show;
     await _storageService.setShowDevicesTab(show);
+    notifyListeners();
+  }
+
+  Future<void> setShowScenesTab(bool show) async {
+    _showScenesTab = show;
+    await _storageService.setShowScenesTab(show);
     notifyListeners();
   }
 

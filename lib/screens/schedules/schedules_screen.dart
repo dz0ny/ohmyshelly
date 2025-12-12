@@ -143,6 +143,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
     bool isLoading,
     String? error,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (isLoading && schedules.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(48),
@@ -156,7 +157,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
         child: Center(
           child: Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.error_outline,
                 size: 48,
                 color: AppColors.error,
@@ -166,7 +167,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 error,
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -190,14 +191,14 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
               Icon(
                 Icons.cloud_off,
                 size: 48,
-                color: AppColors.textHint,
+                color: colorScheme.outline,
               ),
               const SizedBox(height: 12),
               Text(
                 l10n.deviceOffline,
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -215,14 +216,14 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
               Icon(
                 Icons.schedule,
                 size: 48,
-                color: AppColors.textHint,
+                color: colorScheme.outline,
               ),
               const SizedBox(height: 12),
               Text(
                 l10n.noSchedules,
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 16),

@@ -243,9 +243,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     }
 
     if (isPower && provider.powerStatistics != null) {
-      return _buildPowerContent(provider.powerStatistics!, provider.selection.type, provider.selection.selectedDate, l10n);
+      return _buildPowerContent(context, provider.powerStatistics!, provider.selection.type, provider.selection.selectedDate, l10n);
     } else if (!isPower && provider.weatherStatistics != null) {
-      return _buildWeatherContent(provider.weatherStatistics!, provider.selection.type, provider.selection.selectedDate, l10n);
+      return _buildWeatherContent(context, provider.weatherStatistics!, provider.selection.type, provider.selection.selectedDate, l10n);
     }
 
     return Center(
@@ -253,12 +253,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildPowerContent(PowerStatistics stats, DateRangeType rangeType, DateTime selectedDate, AppLocalizations l10n) {
+  Widget _buildPowerContent(BuildContext context, PowerStatistics stats, DateRangeType rangeType, DateTime selectedDate, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (stats.dataPoints.isEmpty) {
       return Center(
         child: Text(
           l10n.noPowerData,
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: colorScheme.onSurfaceVariant),
         ),
       );
     }
@@ -283,9 +284,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                   Text(
                     '${l10n.total}: ${Formatters.energy(stats.totalConsumption)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -318,12 +319,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildWeatherContent(WeatherStatistics stats, DateRangeType rangeType, DateTime selectedDate, AppLocalizations l10n) {
+  Widget _buildWeatherContent(BuildContext context, WeatherStatistics stats, DateRangeType rangeType, DateTime selectedDate, AppLocalizations l10n) {
     if (stats.dataPoints.isEmpty) {
       return Center(
         child: Text(
           l10n.noWeatherData,
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       );
     }
@@ -353,12 +354,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   x: p.timestamp.millisecondsSinceEpoch.toDouble(),
                   y: p.avgTemperature,
                   timestamp: p.timestamp,
+                  minY: p.minTemperature,
+                  maxY: p.maxTemperature,
                 ))
             .toList();
         unit = '\u00B0C';
         lineColor = AppColors.weatherStation;
         chartTitle = l10n.temperature;
-        summaryCard = _buildTemperatureSummary(stats, l10n);
+        summaryCard = _buildTemperatureSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.humidity:
@@ -372,7 +375,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         unit = '%';
         lineColor = AppColors.info;
         chartTitle = l10n.humidity;
-        summaryCard = _buildHumiditySummary(stats, l10n);
+        summaryCard = _buildHumiditySummary(context, stats, l10n);
         break;
 
       case WeatherMetric.pressure:
@@ -386,7 +389,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         unit = 'hPa';
         lineColor = const Color(0xFF7E57C2); // Purple
         chartTitle = l10n.pressure;
-        summaryCard = _buildPressureSummary(stats, l10n);
+        summaryCard = _buildPressureSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.uv:
@@ -400,7 +403,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         unit = '';
         lineColor = AppColors.warning;
         chartTitle = l10n.uvIndex;
-        summaryCard = _buildUvSummary(stats, l10n);
+        summaryCard = _buildUvSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.rain:
@@ -414,7 +417,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         unit = 'mm';
         lineColor = AppColors.info;
         chartTitle = l10n.rain;
-        summaryCard = _buildRainSummary(stats, l10n);
+        summaryCard = _buildRainSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.solar:
@@ -429,15 +432,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         unit = 'W/m²';
         lineColor = const Color(0xFFFF9800); // Orange
         chartTitle = l10n.solar;
-        summaryCard = _buildSolarSummary(stats, l10n);
+        summaryCard = _buildSolarSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.wind:
         // Shelly API doesn't provide historical wind data
-        return Center(
-          child: Text(
-            l10n.windHistoryNotAvailable,
-            style: const TextStyle(color: AppColors.textSecondary),
+        return Builder(
+          builder: (context) => Center(
+            child: Text(
+              l10n.windHistoryNotAvailable,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
           ),
         );
     }
@@ -482,7 +487,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildTemperatureSummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildTemperatureSummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -497,19 +502,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.min,
               Formatters.temperature(stats.minTemperature),
               Icons.arrow_downward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.max,
               Formatters.temperature(stats.maxTemperature),
               Icons.arrow_upward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.average,
               Formatters.temperature(stats.avgTemperature),
               Icons.trending_flat,
@@ -520,7 +525,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildHumiditySummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildHumiditySummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     final minHumidity = stats.dataPoints.map((p) => p.humidity).reduce((a, b) => a < b ? a : b);
     final maxHumidity = stats.dataPoints.map((p) => p.humidity).reduce((a, b) => a > b ? a : b);
 
@@ -538,19 +543,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.min,
               Formatters.humidity(minHumidity),
               Icons.arrow_downward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.max,
               Formatters.humidity(maxHumidity),
               Icons.arrow_upward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.average,
               Formatters.humidity(stats.avgHumidity),
               Icons.trending_flat,
@@ -561,7 +566,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildPressureSummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildPressureSummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     final minPressure = stats.dataPoints.map((p) => p.minPressure).reduce((a, b) => a < b ? a : b);
     final maxPressure = stats.dataPoints.map((p) => p.maxPressure).reduce((a, b) => a > b ? a : b);
 
@@ -579,19 +584,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.min,
               Formatters.pressure(minPressure),
               Icons.arrow_downward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.max,
               Formatters.pressure(maxPressure),
               Icons.arrow_upward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.average,
               Formatters.pressure(stats.avgPressure),
               Icons.trending_flat,
@@ -602,7 +607,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildUvSummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildUvSummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     final maxUv = stats.dataPoints.map((p) => p.uvIndex).reduce((a, b) => a > b ? a : b);
     final avgUv = stats.dataPoints.fold<double>(0, (sum, p) => sum + p.uvIndex) / stats.dataPoints.length;
 
@@ -620,13 +625,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.peakUv,
               maxUv.toStringAsFixed(1),
               Icons.arrow_upward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.average,
               avgUv.toStringAsFixed(1),
               Icons.trending_flat,
@@ -637,7 +642,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildRainSummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildRainSummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     final maxRain = stats.dataPoints.map((p) => p.precipitation).reduce((a, b) => a > b ? a : b);
 
     return Card(
@@ -654,13 +659,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.total,
               Formatters.precipitation(stats.totalPrecipitation),
               AppIcons.rain,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.peak,
               Formatters.precipitation(maxRain),
               Icons.arrow_upward,
@@ -671,7 +676,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildSolarSummary(WeatherStatistics stats, AppLocalizations l10n) {
+  Widget _buildSolarSummary(BuildContext context, WeatherStatistics stats, AppLocalizations l10n) {
     // Convert lux to W/m²
     final solarValues = stats.dataPoints.map((p) => p.illuminance / 120).toList();
     final maxSolar = solarValues.reduce((a, b) => a > b ? a : b);
@@ -691,13 +696,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.peak,
               Formatters.solarIrradiance(maxSolar),
               Icons.arrow_upward,
             ),
             const Divider(height: 24),
-            _buildSummaryRow(
+            _buildSummaryRow(context,
               l10n.average,
               Formatters.solarIrradiance(avgSolar),
               Icons.trending_flat,
@@ -737,6 +742,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                                 x: p.timestamp.millisecondsSinceEpoch.toDouble(),
                                 y: p.avgTemperature,
                                 timestamp: p.timestamp,
+                                minY: p.minTemperature,
+                                maxY: p.maxTemperature,
                               ))
                           .toList(),
                       lineColor: AppColors.weatherStation,
@@ -767,31 +774,31 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildSummaryRow(
+                  _buildSummaryRow(context,
                     l10n.min,
                     Formatters.temperature(stats.minTemperature),
                     Icons.arrow_downward,
                   ),
                   const Divider(height: 24),
-                  _buildSummaryRow(
+                  _buildSummaryRow(context,
                     l10n.max,
                     Formatters.temperature(stats.maxTemperature),
                     Icons.arrow_upward,
                   ),
                   const Divider(height: 24),
-                  _buildSummaryRow(
+                  _buildSummaryRow(context,
                     l10n.average,
                     Formatters.temperature(stats.avgTemperature),
                     Icons.trending_flat,
                   ),
                   const Divider(height: 24),
-                  _buildSummaryRow(
+                  _buildSummaryRow(context,
                     l10n.humidityAvg,
                     Formatters.humidity(stats.avgHumidity),
                     AppIcons.humidity,
                   ),
                   const Divider(height: 24),
-                  _buildSummaryRow(
+                  _buildSummaryRow(context,
                     l10n.rainTotal,
                     Formatters.precipitation(stats.totalPrecipitation),
                     AppIcons.rain,
@@ -805,23 +812,24 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, IconData icon) {
+  Widget _buildSummaryRow(BuildContext context, String label, String value, IconData icon) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
-        Icon(icon, size: 20, color: AppColors.textSecondary),
+        Icon(icon, size: 20, color: colorScheme.onSurfaceVariant),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: colorScheme.onSurfaceVariant),
           ),
         ),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: colorScheme.onSurface,
           ),
         ),
       ],

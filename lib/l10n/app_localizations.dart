@@ -5,8 +5,34 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_bg.dart';
+import 'app_localizations_ca.dart';
+import 'app_localizations_cs.dart';
+import 'app_localizations_da.dart';
+import 'app_localizations_de.dart';
+import 'app_localizations_el.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_et.dart';
+import 'app_localizations_fi.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_hr.dart';
+import 'app_localizations_hu.dart';
+import 'app_localizations_is.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_lt.dart';
+import 'app_localizations_lv.dart';
+import 'app_localizations_nl.dart';
+import 'app_localizations_no.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ro.dart';
+import 'app_localizations_ru.dart';
+import 'app_localizations_sk.dart';
 import 'app_localizations_sl.dart';
+import 'app_localizations_sr.dart';
+import 'app_localizations_sv.dart';
+import 'app_localizations_uk.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,8 +120,37 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('bg'),
+    Locale('ca'),
+    Locale('cs'),
+    Locale('da'),
+    Locale('de'),
+    Locale('el'),
     Locale('en'),
+    Locale('en', 'US'),
+    Locale('es'),
+    Locale('es', 'MX'),
+    Locale('et'),
+    Locale('fi'),
+    Locale('fr'),
+    Locale('fr', 'CA'),
+    Locale('hr'),
+    Locale('hu'),
+    Locale('is'),
+    Locale('it'),
+    Locale('lt'),
+    Locale('lv'),
+    Locale('nl'),
+    Locale('no'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('ro'),
+    Locale('ru'),
+    Locale('sk'),
     Locale('sl'),
+    Locale('sr'),
+    Locale('sv'),
+    Locale('uk'),
   ];
 
   /// No description provided for @appName.
@@ -325,6 +380,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Temperature'**
   String get temperature;
+
+  /// No description provided for @feelsLike.
+  ///
+  /// In en, this message translates to:
+  /// **'Feels like'**
+  String get feelsLike;
 
   /// No description provided for @totalEnergy.
   ///
@@ -644,6 +705,30 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get appearance;
 
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
   /// No description provided for @showDevicesTab.
   ///
   /// In en, this message translates to:
@@ -679,6 +764,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Slovenian'**
   String get languageSlovenian;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get languageGerman;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get languageFrench;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageSpanish;
+
+  /// No description provided for @languagePortuguese.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese'**
+  String get languagePortuguese;
+
+  /// No description provided for @languageItalian.
+  ///
+  /// In en, this message translates to:
+  /// **'Italian'**
+  String get languageItalian;
+
+  /// No description provided for @languageDutch.
+  ///
+  /// In en, this message translates to:
+  /// **'Dutch'**
+  String get languageDutch;
+
+  /// No description provided for @languageCatalan.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalan'**
+  String get languageCatalan;
+
+  /// No description provided for @languageSwedish.
+  ///
+  /// In en, this message translates to:
+  /// **'Swedish'**
+  String get languageSwedish;
+
+  /// No description provided for @languageNorwegian.
+  ///
+  /// In en, this message translates to:
+  /// **'Norwegian'**
+  String get languageNorwegian;
+
+  /// No description provided for @languageDanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Danish'**
+  String get languageDanish;
+
+  /// No description provided for @languageFinnish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finnish'**
+  String get languageFinnish;
+
+  /// No description provided for @languageIcelandic.
+  ///
+  /// In en, this message translates to:
+  /// **'Icelandic'**
+  String get languageIcelandic;
+
+  /// No description provided for @languagePolish.
+  ///
+  /// In en, this message translates to:
+  /// **'Polish'**
+  String get languagePolish;
+
+  /// No description provided for @languageCzech.
+  ///
+  /// In en, this message translates to:
+  /// **'Czech'**
+  String get languageCzech;
+
+  /// No description provided for @languageSlovak.
+  ///
+  /// In en, this message translates to:
+  /// **'Slovak'**
+  String get languageSlovak;
+
+  /// No description provided for @languageHungarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Hungarian'**
+  String get languageHungarian;
+
+  /// No description provided for @languageRomanian.
+  ///
+  /// In en, this message translates to:
+  /// **'Romanian'**
+  String get languageRomanian;
+
+  /// No description provided for @languageBulgarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulgarian'**
+  String get languageBulgarian;
+
+  /// No description provided for @languageUkrainian.
+  ///
+  /// In en, this message translates to:
+  /// **'Ukrainian'**
+  String get languageUkrainian;
+
+  /// No description provided for @languageRussian.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get languageRussian;
+
+  /// No description provided for @languageLithuanian.
+  ///
+  /// In en, this message translates to:
+  /// **'Lithuanian'**
+  String get languageLithuanian;
+
+  /// No description provided for @languageLatvian.
+  ///
+  /// In en, this message translates to:
+  /// **'Latvian'**
+  String get languageLatvian;
+
+  /// No description provided for @languageEstonian.
+  ///
+  /// In en, this message translates to:
+  /// **'Estonian'**
+  String get languageEstonian;
+
+  /// No description provided for @languageCroatian.
+  ///
+  /// In en, this message translates to:
+  /// **'Croatian'**
+  String get languageCroatian;
+
+  /// No description provided for @languageSerbian.
+  ///
+  /// In en, this message translates to:
+  /// **'Serbian'**
+  String get languageSerbian;
+
+  /// No description provided for @languageGreek.
+  ///
+  /// In en, this message translates to:
+  /// **'Greek'**
+  String get languageGreek;
+
+  /// No description provided for @languageSpanishMexico.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish (Mexico)'**
+  String get languageSpanishMexico;
+
+  /// No description provided for @languageFrenchCanada.
+  ///
+  /// In en, this message translates to:
+  /// **'French (Canada)'**
+  String get languageFrenchCanada;
+
+  /// No description provided for @languageEnglishUS.
+  ///
+  /// In en, this message translates to:
+  /// **'English (US)'**
+  String get languageEnglishUS;
 
   /// No description provided for @cancel.
   ///
@@ -1136,6 +1395,12 @@ abstract class AppLocalizations {
   /// **'This Year'**
   String get thisYear;
 
+  /// No description provided for @nextYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Year'**
+  String get nextYear;
+
   /// No description provided for @selectMonth.
   ///
   /// In en, this message translates to:
@@ -1406,6 +1671,12 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
   String hoursAgo(int count);
 
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
   /// No description provided for @yesterday.
   ///
   /// In en, this message translates to:
@@ -1459,6 +1730,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Serial'**
   String get serial;
+
+  /// No description provided for @firmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware'**
+  String get firmware;
 
   /// No description provided for @room.
   ///
@@ -1567,6 +1844,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drag to reorder devices'**
   String get dragToReorder;
+
+  /// No description provided for @scenes.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes'**
+  String get scenes;
+
+  /// No description provided for @noScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'No scenes found'**
+  String get noScenes;
+
+  /// No description provided for @noScenesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create scenes in your Shelly Cloud account'**
+  String get noScenesDesc;
+
+  /// No description provided for @showScenesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Scenes Tab'**
+  String get showScenesTab;
+
+  /// No description provided for @showScenesTabDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display automation scenes in navigation'**
+  String get showScenesTabDesc;
+
+  /// No description provided for @sceneEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get sceneEnabled;
+
+  /// No description provided for @sceneDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get sceneDisabled;
+
+  /// No description provided for @loadingScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading scenes...'**
+  String get loadingScenes;
+
+  /// No description provided for @runScene.
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get runScene;
+
+  /// No description provided for @sceneRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running...'**
+  String get sceneRunning;
 }
 
 class _AppLocalizationsDelegate
@@ -1579,20 +1916,128 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'sl'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'bg',
+    'ca',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'en',
+    'es',
+    'et',
+    'fi',
+    'fr',
+    'hr',
+    'hu',
+    'is',
+    'it',
+    'lt',
+    'lv',
+    'nl',
+    'no',
+    'pl',
+    'pt',
+    'ro',
+    'ru',
+    'sk',
+    'sl',
+    'sr',
+    'sv',
+    'uk',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when only language code is specified.
+  // Lookup logic when language+country codes are specified.
   switch (locale.languageCode) {
     case 'en':
+      {
+        switch (locale.countryCode) {
+          case 'US':
+            return AppLocalizationsEnUs();
+        }
+        break;
+      }
+    case 'es':
+      {
+        switch (locale.countryCode) {
+          case 'MX':
+            return AppLocalizationsEsMx();
+        }
+        break;
+      }
+    case 'fr':
+      {
+        switch (locale.countryCode) {
+          case 'CA':
+            return AppLocalizationsFrCa();
+        }
+        break;
+      }
+  }
+
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'bg':
+      return AppLocalizationsBg();
+    case 'ca':
+      return AppLocalizationsCa();
+    case 'cs':
+      return AppLocalizationsCs();
+    case 'da':
+      return AppLocalizationsDa();
+    case 'de':
+      return AppLocalizationsDe();
+    case 'el':
+      return AppLocalizationsEl();
+    case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'et':
+      return AppLocalizationsEt();
+    case 'fi':
+      return AppLocalizationsFi();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'hr':
+      return AppLocalizationsHr();
+    case 'hu':
+      return AppLocalizationsHu();
+    case 'is':
+      return AppLocalizationsIs();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'lt':
+      return AppLocalizationsLt();
+    case 'lv':
+      return AppLocalizationsLv();
+    case 'nl':
+      return AppLocalizationsNl();
+    case 'no':
+      return AppLocalizationsNo();
+    case 'pl':
+      return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ro':
+      return AppLocalizationsRo();
+    case 'ru':
+      return AppLocalizationsRu();
+    case 'sk':
+      return AppLocalizationsSk();
     case 'sl':
       return AppLocalizationsSl();
+    case 'sr':
+      return AppLocalizationsSr();
+    case 'sv':
+      return AppLocalizationsSv();
+    case 'uk':
+      return AppLocalizationsUk();
   }
 
   throw FlutterError(

@@ -126,6 +126,9 @@ class AppLocalizationsSl extends AppLocalizations {
   String get temperature => 'Temperatura';
 
   @override
+  String get feelsLike => 'Občutek';
+
+  @override
   String get totalEnergy => 'Skupna energija';
 
   @override
@@ -285,6 +288,18 @@ class AppLocalizationsSl extends AppLocalizations {
   String get appearance => 'Izgled';
 
   @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistemska';
+
+  @override
+  String get themeLight => 'Svetla';
+
+  @override
+  String get themeDark => 'Temna';
+
+  @override
   String get showDevicesTab => 'Prikaži zavihek Naprave';
 
   @override
@@ -302,6 +317,93 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get languageSlovenian => 'Slovenščina';
+
+  @override
+  String get languageGerman => 'Nemščina';
+
+  @override
+  String get languageFrench => 'Francoščina';
+
+  @override
+  String get languageSpanish => 'Španščina';
+
+  @override
+  String get languagePortuguese => 'Portugalščina';
+
+  @override
+  String get languageItalian => 'Italijanščina';
+
+  @override
+  String get languageDutch => 'Nizozemščina';
+
+  @override
+  String get languageCatalan => 'Katalonščina';
+
+  @override
+  String get languageSwedish => 'Švedščina';
+
+  @override
+  String get languageNorwegian => 'Norveščina';
+
+  @override
+  String get languageDanish => 'Danščina';
+
+  @override
+  String get languageFinnish => 'Finščina';
+
+  @override
+  String get languageIcelandic => 'Islandščina';
+
+  @override
+  String get languagePolish => 'Poljščina';
+
+  @override
+  String get languageCzech => 'Češčina';
+
+  @override
+  String get languageSlovak => 'Slovaščina';
+
+  @override
+  String get languageHungarian => 'Madžarščina';
+
+  @override
+  String get languageRomanian => 'Romunščina';
+
+  @override
+  String get languageBulgarian => 'Bolgarščina';
+
+  @override
+  String get languageUkrainian => 'Ukrajinščina';
+
+  @override
+  String get languageRussian => 'Ruščina';
+
+  @override
+  String get languageLithuanian => 'Litovščina';
+
+  @override
+  String get languageLatvian => 'Latvijščina';
+
+  @override
+  String get languageEstonian => 'Estonščina';
+
+  @override
+  String get languageCroatian => 'Hrvaščina';
+
+  @override
+  String get languageSerbian => 'Srbščina';
+
+  @override
+  String get languageGreek => 'Grščina';
+
+  @override
+  String get languageSpanishMexico => 'Španščina (Mehika)';
+
+  @override
+  String get languageFrenchCanada => 'Francoščina (Kanada)';
+
+  @override
+  String get languageEnglishUS => 'Angleščina (ZDA)';
 
   @override
   String get cancel => 'Prekliči';
@@ -533,6 +635,9 @@ class AppLocalizationsSl extends AppLocalizations {
   String get thisYear => 'Letos';
 
   @override
+  String get nextYear => 'Prihodnje leto';
+
+  @override
   String get selectMonth => 'Izberi mesec';
 
   @override
@@ -691,6 +796,9 @@ class AppLocalizationsSl extends AppLocalizations {
   }
 
   @override
+  String get today => 'Danes';
+
+  @override
   String get yesterday => 'Včeraj';
 
   @override
@@ -726,6 +834,9 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get serial => 'Serijska št.';
+
+  @override
+  String get firmware => 'Firmware';
 
   @override
   String get room => 'Soba';
@@ -780,4 +891,34 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get dragToReorder => 'Povleci za prerazporeditev naprav';
+
+  @override
+  String get scenes => 'Avtomatizacije';
+
+  @override
+  String get noScenes => 'Ni najdenih avtomatizacij';
+
+  @override
+  String get noScenesDesc => 'Ustvarite avtomatizacije v računu Shelly Cloud';
+
+  @override
+  String get showScenesTab => 'Prikaži zavihek Avtomatizacije';
+
+  @override
+  String get showScenesTabDesc => 'Prikaži avtomatizacije v navigaciji';
+
+  @override
+  String get sceneEnabled => 'Omogočeno';
+
+  @override
+  String get sceneDisabled => 'Onemogočeno';
+
+  @override
+  String get loadingScenes => 'Nalaganje avtomatizacij...';
+
+  @override
+  String get runScene => 'Zaženi';
+
+  @override
+  String get sceneRunning => 'Izvajanje...';
 }

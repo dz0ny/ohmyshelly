@@ -17,6 +17,7 @@ class PowerToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: isLoading || onChanged == null
           ? null
@@ -27,9 +28,9 @@ class PowerToggle extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isOn ? AppColors.deviceOn : AppColors.surfaceVariant,
+          color: isOn ? AppColors.deviceOn : colorScheme.surfaceContainerHighest,
           border: Border.all(
-            color: isOn ? AppColors.deviceOn : AppColors.border,
+            color: isOn ? AppColors.deviceOn : colorScheme.outlineVariant,
             width: 2,
           ),
           boxShadow: isOn
@@ -48,14 +49,14 @@ class PowerToggle extends StatelessWidget {
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    isOn ? Colors.white : AppColors.textSecondary,
+                    isOn ? Colors.white : colorScheme.onSurfaceVariant,
                   ),
                 ),
               )
             : Icon(
                 Icons.power_settings_new_rounded,
                 size: size * 0.5,
-                color: isOn ? Colors.white : AppColors.textSecondary,
+                color: isOn ? Colors.white : colorScheme.onSurfaceVariant,
               ),
       ),
     );
@@ -76,6 +77,7 @@ class PowerToggleCompact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (isLoading) {
       return const SizedBox(
         width: 40,
@@ -94,8 +96,8 @@ class PowerToggleCompact extends StatelessWidget {
       value: isOn,
       onChanged: onChanged,
       activeTrackColor: AppColors.deviceOn,
-      inactiveThumbColor: AppColors.textHint,
-      inactiveTrackColor: AppColors.surfaceVariant,
+      inactiveThumbColor: colorScheme.outline,
+      inactiveTrackColor: colorScheme.surfaceContainerHighest,
     );
   }
 }

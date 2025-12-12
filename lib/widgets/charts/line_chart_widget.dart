@@ -10,8 +10,23 @@ class ChartDataPoint {
   final double x;
   final double y;
   final DateTime? timestamp;
+  final bool isActualData;
+  /// Optional min value for range display (e.g., min temperature)
+  final double? minY;
+  /// Optional max value for range display (e.g., max temperature)
+  final double? maxY;
 
-  ChartDataPoint({required this.x, required this.y, this.timestamp});
+  ChartDataPoint({
+    required this.x,
+    required this.y,
+    this.timestamp,
+    this.isActualData = true,
+    this.minY,
+    this.maxY,
+  });
+
+  /// Whether this point has min/max range data
+  bool get hasRange => minY != null && maxY != null;
 }
 
 class LineChartWidget extends StatefulWidget {
@@ -42,6 +57,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   late List<ChartDataPoint> _filledDataPoints;
   late List<String> _labels;
   String? _lastLocale;
+  bool _hasActualData = false;
 
   @override
   void initState() {
@@ -71,8 +87,12 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       // Legacy mode - use raw data points
       _filledDataPoints = widget.dataPoints;
       _labels = [];
+      _hasActualData = widget.dataPoints.isNotEmpty;
       return;
     }
+
+    // Check if we have any actual data from the API
+    _hasActualData = widget.dataPoints.isNotEmpty;
 
     switch (widget.rangeType!) {
       case DateRangeType.day:
@@ -98,6 +118,15 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     _filledDataPoints = [];
     _labels = [];
 
+    // Debug: Log first and last data points received
+    if (kDebugMode && widget.dataPoints.isNotEmpty) {
+      final first = widget.dataPoints.first;
+      final last = widget.dataPoints.last;
+      debugPrint('LineChart _prepareDayData: selectedDate=$selectedDate');
+      debugPrint('LineChart first dataPoint: timestamp=${first.timestamp}, hour=${first.timestamp?.hour}, isUtc=${first.timestamp?.isUtc}');
+      debugPrint('LineChart last dataPoint: timestamp=${last.timestamp}, hour=${last.timestamp?.hour}, isUtc=${last.timestamp?.isUtc}');
+    }
+
     for (int hour = 0; hour < 24; hour++) {
       final timestamp = DateTime(day.year, day.month, day.day, hour);
       final existing = widget.dataPoints.where((p) {
@@ -119,6 +148,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         x: timestamp.millisecondsSinceEpoch.toDouble(),
         y: existing?.y ?? 0,
         timestamp: timestamp,
+        isActualData: existing != null,
+        minY: existing?.minY,
+        maxY: existing?.maxY,
       ));
       _labels.add('${hour}h');
     }
@@ -155,6 +187,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         x: date.millisecondsSinceEpoch.toDouble(),
         y: existing?.y ?? 0,
         timestamp: date,
+        isActualData: existing != null,
+        minY: existing?.minY,
+        maxY: existing?.maxY,
       ));
       _labels.add(dayNames[i]);
     }
@@ -187,6 +222,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         x: date.millisecondsSinceEpoch.toDouble(),
         y: existing?.y ?? 0,
         timestamp: date,
+        isActualData: existing != null,
+        minY: existing?.minY,
+        maxY: existing?.maxY,
       ));
       _labels.add('$day');
     }
@@ -216,14 +254,28 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       });
 
       double avgValue = 0;
+      double? monthMinY;
+      double? monthMaxY;
       if (monthData.isNotEmpty) {
         avgValue = monthData.fold<double>(0, (acc, p) => acc + p.y) / monthData.length;
+        // For min/max range, take the overall min and max for the month
+        final minValues = monthData.where((p) => p.minY != null).map((p) => p.minY!);
+        final maxValues = monthData.where((p) => p.maxY != null).map((p) => p.maxY!);
+        if (minValues.isNotEmpty) {
+          monthMinY = minValues.reduce((a, b) => a < b ? a : b);
+        }
+        if (maxValues.isNotEmpty) {
+          monthMaxY = maxValues.reduce((a, b) => a > b ? a : b);
+        }
       }
 
       _filledDataPoints.add(ChartDataPoint(
         x: date.millisecondsSinceEpoch.toDouble(),
         y: avgValue,
         timestamp: date,
+        isActualData: monthData.isNotEmpty,
+        minY: monthMinY,
+        maxY: monthMaxY,
       ));
       _labels.add(monthNames[month - 1]);
     }
@@ -235,26 +287,60 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     _prepareData(l10n);
 
     if (kDebugMode) {
-      debugPrint('LineChartWidget: ${_filledDataPoints.length} data points, rangeType: ${widget.rangeType}');
+      debugPrint('LineChartWidget: ${_filledDataPoints.length} data points, rangeType: ${widget.rangeType}, hasActualData: $_hasActualData');
     }
 
-    if (_filledDataPoints.isEmpty) {
+    // Show "no data" message when there's no actual API data
+    if (_filledDataPoints.isEmpty || !_hasActualData) {
+      final colorScheme = Theme.of(context).colorScheme;
       return Center(
         child: Text(
           l10n.noDataAvailable,
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: colorScheme.onSurfaceVariant),
         ),
       );
     }
 
+    // Check if we have range data (min/max)
+    final hasRangeData = _filledDataPoints.any((p) => p.hasRange && p.isActualData);
+
+    // Only include actual data points in the line (filter out zero-filled placeholders)
     final spots = _filledDataPoints
         .asMap()
         .entries
+        .where((e) => e.value.isActualData)
         .map((e) => FlSpot(e.key.toDouble(), e.value.y))
         .toList();
 
-    final minY = _filledDataPoints.map((p) => p.y).reduce((a, b) => a < b ? a : b);
-    final maxY = _filledDataPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b);
+    // Create min/max spots if range data available
+    List<FlSpot>? minSpots;
+    List<FlSpot>? maxSpots;
+    if (hasRangeData) {
+      minSpots = _filledDataPoints
+          .asMap()
+          .entries
+          .where((e) => e.value.isActualData && e.value.hasRange)
+          .map((e) => FlSpot(e.key.toDouble(), e.value.minY!))
+          .toList();
+      maxSpots = _filledDataPoints
+          .asMap()
+          .entries
+          .where((e) => e.value.isActualData && e.value.hasRange)
+          .map((e) => FlSpot(e.key.toDouble(), e.value.maxY!))
+          .toList();
+    }
+
+    // Calculate min/max only from actual data points
+    final actualPoints = _filledDataPoints.where((p) => p.isActualData).toList();
+    double minY, maxY;
+    if (hasRangeData) {
+      // Use range values for Y axis bounds
+      minY = actualPoints.where((p) => p.minY != null).map((p) => p.minY!).reduce((a, b) => a < b ? a : b);
+      maxY = actualPoints.where((p) => p.maxY != null).map((p) => p.maxY!).reduce((a, b) => a > b ? a : b);
+    } else {
+      minY = actualPoints.map((p) => p.y).reduce((a, b) => a < b ? a : b);
+      maxY = actualPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b);
+    }
 
     // Handle case where all values are the same (including all zeros)
     final range = maxY - minY;
@@ -284,7 +370,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     final labelInterval = _calculateLabelInterval(_filledDataPoints.length);
 
     try {
-      return _buildChart(spots, effectiveMinY, effectiveMaxY, horizontalInterval, labelInterval, l10n);
+      return _buildChart(spots, effectiveMinY, effectiveMaxY, horizontalInterval, labelInterval, l10n, minSpots: minSpots, maxSpots: maxSpots);
     } catch (e, stackTrace) {
       debugPrint('LineChartWidget ERROR: $e');
       debugPrint('LineChartWidget STACK: $stackTrace');
@@ -303,8 +389,12 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double effectiveMaxY,
     double horizontalInterval,
     double labelInterval,
-    AppLocalizations l10n,
-  ) {
+    AppLocalizations l10n, {
+    List<FlSpot>? minSpots,
+    List<FlSpot>? maxSpots,
+  }) {
+    final hasRange = minSpots != null && maxSpots != null && minSpots.isNotEmpty;
+
     return LineChart(
       LineChartData(
         gridData: FlGridData(
@@ -334,9 +424,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       _labels[index],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   );
@@ -350,9 +440,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     _formatAxisLabel(timestamp, l10n),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 10,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 );
@@ -369,9 +459,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   padding: const EdgeInsets.only(right: 8),
                   child: Text(
                     '${value.toStringAsFixed(value.abs() < 10 ? 1 : 0)}${widget.unit}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 10,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 );
@@ -386,17 +476,81 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ),
         ),
         borderData: FlBorderData(show: false),
+        minX: 0,
+        maxX: (_filledDataPoints.length - 1).toDouble(),
         minY: effectiveMinY,
         maxY: effectiveMaxY,
-        lineBarsData: [
+        betweenBarsData: hasRange ? [
+          BetweenBarsData(
+            fromIndex: 0, // max line (red)
+            toIndex: 1,   // min line (blue)
+            gradient: LinearGradient(
+              colors: [
+                Colors.red.shade400.withValues(alpha: 0.3),
+                Colors.blue.shade400.withValues(alpha: 0.3),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ] : [],
+        lineBarsData: hasRange ? [
+          // Max line (top of range) - warmer/red tint
+          LineChartBarData(
+            spots: maxSpots!,
+            isCurved: false,
+            color: Colors.red.shade400,
+            barWidth: 1.5,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 2,
+                  color: Colors.red.shade400,
+                  strokeWidth: 0,
+                );
+              },
+            ),
+            belowBarData: BarAreaData(show: false),
+          ),
+          // Min line (bottom of range) - cooler/blue tint
+          LineChartBarData(
+            spots: minSpots!,
+            isCurved: false,
+            color: Colors.blue.shade400,
+            barWidth: 1.5,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 2,
+                  color: Colors.blue.shade400,
+                  strokeWidth: 0,
+                );
+              },
+            ),
+            belowBarData: BarAreaData(show: false),
+          ),
+        ] : [
+          // Single line (no range data)
           LineChartBarData(
             spots: spots,
-            isCurved: true,
-            curveSmoothness: 0.3,
+            isCurved: false,
             color: widget.lineColor,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: FlDotData(show: widget.showDots),
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 4,
+                  color: widget.lineColor,
+                  strokeWidth: 0,
+                );
+              },
+            ),
             belowBarData: BarAreaData(
               show: true,
               gradient: LinearGradient(
@@ -413,8 +567,43 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
             getTooltipItems: (touchedSpots) {
+              if (touchedSpots.isEmpty) return [];
+
+              // For range data, show combined min/max tooltip
+              if (hasRange && touchedSpots.length >= 2) {
+                final index = touchedSpots.first.x.toInt();
+                if (index < 0 || index >= _filledDataPoints.length) {
+                  return [null, null];
+                }
+                final point = _filledDataPoints[index];
+
+                String timeLabel;
+                if (_labels.isNotEmpty && index < _labels.length) {
+                  timeLabel = _labels[index];
+                } else {
+                  final timestamp = point.timestamp ??
+                      DateTime.fromMillisecondsSinceEpoch(point.x.toInt());
+                  timeLabel = Formatters.time(timestamp);
+                }
+
+                // Show max value on first line tooltip only
+                return [
+                  LineTooltipItem(
+                    '${l10n.max}: ${point.maxY?.toStringAsFixed(1) ?? "-"}${widget.unit}\n'
+                    '${l10n.min}: ${point.minY?.toStringAsFixed(1) ?? "-"}${widget.unit}\n'
+                    '$timeLabel',
+                    const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  null, // Hide second tooltip
+                ];
+              }
+
               return touchedSpots.map((spot) {
-                final index = spot.spotIndex;
+                final index = spot.x.toInt();
                 if (index < 0 || index >= _filledDataPoints.length) {
                   return null;
                 }

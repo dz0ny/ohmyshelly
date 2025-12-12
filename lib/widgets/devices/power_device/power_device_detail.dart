@@ -33,48 +33,55 @@ class PowerDeviceDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final isOn = status?.isOn ?? false;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Power toggle
+          // Power toggle - entire card is tappable
           Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PowerToggle(
-                    isOn: isOn,
-                    isLoading: isToggling,
-                    size: 80,
-                    onChanged: device.isOnline ? onToggle : null,
-                  ),
-                  const SizedBox(width: 24),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        isOn ? l10n.on : l10n.off,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: isOn ? AppColors.deviceOn : AppColors.textSecondary,
-                        ),
-                      ),
-                      if (!device.isOnline)
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: device.isOnline && !isToggling && onToggle != null
+                  ? () => onToggle!(!isOn)
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PowerToggle(
+                      isOn: isOn,
+                      isLoading: isToggling,
+                      size: 80,
+                      onChanged: null, // Handled by card tap
+                    ),
+                    const SizedBox(width: 24),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          l10n.offline,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.textHint,
+                          isOn ? l10n.on : l10n.off,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: isOn ? AppColors.deviceOn : colorScheme.onSurfaceVariant,
                           ),
                         ),
-                    ],
-                  ),
-                ],
+                        if (!device.isOnline)
+                          Text(
+                            l10n.offline,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: colorScheme.outline,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -88,6 +95,7 @@ class PowerDeviceDetail extends StatelessWidget {
   }
 
   Widget _buildStatsCard(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -96,10 +104,10 @@ class PowerDeviceDetail extends StatelessWidget {
           children: [
             Text(
               l10n.power,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
@@ -147,14 +155,14 @@ class PowerDeviceDetail extends StatelessWidget {
                   Icon(
                     Icons.access_time,
                     size: 14,
-                    color: AppColors.textHint,
+                    color: colorScheme.outline,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     '${l10n.lastUpdated}: ${Formatters.timeAgo(status!.lastUpdated!, l10n)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.textHint,
+                      color: colorScheme.outline,
                     ),
                   ),
                 ],
@@ -176,10 +184,11 @@ class PowerDeviceDetail extends StatelessWidget {
     List<double>? sparklineData,
     Color? sparklineColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     final tile = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceVariant.withValues(alpha: 0.3),
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -187,7 +196,7 @@ class PowerDeviceDetail extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 24, color: iconColor ?? AppColors.textSecondary),
+              Icon(icon, size: 24, color: iconColor ?? colorScheme.onSurfaceVariant),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -195,18 +204,18 @@ class PowerDeviceDetail extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -215,7 +224,7 @@ class PowerDeviceDetail extends StatelessWidget {
               if (onTap != null)
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.textHint,
+                  color: colorScheme.outline,
                 ),
             ],
           ),

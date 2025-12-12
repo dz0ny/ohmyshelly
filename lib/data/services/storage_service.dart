@@ -8,7 +8,9 @@ class StorageService {
   static const String _userKey = 'user_data';
   static const String _onboardingKey = 'onboarding_complete';
   static const String _languageKey = 'language_code';
+  static const String _themeModeKey = 'theme_mode';
   static const String _showDevicesTabKey = 'show_devices_tab';
+  static const String _showScenesTabKey = 'show_scenes_tab';
   static const String _dashboardDeviceOrderKey = 'dashboard_device_order';
 
   Future<void> init() async {
@@ -78,6 +80,19 @@ class StorageService {
     }
   }
 
+  // Theme mode methods (system, light, dark)
+  Future<String?> getThemeMode() async {
+    return await _storage.read(key: _themeModeKey);
+  }
+
+  Future<void> setThemeMode(String? themeMode) async {
+    if (themeMode == null) {
+      await _storage.delete(key: _themeModeKey);
+    } else {
+      await _storage.write(key: _themeModeKey, value: themeMode);
+    }
+  }
+
   // Show devices tab setting (default: true)
   Future<bool> getShowDevicesTab() async {
     final value = await _storage.read(key: _showDevicesTabKey);
@@ -86,6 +101,16 @@ class StorageService {
 
   Future<void> setShowDevicesTab(bool show) async {
     await _storage.write(key: _showDevicesTabKey, value: show.toString());
+  }
+
+  // Show scenes tab setting (default: false - hidden by default)
+  Future<bool> getShowScenesTab() async {
+    final value = await _storage.read(key: _showScenesTabKey);
+    return value == 'true'; // Default to false
+  }
+
+  Future<void> setShowScenesTab(bool show) async {
+    await _storage.write(key: _showScenesTabKey, value: show.toString());
   }
 
   // Dashboard device order (list of device IDs)

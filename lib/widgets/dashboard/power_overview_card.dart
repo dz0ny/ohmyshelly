@@ -18,6 +18,7 @@ class PowerOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
       elevation: 0,
@@ -66,18 +67,18 @@ class PowerOverviewCard extends StatelessWidget {
                         children: [
                           Text(
                             l10n.totalPower,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             '$deviceCount ${l10n.devices.toLowerCase()}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -86,7 +87,7 @@ class PowerOverviewCard extends StatelessWidget {
                     if (onTap != null)
                       Icon(
                         Icons.chevron_right_rounded,
-                        color: AppColors.textHint,
+                        color: colorScheme.outline,
                         size: 24,
                       ),
                   ],
@@ -102,10 +103,10 @@ class PowerOverviewCard extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: Text(
                           _formatPowerValue(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 64,
                             fontWeight: FontWeight.w300,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                             height: 1,
                           ),
                         ),
@@ -113,10 +114,10 @@ class PowerOverviewCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         _getPowerUnit(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
-                          color: AppColors.textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -134,18 +135,18 @@ class PowerOverviewCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       '0',
                       style: TextStyle(
                         fontSize: 11,
-                        color: AppColors.textHint,
+                        color: colorScheme.outline,
                       ),
                     ),
                     Text(
                       _getMaxPowerLabel(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: AppColors.textHint,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ],

@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Build outputs
+*.ipa
+*.zip
+*.dSYM.zip
+android/fastlane/report.xml
+ios/fastlane/report.xml

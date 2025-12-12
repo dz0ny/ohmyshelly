@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
@@ -141,6 +142,7 @@ class PowerDeviceStatus {
   final String? ssid;
   final int uptime;
   final DateTime? lastUpdated;
+  final String? firmwareVersion;
 
   PowerDeviceStatus({
     required this.isOn,
@@ -155,6 +157,7 @@ class PowerDeviceStatus {
     this.ssid,
     this.uptime = 0,
     this.lastUpdated,
+    this.firmwareVersion,
   });
 
   // User-friendly formatted values
@@ -209,7 +212,20 @@ class PowerDeviceStatus {
       ssid: wifi?['ssid'] as String?,
       uptime: sys?['uptime'] as int? ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
+      firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
     );
+  }
+
+  /// Parse firmware version from fw_id (e.g., "20241011-114455/1.4.4-g6d2a586" -> "1.4.4")
+  static String? _parseFirmwareVersion(String? fwId) {
+    if (fwId == null || fwId.isEmpty) return null;
+    // Format: "DATE/VERSION-HASH" - extract VERSION part
+    final parts = fwId.split('/');
+    if (parts.length < 2) return fwId;
+    final versionPart = parts[1];
+    // Remove git hash suffix if present (e.g., "1.4.4-g6d2a586" -> "1.4.4")
+    final dashIndex = versionPart.indexOf('-g');
+    return dashIndex > 0 ? versionPart.substring(0, dashIndex) : versionPart;
   }
 
   static PowerDeviceStatus empty() {
@@ -241,6 +257,7 @@ class WeatherStationStatus {
   final bool isInRange;
   final int? rssi;
   final DateTime? lastUpdated;
+  final String? firmwareVersion;
 
   WeatherStationStatus({
     required this.temperature,
@@ -258,6 +275,7 @@ class WeatherStationStatus {
     required this.isInRange,
     this.rssi,
     this.lastUpdated,
+    this.firmwareVersion,
   });
 
   // User-friendly formatted values
@@ -266,6 +284,42 @@ class WeatherStationStatus {
   String get humidityDisplay => Formatters.humidity(humidity);
   String get pressureDisplay => Formatters.pressure(pressure);
   String get dewpointDisplay => Formatters.temperature(dewpoint);
+
+  /// Calculated "feels like" temperature using wind chill and heat index
+  /// Wind Chill: Used when temp < 10°C and wind speed > 4.8 km/h
+  /// Heat Index: Used when temp > 26°C and humidity > 40%
+  double get feelsLike {
+    // Wind Chill calculation (for cold weather)
+    // Formula: 13.12 + 0.6215*T - 11.37*V^0.16 + 0.3965*T*V^0.16
+    // where T is temperature in °C and V is wind speed in km/h
+    if (temperature <= 10 && windSpeed > 4.8) {
+      final v016 = math.pow(windSpeed, 0.16);
+      return 13.12 + 0.6215 * temperature - 11.37 * v016 + 0.3965 * temperature * v016;
+    }
+
+    // Heat Index calculation (for hot weather)
+    // Simplified Rothfusz regression
+    if (temperature >= 26 && humidity > 40) {
+      final t = temperature;
+      final h = humidity;
+      double hi = -8.78469475556 +
+          1.61139411 * t +
+          2.33854883889 * h -
+          0.14611605 * t * h -
+          0.012308094 * t * t -
+          0.0164248277778 * h * h +
+          0.002211732 * t * t * h +
+          0.00072546 * t * h * h -
+          0.000003582 * t * t * h * h;
+      return hi;
+    }
+
+    // Default: actual temperature
+    return temperature;
+  }
+
+  String get feelsLikeDisplay => Formatters.temperature(feelsLike);
+  String get feelsLikeShort => Formatters.temperatureShort(feelsLike);
   String get uvDisplay => Formatters.uvIndex(uvIndex);
   String get windSpeedDisplay => Formatters.windSpeed(windSpeed);
   String get windGustDisplay => Formatters.windSpeed(windGust);
@@ -347,6 +401,7 @@ class WeatherStationStatus {
     final devicePower = json['devicepower:0'] as Map<String, dynamic>?;
     final battery = devicePower?['battery'] as Map<String, dynamic>?;
     final wifi = json['wifi'] as Map<String, dynamic>?;
+    final sys = json['sys'] as Map<String, dynamic>?;
     final updatedStr = json['_updated'] as String?;
 
     return WeatherStationStatus(
@@ -365,7 +420,18 @@ class WeatherStationStatus {
       isInRange: reporter?['inrange'] as bool? ?? false,
       rssi: (reporter?['rssi'] as int?) ?? (wifi?['rssi'] as int?),
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
+      firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
     );
+  }
+
+  /// Parse firmware version from fw_id (e.g., "20241011-114455/1.4.4-g6d2a586" -> "1.4.4")
+  static String? _parseFirmwareVersion(String? fwId) {
+    if (fwId == null || fwId.isEmpty) return null;
+    final parts = fwId.split('/');
+    if (parts.length < 2) return fwId;
+    final versionPart = parts[1];
+    final dashIndex = versionPart.indexOf('-g');
+    return dashIndex > 0 ? versionPart.substring(0, dashIndex) : versionPart;
   }
 
   static WeatherStationStatus empty() {
@@ -393,6 +459,7 @@ class GatewayStatus {
   final String? ssid;
   final int uptime;
   final DateTime? lastUpdated;
+  final String? firmwareVersion;
 
   GatewayStatus({
     required this.cloudConnected,
@@ -401,6 +468,7 @@ class GatewayStatus {
     this.ssid,
     required this.uptime,
     this.lastUpdated,
+    this.firmwareVersion,
   });
 
   String get uptimeDisplay {
@@ -439,7 +507,18 @@ class GatewayStatus {
       ssid: wifi?['ssid'] as String?,
       uptime: sys?['uptime'] as int? ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
+      firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
     );
+  }
+
+  /// Parse firmware version from fw_id (e.g., "20241011-114455/1.4.4-g6d2a586" -> "1.4.4")
+  static String? _parseFirmwareVersion(String? fwId) {
+    if (fwId == null || fwId.isEmpty) return null;
+    final parts = fwId.split('/');
+    if (parts.length < 2) return fwId;
+    final versionPart = parts[1];
+    final dashIndex = versionPart.indexOf('-g');
+    return dashIndex > 0 ? versionPart.substring(0, dashIndex) : versionPart;
   }
 
   static GatewayStatus empty() {

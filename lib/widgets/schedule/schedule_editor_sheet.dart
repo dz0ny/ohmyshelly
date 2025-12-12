@@ -109,14 +109,14 @@ class _ScheduleEditorSheetState extends State<ScheduleEditorSheet> {
             const SizedBox(height: 24),
 
             // Time picker
-            _buildSectionLabel(l10n.scheduleTime),
+            _buildSectionLabel(context, l10n.scheduleTime),
             const SizedBox(height: 8),
             _buildTimePicker(context),
 
             const SizedBox(height: 24),
 
             // Day selector
-            _buildSectionLabel(l10n.scheduleDays),
+            _buildSectionLabel(context, l10n.scheduleDays),
             const SizedBox(height: 12),
             DaySelector(
               selectedDays: _selectedDays,
@@ -128,7 +128,7 @@ class _ScheduleEditorSheetState extends State<ScheduleEditorSheet> {
             const SizedBox(height: 24),
 
             // Action selector
-            _buildSectionLabel(l10n.scheduleAction),
+            _buildSectionLabel(context, l10n.scheduleAction),
             const SizedBox(height: 8),
             _buildActionSelector(l10n),
 
@@ -157,13 +157,13 @@ class _ScheduleEditorSheetState extends State<ScheduleEditorSheet> {
     );
   }
 
-  Widget _buildSectionLabel(String label) {
+  Widget _buildSectionLabel(BuildContext context, String label) {
     return Text(
       label,
       style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
   }

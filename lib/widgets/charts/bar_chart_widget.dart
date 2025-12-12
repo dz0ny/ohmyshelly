@@ -190,21 +190,23 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     _prepareData(l10n);
 
     if (_filledDataPoints.isEmpty) {
+      final colorScheme = Theme.of(context).colorScheme;
       return Center(
         child: Text(
           l10n.noDataAvailable,
-          style: const TextStyle(color: AppColors.textSecondary),
+          style: TextStyle(color: colorScheme.onSurfaceVariant),
         ),
       );
     }
 
+    final colorScheme = Theme.of(context).colorScheme;
     return BarChart(
-      mainBarData(),
+      mainBarData(colorScheme),
       swapAnimationDuration: const Duration(milliseconds: 250),
     );
   }
 
-  BarChartData mainBarData() {
+  BarChartData mainBarData(ColorScheme colorScheme) {
     final maxY = _filledDataPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b);
     final effectiveMaxY = maxY == 0 ? 10.0 : maxY * 1.2;
 
@@ -260,7 +262,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            getTitlesWidget: _getBottomTitles,
+            getTitlesWidget: (value, meta) => _getBottomTitles(value, meta, colorScheme),
             reservedSize: 30,
           ),
         ),
@@ -268,7 +270,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
-            getTitlesWidget: _getLeftTitles,
+            getTitlesWidget: (value, meta) => _getLeftTitles(value, meta, colorScheme),
           ),
         ),
       ),
@@ -337,7 +339,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     return 6;
   }
 
-  Widget _getBottomTitles(double value, TitleMeta meta) {
+  Widget _getBottomTitles(double value, TitleMeta meta, ColorScheme colorScheme) {
     final index = value.toInt();
     if (index < 0 || index >= _labels.length) {
       return const SizedBox.shrink();
@@ -353,8 +355,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       space: 8,
       child: Text(
         _labels[index],
-        style: const TextStyle(
-          color: AppColors.textSecondary,
+        style: TextStyle(
+          color: colorScheme.onSurfaceVariant,
           fontWeight: FontWeight.bold,
           fontSize: 10,
         ),
@@ -362,14 +364,14 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     );
   }
 
-  Widget _getLeftTitles(double value, TitleMeta meta) {
+  Widget _getLeftTitles(double value, TitleMeta meta, ColorScheme colorScheme) {
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
       child: Text(
         _formatYAxisLabel(value),
-        style: const TextStyle(
-          color: AppColors.textSecondary,
+        style: TextStyle(
+          color: colorScheme.onSurfaceVariant,
           fontSize: 10,
         ),
       ),

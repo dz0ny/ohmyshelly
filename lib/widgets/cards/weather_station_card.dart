@@ -20,6 +20,7 @@ class WeatherStationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -55,10 +56,10 @@ class WeatherStationCard extends StatelessWidget {
                       children: [
                         Text(
                           device.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -69,7 +70,7 @@ class WeatherStationCard extends StatelessWidget {
                             StatusBadge(isOnline: device.isOnline),
                             if (status != null) ...[
                               const SizedBox(width: 12),
-                              _buildBatteryIndicator(),
+                              _buildBatteryIndicator(context),
                             ],
                           ],
                         ),
@@ -95,10 +96,10 @@ class WeatherStationCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               status!.temperatureDisplay,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -110,14 +111,14 @@ class WeatherStationCard extends StatelessWidget {
                             Icon(
                               AppIcons.humidity,
                               size: 14,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               status!.humidityDisplay,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.textSecondary,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -125,9 +126,9 @@ class WeatherStationCard extends StatelessWidget {
                       ],
                     )
                   else
-                    const Icon(
+                    Icon(
                       Icons.chevron_right,
-                      color: AppColors.textHint,
+                      color: colorScheme.outline,
                     ),
                 ],
               ),
@@ -136,6 +137,7 @@ class WeatherStationCard extends StatelessWidget {
             DeviceCardFooter(
               rssi: status?.rssi,
               lastUpdated: status?.lastUpdated,
+              firmwareVersion: status?.firmwareVersion,
             ),
           ],
         ),
@@ -143,9 +145,10 @@ class WeatherStationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBatteryIndicator() {
+  Widget _buildBatteryIndicator(BuildContext context) {
     if (status == null) return const SizedBox.shrink();
 
+    final colorScheme = Theme.of(context).colorScheme;
     final batteryPercent = status!.batteryPercent;
     final isLow = batteryPercent < 20;
 
@@ -155,14 +158,14 @@ class WeatherStationCard extends StatelessWidget {
         Icon(
           isLow ? AppIcons.batteryLow : AppIcons.battery,
           size: 14,
-          color: isLow ? AppColors.warning : AppColors.textSecondary,
+          color: isLow ? AppColors.warning : colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: 4),
         Text(
           status!.batteryDisplay,
           style: TextStyle(
             fontSize: 12,
-            color: isLow ? AppColors.warning : AppColors.textSecondary,
+            color: isLow ? AppColors.warning : colorScheme.onSurfaceVariant,
           ),
         ),
       ],

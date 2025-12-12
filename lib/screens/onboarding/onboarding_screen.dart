@@ -83,10 +83,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final pages = _getPages(l10n);
 
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
           // Background decoration
@@ -136,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: TextButton(
                       onPressed: _completeOnboarding,
                       style: TextButton.styleFrom(
-                        foregroundColor: AppColors.textSecondary,
+                        foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
@@ -178,7 +179,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         controller: _pageController,
                         count: pages.length,
                         effect: ExpandingDotsEffect(
-                          dotColor: AppColors.border,
+                          dotColor: colorScheme.outlineVariant,
                           activeDotColor: pages[_currentPage].color,
                           dotHeight: 8,
                           dotWidth: 8,
@@ -312,10 +313,10 @@ class _OnboardingPage extends StatelessWidget {
             // Title
             Text(
               data.title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
                 letterSpacing: -0.5,
               ),
               textAlign: TextAlign.center,
@@ -324,9 +325,9 @@ class _OnboardingPage extends StatelessWidget {
             // Description
             Text(
               data.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.6,
               ),
               textAlign: TextAlign.center,

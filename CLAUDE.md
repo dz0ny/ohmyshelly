@@ -227,13 +227,79 @@ Weather chart logic is in `lib/screens/statistics/statistics_screen.dart`:
 ## Code Style
 
 - Use friendly, non-technical language in UI (e.g., "Power" not "apower")
-- Material Design 3 with orange primary color
+- Material Design 3 with Shelly blue primary color (`#4A90D9`)
 - Auto-refresh every 30 seconds + pull-to-refresh
 - Provider pattern for state management
 - Use `WidgetsBinding.instance.addPostFrameCallback` to defer state changes in initState
 - Dashboard tab is first (shows live values, no toggle), Devices tab is second (shows toggle)
 - In debug mode, long-press device cards to copy JSON status
 - **No icons in segmented buttons** - Keep SegmentedButton segments text-only for cleaner UI
+
+## Dark Mode Support (IMPORTANT)
+
+The app supports light/dark/system theme modes. **NEVER use hardcoded `AppColors` for text or backgrounds** - always use theme-aware `ColorScheme` colors.
+
+### Color Usage Rules
+
+| Use Case | CORRECT | WRONG |
+|----------|---------|-------|
+| Primary text | `colorScheme.onSurface` | `AppColors.textPrimary` |
+| Secondary text | `colorScheme.onSurfaceVariant` | `AppColors.textSecondary` |
+| Hint/disabled text | `colorScheme.outline` | `AppColors.textHint` |
+| Card/tile background | `colorScheme.surfaceContainerHighest` | `AppColors.surfaceVariant` |
+| Borders | `colorScheme.outlineVariant` | `AppColors.border` |
+| Chevron icons | `colorScheme.outline` | `AppColors.textHint` |
+
+### Implementation Pattern
+
+```dart
+@override
+Widget build(BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
+
+  return Container(
+    decoration: BoxDecoration(
+      color: colorScheme.surfaceContainerHighest,  // NOT AppColors.surfaceVariant
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      'Label',
+      style: TextStyle(
+        color: colorScheme.onSurfaceVariant,  // NOT AppColors.textSecondary
+      ),
+    ),
+  );
+}
+```
+
+### When to Use AppColors
+
+AppColors should ONLY be used for:
+- **Device type colors**: `AppColors.powerDevice`, `AppColors.weatherStation`, `AppColors.gateway`
+- **Status colors**: `AppColors.deviceOn`, `AppColors.deviceOff`, `AppColors.success`, `AppColors.error`, `AppColors.warning`, `AppColors.info`
+- **Primary brand color**: `AppColors.primary` (for accents that should stay consistent)
+
+### ColorScheme Reference
+
+| ColorScheme Property | Light Mode | Dark Mode | Use For |
+|---------------------|------------|-----------|---------|
+| `onSurface` | `#212121` | `#F5F5F5` | Primary text, titles |
+| `onSurfaceVariant` | `#757575` | `#B0B0B0` | Secondary text, labels |
+| `outline` | `#757575` | `#808080` | Hints, disabled, icons |
+| `outlineVariant` | `#E0E0E0` | `#404040` | Borders, dividers |
+| `surfaceContainerHighest` | `#E8E8E8` | `#353535` | Inner tiles, stat boxes |
+| `surfaceContainerHigh` | `#F0F0F0` | `#282828` | Elevated surfaces |
+| `surface` | `#FFFFFF` | `#1A1A1A` | Cards, dialogs |
+
+### Files That Need Theme-Aware Colors
+
+When editing these files, ensure all colors use `colorScheme`:
+- `lib/screens/statistics/statistics_screen.dart` - Charts and date picker
+- `lib/screens/home/devices_tab.dart` - Device list
+- `lib/screens/home/scenes_tab.dart` - Scenes list
+- `lib/widgets/common/date_range_picker.dart` - Date selector
+- `lib/widgets/cards/*.dart` - All card widgets
+- `lib/widgets/devices/**/*.dart` - Device-specific widgets
 
 ## Debug Features
 

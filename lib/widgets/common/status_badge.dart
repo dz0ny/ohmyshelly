@@ -15,6 +15,7 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -23,7 +24,7 @@ class StatusBadge extends StatelessWidget {
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: isOnline ? AppColors.success : AppColors.textHint,
+            color: isOnline ? AppColors.success : colorScheme.outline,
             shape: BoxShape.circle,
           ),
         ),
@@ -33,7 +34,7 @@ class StatusBadge extends StatelessWidget {
             isOnline ? l10n.online : l10n.offline,
             style: TextStyle(
               fontSize: 12,
-              color: isOnline ? AppColors.success : AppColors.textSecondary,
+              color: isOnline ? AppColors.success : colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,
             ),
           ),

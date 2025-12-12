@@ -40,21 +40,30 @@ class DeviceSettingsScreen extends StatelessWidget {
             children: [
               // Device Info Section
               _buildSectionHeader(l10n.deviceInfo),
-              _buildInfoTile(l10n.name, device.name),
-              _buildInfoTile(l10n.model, device.code),
-              _buildInfoTile(l10n.type, DeviceTypeHelper.friendlyName(device.type, l10n)),
-              _buildInfoTile(l10n.generation, device.gen.isNotEmpty ? device.gen : '-'),
-              _buildInfoTile(l10n.deviceId, device.id),
+              _buildInfoTile(context, l10n.name, device.name),
+              _buildInfoTile(context, l10n.model, device.code),
+              _buildInfoTile(context, l10n.type, DeviceTypeHelper.friendlyName(device.type, l10n)),
+              _buildInfoTile(context, l10n.generation, device.gen.isNotEmpty ? device.gen : '-'),
+              _buildInfoTile(context, l10n.deviceId, device.id),
               if (device.serial != null)
-                _buildInfoTile(l10n.serial, device.serial.toString()),
+                _buildInfoTile(context, l10n.serial, device.serial.toString()),
+              if (status != null) ...[
+                if (status.powerStatus?.firmwareVersion != null)
+                  _buildInfoTile(context, l10n.firmware, 'v${status.powerStatus!.firmwareVersion}'),
+                if (status.weatherStatus?.firmwareVersion != null)
+                  _buildInfoTile(context, l10n.firmware, 'v${status.weatherStatus!.firmwareVersion}'),
+                if (status.gatewayStatus?.firmwareVersion != null)
+                  _buildInfoTile(context, l10n.firmware, 'v${status.gatewayStatus!.firmwareVersion}'),
+              ],
               if (device.roomName != null)
-                _buildInfoTile(l10n.room, device.roomName!),
+                _buildInfoTile(context, l10n.room, device.roomName!),
 
               const SizedBox(height: 8),
 
               // Connection Status Section
               _buildSectionHeader(l10n.connection),
               _buildInfoTile(
+                context,
                 l10n.status,
                 device.isOnline ? l10n.online : l10n.offline,
                 valueColor: device.isOnline ? AppColors.success : AppColors.error,
@@ -62,24 +71,29 @@ class DeviceSettingsScreen extends StatelessWidget {
               if (status?.rawJson != null) ...[
                 if (status!.rawJson['wifi'] != null) ...[
                   _buildInfoTile(
+                    context,
                     l10n.wifiNetwork,
                     status.rawJson['wifi']['ssid'] as String? ?? '-',
                   ),
                   _buildInfoTile(
+                    context,
                     l10n.ipAddress,
                     status.rawJson['wifi']['sta_ip'] as String? ?? '-',
                   ),
                   _buildInfoTile(
+                    context,
                     l10n.signalStrength,
                     '${status.rawJson['wifi']['rssi'] ?? '-'} dBm',
                   ),
                 ],
                 if (status.rawJson['sys'] != null) ...[
                   _buildInfoTile(
+                    context,
                     l10n.uptime,
                     _formatUptime(status.rawJson['sys']['uptime'] as int? ?? 0),
                   ),
                   _buildInfoTile(
+                    context,
                     l10n.ramFree,
                     _formatBytes(status.rawJson['sys']['ram_free'] as int? ?? 0),
                   ),
@@ -108,13 +122,14 @@ class DeviceSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTile(String label, String value, {Color? valueColor}) {
+  Widget _buildInfoTile(BuildContext context, String label, String value, {Color? valueColor}) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ListTile(
       title: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
-          color: AppColors.textSecondary,
+          color: colorScheme.onSurfaceVariant,
         ),
       ),
       trailing: Text(
@@ -122,7 +137,7 @@ class DeviceSettingsScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: valueColor ?? AppColors.textPrimary,
+          color: valueColor ?? colorScheme.onSurface,
         ),
       ),
     );

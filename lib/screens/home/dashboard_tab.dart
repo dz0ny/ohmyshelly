@@ -31,38 +31,15 @@ class _DashboardTabState extends State<DashboardTab> {
       appBar: AppBar(
         title: Text(l10n.dashboard),
         actions: [
-          Consumer2<DeviceProvider, SettingsProvider>(
-            builder: (context, deviceProvider, settingsProvider, _) {
-              final displayDevices = deviceProvider.devices
-                  .where((d) => !d.isGateway)
-                  .toList();
-
-              if (displayDevices.isEmpty) {
-                return const SizedBox.shrink();
-              }
-
-              if (_isReorderMode) {
-                return TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isReorderMode = false;
-                    });
-                  },
-                  child: Text(l10n.reorderDevicesDone),
-                );
-              }
-
-              return IconButton(
-                icon: const Icon(AppIcons.reorder),
-                tooltip: l10n.reorderDevices,
-                onPressed: () {
-                  setState(() {
-                    _isReorderMode = true;
-                  });
-                },
-              );
-            },
-          ),
+          if (_isReorderMode)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isReorderMode = false;
+                });
+              },
+              child: Text(l10n.reorderDevicesDone),
+            ),
           IconButton(
             icon: const Icon(AppIcons.settings),
             tooltip: l10n.settings,
@@ -123,8 +100,13 @@ class _DashboardTabState extends State<DashboardTab> {
             onRefresh: () => deviceProvider.refresh(),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: displayDevices.length,
+              itemCount: displayDevices.length + 1, // +1 for reorder button
               itemBuilder: (context, index) {
+                // Reorder button at the end
+                if (index == displayDevices.length) {
+                  return _buildReorderButton(context, l10n);
+                }
+
                 final device = displayDevices[index];
                 final status = deviceProvider.getStatus(device.id);
 
@@ -136,6 +118,37 @@ class _DashboardTabState extends State<DashboardTab> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildReorderButton(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 24),
+      child: Center(
+        child: TextButton.icon(
+          onPressed: () {
+            setState(() {
+              _isReorderMode = true;
+            });
+          },
+          icon: Icon(
+            AppIcons.reorder,
+            size: 18,
+            color: colorScheme.outline,
+          ),
+          label: Text(
+            l10n.reorderDevices,
+            style: TextStyle(
+              color: colorScheme.outline,
+              fontSize: 13,
+            ),
+          ),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+        ),
       ),
     );
   }

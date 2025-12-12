@@ -15,6 +15,9 @@ class WeatherStationDetail extends StatelessWidget {
   final List<double> temperatureHistory;
   final List<double> humidityHistory;
   final List<double> pressureHistory;
+  final List<double> uvHistory;
+  final List<double> solarHistory;
+  final List<double> rainHistory;
 
   const WeatherStationDetail({
     super.key,
@@ -23,6 +26,9 @@ class WeatherStationDetail extends StatelessWidget {
     this.temperatureHistory = const [],
     this.humidityHistory = const [],
     this.pressureHistory = const [],
+    this.uvHistory = const [],
+    this.solarHistory = const [],
+    this.rainHistory = const [],
   });
 
   void _navigateToHistory(BuildContext context, String metric) {
@@ -50,13 +56,14 @@ class WeatherStationDetail extends StatelessWidget {
         // Last updated
         if (status!.lastUpdated != null) ...[
           const SizedBox(height: 16),
-          _buildLastUpdated(l10n),
+          _buildLastUpdated(context, l10n),
         ],
       ],
     );
   }
 
   Widget _buildHeroCard(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     final tempTrend = status!.getTemperatureTrend(null);
 
     return Card(
@@ -71,8 +78,8 @@ class WeatherStationDetail extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.weatherStation.withValues(alpha: 0.1),
-              AppColors.weatherStation.withValues(alpha: 0.05),
+              AppColors.weatherStation.withValues(alpha: 0.15),
+              AppColors.weatherStation.withValues(alpha: 0.08),
             ],
           ),
         ),
@@ -94,28 +101,37 @@ class WeatherStationDetail extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: Text(
                           _formatTemperatureValue(status!.temperature),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 72,
                             fontWeight: FontWeight.w300,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                             height: 1,
                           ),
                         ),
                       ),
                     ),
                     // Degree symbol and unit
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
                       child: Text(
                         '°C',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w300,
-                          color: AppColors.textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 4),
+                // Feels like temperature
+                Text(
+                  '${l10n.feelsLike} ${status!.feelsLikeDisplay}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 // Trend badge
@@ -159,14 +175,14 @@ class WeatherStationDetail extends StatelessWidget {
                     Icon(
                       AppIcons.statistics,
                       size: 14,
-                      color: AppColors.textHint,
+                      color: colorScheme.outline,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       l10n.tapForHistory,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textHint,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ],
@@ -321,6 +337,7 @@ class WeatherStationDetail extends StatelessWidget {
     required VoidCallback onTap,
     Widget? sparkline,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -339,7 +356,7 @@ class WeatherStationDetail extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(icon, size: 18, color: color),
@@ -348,16 +365,16 @@ class WeatherStationDetail extends StatelessWidget {
                   Expanded(
                     child: Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right,
                     size: 16,
-                    color: AppColors.textHint,
+                    color: colorScheme.outline,
                   ),
                 ],
               ),
@@ -371,10 +388,10 @@ class WeatherStationDetail extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -429,20 +446,23 @@ class WeatherStationDetail extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         // Battery (full width)
-        _buildBatteryTile(l10n),
+        _buildBatteryTile(context, l10n),
       ],
     );
   }
 
   Widget _buildGridTile({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required String value,
     required Color color,
     String? subtitle,
     Widget? badge,
+    Widget? sparkline,
     VoidCallback? onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -462,7 +482,7 @@ class WeatherStationDetail extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(icon, size: 18, color: color),
@@ -471,16 +491,16 @@ class WeatherStationDetail extends StatelessWidget {
                     Icon(
                       Icons.chevron_right_rounded,
                       size: 20,
-                      color: AppColors.textHint,
+                      color: colorScheme.outline,
                     ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 4),
@@ -489,10 +509,10 @@ class WeatherStationDetail extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -500,15 +520,19 @@ class WeatherStationDetail extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
               if (badge != null) ...[
                 const SizedBox(height: 8),
                 badge,
+              ],
+              if (sparkline != null) ...[
+                const SizedBox(height: 12),
+                sparkline,
               ],
             ],
           ),
@@ -521,6 +545,7 @@ class WeatherStationDetail extends StatelessWidget {
     final dangerLevel = status!.uvDangerLevel;
 
     return _buildGridTile(
+      context: context,
       icon: AppIcons.uvIndex,
       label: l10n.uvIndex,
       value: status!.uvDisplay,
@@ -551,6 +576,15 @@ class WeatherStationDetail extends StatelessWidget {
           ],
         ),
       ),
+      sparkline: uvHistory.length >= 2
+          ? SparklineWidget(
+              data: uvHistory,
+              lineColor: AppColors.warning,
+              height: 35,
+              showDots: true,
+              showHourLabels: true,
+            )
+          : null,
     );
   }
 
@@ -564,7 +598,7 @@ class WeatherStationDetail extends StatelessWidget {
       levelColor = const Color(0xFF5C6BC0);
     } else if (irradiance < 100) {
       solarLevel = l10n.solarCloudy;
-      levelColor = AppColors.textSecondary;
+      levelColor = Theme.of(context).colorScheme.onSurfaceVariant;
     } else if (irradiance < 500) {
       solarLevel = l10n.solarPartlySunny;
       levelColor = AppColors.warning;
@@ -577,6 +611,7 @@ class WeatherStationDetail extends StatelessWidget {
     }
 
     return _buildGridTile(
+      context: context,
       icon: AppIcons.light,
       label: l10n.solar,
       value: status!.solarIrradianceDisplay,
@@ -597,36 +632,140 @@ class WeatherStationDetail extends StatelessWidget {
           ),
         ),
       ),
+      sparkline: solarHistory.length >= 2
+          ? SparklineWidget(
+              data: solarHistory,
+              lineColor: const Color(0xFFFF9800),
+              height: 35,
+              showDots: true,
+              showHourLabels: true,
+            )
+          : null,
     );
   }
 
   Widget _buildWindTile(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     // No onTap - Shelly API doesn't provide wind history
     return _buildGridTile(
+      context: context,
       icon: AppIcons.wind,
       label: l10n.windSpeed,
       value: status!.windSpeedDisplay,
-      color: AppColors.textSecondary,
+      color: colorScheme.onSurfaceVariant,
       subtitle: status!.windGust > 0
           ? '${l10n.windGust}: ${status!.windGustDisplay}'
-          : status!.windDirectionLocalized(l10n),
+          : null,
+      sparkline: _buildWindCompass(context, l10n),
+    );
+  }
+
+  Widget _buildWindCompass(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final direction = status!.windDirection;
+    // Convert meteorological wind direction to rotation angle
+    final rotationAngle = direction * (3.14159 / 180);
+
+    return Row(
+      children: [
+        // Compass circle
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: colorScheme.outlineVariant,
+              width: 1,
+            ),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Cardinal points (translated)
+              Positioned(
+                top: 2,
+                child: Text(l10n.directionN, style: TextStyle(fontSize: 7, color: colorScheme.outline, fontWeight: FontWeight.w500)),
+              ),
+              Positioned(
+                bottom: 2,
+                child: Text(l10n.directionS, style: TextStyle(fontSize: 7, color: colorScheme.outline)),
+              ),
+              Positioned(
+                left: 3,
+                child: Text(l10n.directionW, style: TextStyle(fontSize: 7, color: colorScheme.outline)),
+              ),
+              Positioned(
+                right: 3,
+                child: Text(l10n.directionE, style: TextStyle(fontSize: 7, color: colorScheme.outline)),
+              ),
+              // Direction arrow
+              Transform.rotate(
+                angle: rotationAngle,
+                child: const Icon(
+                  Icons.navigation_rounded,
+                  size: 16,
+                  color: AppColors.info,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Direction text
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                status!.windDirectionLocalized(l10n),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                status!.windDirectionDegrees,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildRainTile(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     final hasRain = status!.precipitation > 0;
 
     return _buildGridTile(
+      context: context,
       icon: AppIcons.rain,
       label: l10n.rain,
       value: status!.precipitationDisplay,
-      color: hasRain ? AppColors.info : AppColors.textSecondary,
+      color: hasRain ? AppColors.info : colorScheme.onSurfaceVariant,
       subtitle: l10n.rainToday,
       onTap: () => _navigateToHistory(context, 'rain'),
+      sparkline: rainHistory.length >= 2
+          ? SparklineWidget(
+              data: rainHistory,
+              lineColor: AppColors.info,
+              height: 35,
+              showDots: true,
+              showHourLabels: true,
+            )
+          : null,
     );
   }
 
-  Widget _buildBatteryTile(AppLocalizations l10n) {
+  Widget _buildBatteryTile(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     final batteryColor =
         status!.isBatteryLow ? AppColors.warning : AppColors.success;
     final batteryIcon =
@@ -655,7 +794,7 @@ class WeatherStationDetail extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: batteryColor.withValues(alpha: 0.1),
+                color: batteryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(batteryIcon, size: 22, color: batteryColor),
@@ -667,18 +806,18 @@ class WeatherStationDetail extends StatelessWidget {
                 children: [
                   Text(
                     l10n.battery,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     status!.batteryDisplay,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -687,7 +826,7 @@ class WeatherStationDetail extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: batteryColor.withValues(alpha: 0.1),
+                color: batteryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -705,12 +844,13 @@ class WeatherStationDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildLastUpdated(AppLocalizations l10n) {
+  Widget _buildLastUpdated(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -719,14 +859,14 @@ class WeatherStationDetail extends StatelessWidget {
             Icon(
               Icons.access_time_outlined,
               size: 14,
-              color: AppColors.textHint,
+              color: colorScheme.outline,
             ),
             const SizedBox(width: 6),
             Text(
               '${l10n.lastUpdated}: ${Formatters.timeAgo(status!.lastUpdated!, l10n)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textHint,
+                color: colorScheme.outline,
               ),
             ),
           ],

@@ -11,9 +11,11 @@ import '../../providers/device_provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../providers/schedule_provider.dart';
 import '../../providers/settings_provider.dart';
+import '../../providers/scene_provider.dart';
 import '../../widgets/common/update_banner.dart';
 import 'devices_tab.dart';
 import 'dashboard_tab.dart';
+import 'scenes_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
   int _tapCount = 0;
+  int? _lastTappedIndex;
   Timer? _tapResetTimer;
 
   @override
@@ -49,6 +52,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void _handleNavTap(int index) {
+    // Reset counter if different tab is tapped
+    if (_lastTappedIndex != index) {
+      _tapCount = 0;
+      _tapResetTimer?.cancel();
+    }
+    _lastTappedIndex = index;
+
     // Increment tap counter
     _tapCount++;
 
@@ -56,11 +66,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _tapResetTimer?.cancel();
     _tapResetTimer = Timer(const Duration(seconds: 2), () {
       _tapCount = 0;
+      _lastTappedIndex = null;
     });
 
-    // Check for 5 taps
+    // Check for 5 taps on same tab
     if (_tapCount >= 5) {
       _tapCount = 0;
+      _lastTappedIndex = null;
       _tapResetTimer?.cancel();
       _triggerOnboardingRestart();
       return;
@@ -94,25 +106,64 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final deviceProvider = context.read<DeviceProvider>();
     final dashboardProvider = context.read<DashboardProvider>();
     final scheduleProvider = context.read<ScheduleProvider>();
+    final sceneProvider = context.read<SceneProvider>();
+    final settingsProvider = context.read<SettingsProvider>();
 
     // Set credentials for providers
     deviceProvider.setCredentials(authProvider.apiUrl, authProvider.token);
     scheduleProvider.setCredentials(authProvider.apiUrl, authProvider.token);
+    sceneProvider.setCredentials(authProvider.apiUrl, authProvider.token);
 
     // Connect dashboard to device provider
     dashboardProvider.setDeviceProvider(deviceProvider);
 
     // Fetch initial data
     deviceProvider.fetchDevices();
+
+    // Fetch scenes if tab is enabled
+    if (settingsProvider.showScenesTab) {
+      sceneProvider.fetchScenes();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final showDevicesTab = context.watch<SettingsProvider>().showDevicesTab;
+    final settings = context.watch<SettingsProvider>();
+    final showDevicesTab = settings.showDevicesTab;
+    final showScenesTab = settings.showScenesTab;
 
-    // Reset to dashboard if devices tab is hidden and currently selected
-    if (!showDevicesTab && _currentIndex == 1) {
+    // Build dynamic tab list
+    final tabs = <Widget>[
+      const DashboardTab(),
+      if (showDevicesTab) const DevicesTab(),
+      if (showScenesTab) const ScenesTab(),
+    ];
+
+    // Build dynamic navigation destinations
+    final destinations = <NavigationDestination>[
+      NavigationDestination(
+        icon: const Icon(AppIcons.dashboard),
+        selectedIcon: const Icon(AppIcons.dashboard),
+        label: l10n.dashboard,
+      ),
+      if (showDevicesTab)
+        NavigationDestination(
+          icon: const Icon(AppIcons.devices),
+          selectedIcon: const Icon(AppIcons.devices),
+          label: l10n.devices,
+        ),
+      if (showScenesTab)
+        NavigationDestination(
+          icon: const Icon(AppIcons.scenes),
+          selectedIcon: const Icon(AppIcons.scenes),
+          label: l10n.scenes,
+        ),
+    ];
+
+    // Clamp current index to valid range when tabs change
+    final maxIndex = tabs.length - 1;
+    if (_currentIndex > maxIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() => _currentIndex = 0);
@@ -120,17 +171,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       });
     }
 
+    // Fetch scenes when tab becomes visible
+    if (showScenesTab) {
+      final sceneProvider = context.read<SceneProvider>();
+      if (sceneProvider.state == SceneLoadState.initial) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final authProvider = context.read<AuthProvider>();
+          sceneProvider.setCredentials(authProvider.apiUrl, authProvider.token);
+          sceneProvider.fetchScenes();
+        });
+      }
+    }
+
+    final hasMultipleTabs = tabs.length > 1;
+
     return Scaffold(
       body: Stack(
         children: [
-          // Only show DashboardTab if devices tab is hidden
-          if (showDevicesTab)
+          // Show tabs or just dashboard
+          if (hasMultipleTabs)
             IndexedStack(
-              index: _currentIndex,
-              children: const [
-                DashboardTab(),
-                DevicesTab(),
-              ],
+              index: _currentIndex.clamp(0, maxIndex),
+              children: tabs,
             )
           else
             const DashboardTab(),
@@ -141,23 +203,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
         ],
       ),
-      // Hide bottom navigation bar when devices tab is disabled
-      bottomNavigationBar: showDevicesTab
+      // Show bottom navigation bar when there are multiple tabs
+      bottomNavigationBar: hasMultipleTabs
           ? NavigationBar(
-              selectedIndex: _currentIndex,
+              selectedIndex: _currentIndex.clamp(0, maxIndex),
               onDestinationSelected: _handleNavTap,
-              destinations: [
-                NavigationDestination(
-                  icon: const Icon(AppIcons.dashboard),
-                  selectedIcon: const Icon(AppIcons.dashboard),
-                  label: l10n.dashboard,
-                ),
-                NavigationDestination(
-                  icon: const Icon(AppIcons.devices),
-                  selectedIcon: const Icon(AppIcons.devices),
-                  label: l10n.devices,
-                ),
-              ],
+              destinations: destinations,
             )
           : null,
     );

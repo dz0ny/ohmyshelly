@@ -184,16 +184,18 @@ class DateRangePicker extends StatelessWidget {
       },
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith((states) {
+          final colorScheme = Theme.of(context).colorScheme;
           if (states.contains(WidgetState.selected)) {
             return AppColors.primary;
           }
-          return AppColors.surfaceVariant;
+          return colorScheme.surfaceContainerHighest;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
+          final colorScheme = Theme.of(context).colorScheme;
           if (states.contains(WidgetState.selected)) {
             return Colors.white;
           }
-          return AppColors.textPrimary;
+          return colorScheme.onSurface;
         }),
         visualDensity: VisualDensity.compact,
       ),
@@ -201,10 +203,11 @@ class DateRangePicker extends StatelessWidget {
   }
 
   Widget _buildDateSelector(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -228,16 +231,16 @@ class DateRangePicker extends StatelessWidget {
                   children: [
                     Text(
                       selection.getDisplayString(l10n),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(
+                    Icon(
                       Icons.arrow_drop_down_rounded,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -262,8 +265,21 @@ class DateRangePicker extends StatelessWidget {
   }
 
   bool get _canGoNext {
-    // Can't go beyond today
     final now = DateTime.now();
+
+    // For month type, allow going to next month
+    if (selection.type == DateRangeType.month) {
+      final nextMonth = DateTime(now.year, now.month + 1, 1);
+      final selectedMonth = DateTime(selection.selectedDate.year, selection.selectedDate.month, 1);
+      return selectedMonth.isBefore(nextMonth);
+    }
+
+    // For year type, allow going to next year
+    if (selection.type == DateRangeType.year) {
+      return selection.selectedDate.year < now.year + 1;
+    }
+
+    // For other types, can't go beyond today
     final today = DateTime(now.year, now.month, now.day);
     final selected = DateTime(selection.selectedDate.year, selection.selectedDate.month, selection.selectedDate.day);
     return selected.isBefore(today);
@@ -295,21 +311,33 @@ class DateRangePicker extends StatelessWidget {
     switch (selection.type) {
       case DateRangeType.day:
         newDate = selection.selectedDate.add(const Duration(days: 1));
+        // Don't go beyond today for day
+        if (newDate.isAfter(now)) {
+          newDate = now;
+        }
         break;
       case DateRangeType.week:
         newDate = selection.selectedDate.add(const Duration(days: 7));
+        // Don't go beyond today for week
+        if (newDate.isAfter(now)) {
+          newDate = now;
+        }
         break;
       case DateRangeType.month:
         newDate = DateTime(selection.selectedDate.year, selection.selectedDate.month + 1, 1);
+        // Allow up to next month
+        final maxMonth = DateTime(now.year, now.month + 1, 1);
+        if (newDate.isAfter(maxMonth)) {
+          newDate = maxMonth;
+        }
         break;
       case DateRangeType.year:
         newDate = DateTime(selection.selectedDate.year + 1, 1, 1);
+        // Allow up to next year
+        if (newDate.year > now.year + 1) {
+          newDate = DateTime(now.year + 1, 1, 1);
+        }
         break;
-    }
-
-    // Don't go beyond today
-    if (newDate.isAfter(now)) {
-      newDate = now;
     }
 
     onChanged(DateRangeSelection(type: selection.type, selectedDate: newDate));
@@ -467,14 +495,15 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final weeks = _getWeeksInYear(_selectedYear);
     final currentYear = DateTime.now().year;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -484,7 +513,7 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.textHint,
+              color: colorScheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -532,8 +561,8 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
                   selected: isSelected,
                   selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
                   leading: CircleAvatar(
-                    backgroundColor: isSelected ? AppColors.primary : AppColors.surfaceVariant,
-                    foregroundColor: isSelected ? Colors.white : AppColors.textSecondary,
+                    backgroundColor: isSelected ? AppColors.primary : colorScheme.surfaceContainerHighest,
+                    foregroundColor: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
                     child: Text('$weekNum'),
                   ),
                   title: Text(
@@ -542,7 +571,7 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                   ),
-                  subtitle: _getWeekLabel(weekStart, l10n),
+                  subtitle: _getWeekLabel(context, weekStart, l10n),
                   trailing: isSelected
                       ? const Icon(Icons.check_circle_rounded, color: AppColors.primary)
                       : null,
@@ -562,7 +591,8 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
     return ((dayOfYear + firstDayOfYear.weekday - 1) / 7).ceil();
   }
 
-  Widget? _getWeekLabel(DateTime weekStart, AppLocalizations l10n) {
+  Widget? _getWeekLabel(BuildContext context, DateTime weekStart, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     final now = DateTime.now();
     final currentWeekStart = DateTime(now.year, now.month, now.day - (now.weekday - 1));
     final lastWeekStart = currentWeekStart.subtract(const Duration(days: 7));
@@ -570,7 +600,7 @@ class _WeekPickerSheetState extends State<_WeekPickerSheet> {
     if (weekStart == currentWeekStart) {
       return Text(l10n.thisWeek, style: const TextStyle(color: AppColors.primary));
     } else if (weekStart == lastWeekStart) {
-      return Text(l10n.lastWeek, style: const TextStyle(color: AppColors.textSecondary));
+      return Text(l10n.lastWeek, style: TextStyle(color: colorScheme.onSurfaceVariant));
     }
     return null;
   }
@@ -602,10 +632,14 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final monthNames = _getMonthNames(l10n);
     final now = DateTime.now();
-    // Get last 12 months
+    // Get last 12 months + next month (13 total)
     final months = <DateTime>[];
+    // Add next month first
+    months.add(DateTime(now.year, now.month + 1, 1));
+    // Then add current and past 11 months
     for (var i = 0; i < 12; i++) {
       final date = DateTime(now.year, now.month - i, 1);
       months.add(date);
@@ -613,9 +647,9 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -625,7 +659,7 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.textHint,
+              color: colorScheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -661,7 +695,7 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
                 return Material(
                   color: isSelected
                       ? AppColors.primary
-                      : AppColors.surfaceVariant.withValues(alpha: 0.5),
+                      : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
@@ -676,7 +710,7 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? Colors.white : AppColors.textPrimary,
+                              color: isSelected ? Colors.white : colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -686,7 +720,7 @@ class _MonthPickerSheetState extends State<_MonthPickerSheet> {
                               fontSize: 12,
                               color: isSelected
                                   ? Colors.white.withValues(alpha: 0.8)
-                                  : AppColors.textSecondary,
+                                  : colorScheme.onSurfaceVariant,
                             ),
                           ),
                           if (isCurrentMonth && !isSelected)
@@ -728,14 +762,15 @@ class _YearPickerSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    // Last 5 years
-    final years = List.generate(5, (i) => maxYear - i);
+    final colorScheme = Theme.of(context).colorScheme;
+    // Next year + current + last 4 years (6 total)
+    final years = List.generate(6, (i) => maxYear + 1 - i);
 
     return Container(
       height: 300,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -745,7 +780,7 @@ class _YearPickerSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.textHint,
+              color: colorScheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -775,8 +810,8 @@ class _YearPickerSheet extends StatelessWidget {
                   selected: isSelected,
                   selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
                   leading: CircleAvatar(
-                    backgroundColor: isSelected ? AppColors.primary : AppColors.surfaceVariant,
-                    foregroundColor: isSelected ? Colors.white : AppColors.textSecondary,
+                    backgroundColor: isSelected ? AppColors.primary : colorScheme.surfaceContainerHighest,
+                    foregroundColor: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
                     child: Text('${year % 100}'),
                   ),
                   title: Text(
@@ -786,7 +821,11 @@ class _YearPickerSheet extends StatelessWidget {
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                   ),
-                  subtitle: isCurrentYear ? Text(l10n.thisYear) : null,
+                  subtitle: year == maxYear + 1
+                      ? Text(l10n.nextYear)
+                      : isCurrentYear
+                          ? Text(l10n.thisYear)
+                          : null,
                   trailing: isSelected
                       ? const Icon(Icons.check_circle_rounded, color: AppColors.primary)
                       : null,

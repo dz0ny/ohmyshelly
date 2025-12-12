@@ -15,6 +15,8 @@ import 'providers/dashboard_provider.dart';
 import 'providers/statistics_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/schedule_provider.dart';
+import 'providers/scene_provider.dart';
+import 'data/services/scene_service.dart';
 import 'router/app_router.dart';
 
 void main() async {
@@ -124,6 +126,13 @@ class OhMyShellyApp extends StatelessWidget {
           ),
         ),
 
+        // Scene provider
+        ChangeNotifierProvider<SceneProvider>(
+          create: (context) => SceneProvider(
+            sceneService: SceneService(apiService),
+          ),
+        ),
+
         // Update service (Android only)
         ChangeNotifierProvider<UpdateService>.value(value: UpdateService()),
       ],
@@ -156,6 +165,8 @@ class _AppWithRouterState extends State<_AppWithRouter> {
           title: 'OhMyShelly',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: settings.themeMode,
           routerConfig: _appRouter.router,
           locale: settings.locale,
           supportedLocales: AppLocalizations.supportedLocales,

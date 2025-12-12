@@ -23,6 +23,7 @@ class GatewayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -58,10 +59,10 @@ class GatewayCard extends StatelessWidget {
                       children: [
                         Text(
                           device.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -95,17 +96,17 @@ class GatewayCard extends StatelessWidget {
                             color: AppColors.gateway,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'devices',
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ] else ...[
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
-                          color: AppColors.textHint,
+                          color: colorScheme.outline,
                         ),
                       ],
                     ],
@@ -119,6 +120,7 @@ class GatewayCard extends StatelessWidget {
               ssid: status?.ssid,
               uptime: status?.uptimeDisplay,
               lastUpdated: status?.lastUpdated,
+              firmwareVersion: status?.firmwareVersion,
             ),
           ],
         ),
@@ -131,7 +133,7 @@ class GatewayCard extends StatelessWidget {
 
     final l10n = AppLocalizations.of(context)!;
     final strength = status!.signalStrengthLocalized(l10n);
-    final color = _getSignalColor(status!.rssi);
+    final color = _getSignalColor(context, status!.rssi);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -153,8 +155,9 @@ class GatewayCard extends StatelessWidget {
     );
   }
 
-  Color _getSignalColor(int? rssi) {
-    if (rssi == null) return AppColors.textSecondary;
+  Color _getSignalColor(BuildContext context, int? rssi) {
+    final colorScheme = Theme.of(context).colorScheme;
+    if (rssi == null) return colorScheme.onSurfaceVariant;
     if (rssi > -50) return AppColors.success;  // Excellent
     if (rssi > -60) return AppColors.success;  // Good
     if (rssi > -70) return AppColors.warning;  // Fair

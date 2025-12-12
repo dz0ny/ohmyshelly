@@ -34,6 +34,9 @@ class DeviceProvider extends ChangeNotifier {
   final Map<String, List<double>> _temperatureHistory = {};
   final Map<String, List<double>> _humidityHistory = {};
   final Map<String, List<double>> _pressureHistory = {};
+  final Map<String, List<double>> _uvHistory = {};
+  final Map<String, List<double>> _solarHistory = {};
+  final Map<String, List<double>> _rainHistory = {};
   final Map<String, List<double>> _powerHistory = {};
   final Map<String, List<double>> _energyHistory = {};
   bool _isLoadingHistory = false;
@@ -104,6 +107,18 @@ class DeviceProvider extends ChangeNotifier {
   List<double> getPressureHistory(String deviceId) =>
       _pressureHistory[deviceId] ?? [];
 
+  /// Get UV index history for a device (for sparkline charts)
+  List<double> getUvHistory(String deviceId) =>
+      _uvHistory[deviceId] ?? [];
+
+  /// Get solar irradiance history for a device (for sparkline charts)
+  List<double> getSolarHistory(String deviceId) =>
+      _solarHistory[deviceId] ?? [];
+
+  /// Get rain/precipitation history for a device (for sparkline charts)
+  List<double> getRainHistory(String deviceId) =>
+      _rainHistory[deviceId] ?? [];
+
   /// Get power history for a device (for sparkline charts)
   List<double> getPowerHistory(String deviceId) =>
       _powerHistory[deviceId] ?? [];
@@ -139,6 +154,18 @@ class DeviceProvider extends ChangeNotifier {
         // Extract average pressure from each data point
         _pressureHistory[deviceId] = stats.dataPoints
             .map((p) => p.avgPressure)
+            .toList();
+        // Extract UV index from each data point
+        _uvHistory[deviceId] = stats.dataPoints
+            .map((p) => p.uvIndex)
+            .toList();
+        // Extract solar irradiance from illuminance (lux / 120 = W/m²)
+        _solarHistory[deviceId] = stats.dataPoints
+            .map((p) => p.illuminance / 120)
+            .toList();
+        // Extract precipitation from each data point
+        _rainHistory[deviceId] = stats.dataPoints
+            .map((p) => p.precipitation)
             .toList();
         notifyListeners();
       }

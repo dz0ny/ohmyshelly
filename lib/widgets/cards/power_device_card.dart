@@ -44,6 +44,7 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isOn = widget.status?.isOn ?? false;
 
     return Card(
@@ -81,10 +82,10 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
                       children: [
                         Text(
                           widget.device.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -98,14 +99,14 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
                               Icon(
                                 AppIcons.power,
                                 size: 14,
-                                color: AppColors.textSecondary,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 widget.status!.powerDisplay,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.textSecondary,
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ],
@@ -133,6 +134,7 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
               ipAddress: widget.status?.ipAddress,
               ssid: widget.status?.ssid,
               lastUpdated: widget.status?.lastUpdated,
+              firmwareVersion: widget.status?.firmwareVersion,
             ),
           ],
         ),

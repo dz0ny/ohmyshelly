@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 
 class StatTile extends StatelessWidget {
   final IconData icon;
@@ -19,6 +18,7 @@ class StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (compact) {
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -26,15 +26,15 @@ class StatTile extends StatelessWidget {
           Icon(
             icon,
             size: 16,
-            color: iconColor ?? AppColors.textSecondary,
+            color: iconColor ?? colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: 4),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: colorScheme.onSurface,
             ),
           ),
         ],
@@ -49,14 +49,14 @@ class StatTile extends StatelessWidget {
             Icon(
               icon,
               size: 20,
-              color: iconColor ?? AppColors.textSecondary,
+              color: iconColor ?? colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -66,10 +66,10 @@ class StatTile extends StatelessWidget {
           padding: const EdgeInsets.only(left: 28),
           child: Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: colorScheme.onSurface,
             ),
           ),
         ),

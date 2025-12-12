@@ -67,6 +67,7 @@ class DevicesTab extends StatelessWidget {
                 final isOtherRoom = roomName == '___OTHER___';
                 final displayRoomName = isOtherRoom ? l10n.otherDevices : roomName;
 
+                final colorScheme = Theme.of(context).colorScheme;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -83,7 +84,7 @@ class DevicesTab extends StatelessWidget {
                                 ? AppIcons.unknownDevice
                                 : Icons.room,
                             size: 20,
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
@@ -94,7 +95,7 @@ class DevicesTab extends StatelessWidget {
                                   .titleMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
+                                    color: colorScheme.onSurface,
                                   ),
                             ),
                           ),
@@ -204,6 +205,7 @@ class DevicesTab extends StatelessWidget {
       );
     } else {
       // Default card for unknown device types
+      final colorScheme = Theme.of(context).colorScheme;
       card = Card(
         child: ListTile(
           leading: const Icon(AppIcons.unknownDevice),
@@ -211,7 +213,7 @@ class DevicesTab extends StatelessWidget {
           subtitle: Text(device.code),
           trailing: Icon(
             device.isOnline ? AppIcons.online : AppIcons.offline,
-            color: device.isOnline ? AppColors.success : AppColors.textHint,
+            color: device.isOnline ? AppColors.success : colorScheme.outline,
           ),
           onTap: () => context.push('/device/${device.id}'),
         ),
@@ -308,10 +310,10 @@ class DevicesTab extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: SelectableText(
                   jsonString,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 12,
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),

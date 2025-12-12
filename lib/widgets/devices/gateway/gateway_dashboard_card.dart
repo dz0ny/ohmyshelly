@@ -17,6 +17,7 @@ class GatewayDashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isConnected = status?.cloudConnected ?? false;
 
     return Card(
@@ -41,10 +42,10 @@ class GatewayDashboardCard extends StatelessWidget {
             Expanded(
               child: Text(
                 device.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: colorScheme.onSurface,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -52,7 +53,7 @@ class GatewayDashboardCard extends StatelessWidget {
             ),
             Icon(
               isConnected ? Icons.cloud_done : Icons.cloud_off,
-              color: isConnected ? AppColors.success : AppColors.textHint,
+              color: isConnected ? AppColors.success : colorScheme.outline,
               size: 28,
             ),
           ],

@@ -1,0 +1,919 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Portuguese (`pt`).
+class AppLocalizationsPt extends AppLocalizations {
+  AppLocalizationsPt([String locale = 'pt']) : super(locale);
+
+  @override
+  String get appName => 'OhMyShelly';
+
+  @override
+  String get appTagline => 'Casa inteligente simplificada';
+
+  @override
+  String get onboardingTitle1 => 'Seu painel de casa inteligente';
+
+  @override
+  String get onboardingDesc1 =>
+      'Veja todos os seus dispositivos de relance. Monitore o consumo de energia, dados meteorológicos e status dos dispositivos em tempo real. Organize por cômodos.';
+
+  @override
+  String get onboardingTitle2 => 'Estatísticas detalhadas';
+
+  @override
+  String get onboardingDesc2 =>
+      'Visualize gráficos históricos de consumo de energia e clima. Acompanhe tendências por dia, semana, mês ou ano com gráficos bonitos.';
+
+  @override
+  String get onboardingTitle3 => 'Agendamentos e automação';
+
+  @override
+  String get onboardingDesc3 =>
+      'Crie agendamentos para ligar ou desligar dispositivos automaticamente. Defina horários, escolha dias e deixe sua casa funcionar sozinha.';
+
+  @override
+  String get getStarted => 'Começar';
+
+  @override
+  String get skip => 'Pular';
+
+  @override
+  String get next => 'Próximo';
+
+  @override
+  String get signIn => 'Entrar';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get password => 'Senha';
+
+  @override
+  String get emailHint => 'Digite seu e-mail Shelly Cloud';
+
+  @override
+  String get passwordHint => 'Digite sua senha';
+
+  @override
+  String get signingIn => 'Entrando...';
+
+  @override
+  String get signOut => 'Sair';
+
+  @override
+  String get invalidCredentials => 'E-mail ou senha incorretos';
+
+  @override
+  String get connectionError =>
+      'Não foi possível conectar. Verifique sua internet.';
+
+  @override
+  String get devices => 'Dispositivos';
+
+  @override
+  String get dashboard => 'Painel';
+
+  @override
+  String get myDevices => 'Meus dispositivos';
+
+  @override
+  String get noDevices => 'Nenhum dispositivo encontrado';
+
+  @override
+  String get noDevicesDesc => 'Adicione dispositivos na sua conta Shelly Cloud';
+
+  @override
+  String get smartPlug => 'Tomada inteligente';
+
+  @override
+  String get weatherStation => 'Estação meteorológica';
+
+  @override
+  String get gatewayDevice => 'Gateway';
+
+  @override
+  String get unknownDevice => 'Dispositivo';
+
+  @override
+  String get otherDevices => 'Outros';
+
+  @override
+  String get online => 'Conectado';
+
+  @override
+  String get offline => 'Desconectado';
+
+  @override
+  String get on => 'Ligado';
+
+  @override
+  String get off => 'Desligado';
+
+  @override
+  String get power => 'Potência';
+
+  @override
+  String get voltage => 'Tensão';
+
+  @override
+  String get current => 'Corrente';
+
+  @override
+  String get temperature => 'Temperatura';
+
+  @override
+  String get feelsLike => 'Sensação térmica';
+
+  @override
+  String get totalEnergy => 'Energia total';
+
+  @override
+  String get humidity => 'Umidade';
+
+  @override
+  String get pressure => 'Pressão';
+
+  @override
+  String get uvIndex => 'Índice UV';
+
+  @override
+  String get windSpeed => 'Vento';
+
+  @override
+  String get windGust => 'Rajadas';
+
+  @override
+  String get windDirection => 'Direção';
+
+  @override
+  String get rain => 'Chuva';
+
+  @override
+  String get rainToday => 'Hoje';
+
+  @override
+  String get illumination => 'Iluminação';
+
+  @override
+  String get solar => 'Solar';
+
+  @override
+  String get battery => 'Bateria';
+
+  @override
+  String get uvLow => 'Baixo';
+
+  @override
+  String get uvModerate => 'Moderado';
+
+  @override
+  String get uvHigh => 'Alto';
+
+  @override
+  String get uvVeryHigh => 'Muito alto';
+
+  @override
+  String get uvExtreme => 'Extremo';
+
+  @override
+  String get pressureRising => 'Subindo';
+
+  @override
+  String get pressureFalling => 'Descendo';
+
+  @override
+  String get pressureStable => 'Estável';
+
+  @override
+  String get totalDevices => 'Total de dispositivos';
+
+  @override
+  String get activeDevices => 'Ativos';
+
+  @override
+  String get totalPower => 'Potência total';
+
+  @override
+  String get currentWeather => 'Clima atual';
+
+  @override
+  String get statistics => 'Estatísticas';
+
+  @override
+  String get viewHistory => 'Ver histórico';
+
+  @override
+  String get hour => 'Hora';
+
+  @override
+  String get day => 'Dia';
+
+  @override
+  String get week => 'Semana';
+
+  @override
+  String get month => 'Mês';
+
+  @override
+  String get year => 'Ano';
+
+  @override
+  String get average => 'Média';
+
+  @override
+  String get peak => 'Pico';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get min => 'Mín';
+
+  @override
+  String get max => 'Máx';
+
+  @override
+  String get errorGeneric => 'Algo deu errado';
+
+  @override
+  String get errorNetwork => 'Verifique sua conexão com a internet';
+
+  @override
+  String get retry => 'Tentar novamente';
+
+  @override
+  String get pullToRefresh => 'Puxe para atualizar';
+
+  @override
+  String get loadingDevices => 'Carregando dispositivos...';
+
+  @override
+  String get watts => 'W';
+
+  @override
+  String get kilowattHours => 'kWh';
+
+  @override
+  String get volts => 'V';
+
+  @override
+  String get amps => 'A';
+
+  @override
+  String get celsius => '°C';
+
+  @override
+  String get percent => '%';
+
+  @override
+  String get hectopascals => 'hPa';
+
+  @override
+  String get kmPerHour => 'km/h';
+
+  @override
+  String get millimeters => 'mm';
+
+  @override
+  String get lux => 'lux';
+
+  @override
+  String get settings => 'Configurações';
+
+  @override
+  String get appearance => 'Aparência';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Escuro';
+
+  @override
+  String get showDevicesTab => 'Mostrar aba Dispositivos';
+
+  @override
+  String get showDevicesTabDesc =>
+      'Quando desativado, apenas o Painel é mostrado';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get languageSystem => 'Padrão do sistema';
+
+  @override
+  String get languageEnglish => 'Inglês';
+
+  @override
+  String get languageSlovenian => 'Esloveno';
+
+  @override
+  String get languageGerman => 'Alemão';
+
+  @override
+  String get languageFrench => 'Francês';
+
+  @override
+  String get languageSpanish => 'Espanhol';
+
+  @override
+  String get languagePortuguese => 'Português';
+
+  @override
+  String get languageItalian => 'Italiano';
+
+  @override
+  String get languageDutch => 'Holandês';
+
+  @override
+  String get languageCatalan => 'Catalão';
+
+  @override
+  String get languageSwedish => 'Sueco';
+
+  @override
+  String get languageNorwegian => 'Norueguês';
+
+  @override
+  String get languageDanish => 'Dinamarquês';
+
+  @override
+  String get languageFinnish => 'Finlandês';
+
+  @override
+  String get languageIcelandic => 'Islandês';
+
+  @override
+  String get languagePolish => 'Polonês';
+
+  @override
+  String get languageCzech => 'Tcheco';
+
+  @override
+  String get languageSlovak => 'Eslovaco';
+
+  @override
+  String get languageHungarian => 'Húngaro';
+
+  @override
+  String get languageRomanian => 'Romeno';
+
+  @override
+  String get languageBulgarian => 'Búlgaro';
+
+  @override
+  String get languageUkrainian => 'Ucraniano';
+
+  @override
+  String get languageRussian => 'Russo';
+
+  @override
+  String get languageLithuanian => 'Lituano';
+
+  @override
+  String get languageLatvian => 'Letão';
+
+  @override
+  String get languageEstonian => 'Estoniano';
+
+  @override
+  String get languageCroatian => 'Croata';
+
+  @override
+  String get languageSerbian => 'Sérvio';
+
+  @override
+  String get languageGreek => 'Grego';
+
+  @override
+  String get languageSpanishMexico => 'Espanhol (México)';
+
+  @override
+  String get languageFrenchCanada => 'Francês (Canadá)';
+
+  @override
+  String get languageEnglishUS => 'Inglês (EUA)';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get signOutConfirmTitle => 'Sair';
+
+  @override
+  String get signOutConfirmMessage => 'Tem certeza que deseja sair?';
+
+  @override
+  String get lastUpdated => 'Atualizado';
+
+  @override
+  String get summary => 'Resumo';
+
+  @override
+  String get peakUv => 'UV máximo';
+
+  @override
+  String get powerUsage => 'Consumo de energia';
+
+  @override
+  String get noPowerData => 'Sem dados de potência para este período';
+
+  @override
+  String get noWeatherData => 'Sem dados meteorológicos para este período';
+
+  @override
+  String get noDataAvailable => 'Nenhum dado disponível';
+
+  @override
+  String get loadingStatistics => 'Carregando estatísticas...';
+
+  @override
+  String get windHistoryNotAvailable =>
+      'Histórico de vento não está disponível';
+
+  @override
+  String get humidityAvg => 'Umidade (méd)';
+
+  @override
+  String get rainTotal => 'Chuva (total)';
+
+  @override
+  String get directionN => 'N';
+
+  @override
+  String get directionNE => 'NE';
+
+  @override
+  String get directionE => 'L';
+
+  @override
+  String get directionSE => 'SE';
+
+  @override
+  String get directionS => 'S';
+
+  @override
+  String get directionSW => 'SO';
+
+  @override
+  String get directionW => 'O';
+
+  @override
+  String get directionNW => 'NO';
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get account => 'Conta';
+
+  @override
+  String get serverUrl => 'Servidor';
+
+  @override
+  String get timezoneLabel => 'Fuso horário';
+
+  @override
+  String get timezoneNotSet => 'Não definido';
+
+  @override
+  String get powerHistory => 'Histórico de potência';
+
+  @override
+  String get weatherHistory => 'Histórico meteorológico';
+
+  @override
+  String get temperatureHistory => 'Histórico de temperatura';
+
+  @override
+  String get humidityHistory => 'Histórico de umidade';
+
+  @override
+  String get pressureHistory => 'Histórico de pressão';
+
+  @override
+  String get uvHistory => 'Histórico UV';
+
+  @override
+  String get rainHistory => 'Histórico de chuva';
+
+  @override
+  String get solarHistory => 'Histórico solar';
+
+  @override
+  String get voltageHistory => 'Histórico de tensão';
+
+  @override
+  String get currentHistory => 'Histórico de corrente';
+
+  @override
+  String get energyHistory => 'Histórico de energia';
+
+  @override
+  String get currentPowerUsage => 'Potência';
+
+  @override
+  String get dayMon => 'Seg';
+
+  @override
+  String get dayTue => 'Ter';
+
+  @override
+  String get dayWed => 'Qua';
+
+  @override
+  String get dayThu => 'Qui';
+
+  @override
+  String get dayFri => 'Sex';
+
+  @override
+  String get daySat => 'Sáb';
+
+  @override
+  String get daySun => 'Dom';
+
+  @override
+  String get monthJan => 'Jan';
+
+  @override
+  String get monthFeb => 'Fev';
+
+  @override
+  String get monthMar => 'Mar';
+
+  @override
+  String get monthApr => 'Abr';
+
+  @override
+  String get monthMay => 'Mai';
+
+  @override
+  String get monthJun => 'Jun';
+
+  @override
+  String get monthJul => 'Jul';
+
+  @override
+  String get monthAug => 'Ago';
+
+  @override
+  String get monthSep => 'Set';
+
+  @override
+  String get monthOct => 'Out';
+
+  @override
+  String get monthNov => 'Nov';
+
+  @override
+  String get monthDec => 'Dez';
+
+  @override
+  String get monthJanFull => 'Janeiro';
+
+  @override
+  String get monthFebFull => 'Fevereiro';
+
+  @override
+  String get monthMarFull => 'Março';
+
+  @override
+  String get monthAprFull => 'Abril';
+
+  @override
+  String get monthMayFull => 'Maio';
+
+  @override
+  String get monthJunFull => 'Junho';
+
+  @override
+  String get monthJulFull => 'Julho';
+
+  @override
+  String get monthAugFull => 'Agosto';
+
+  @override
+  String get monthSepFull => 'Setembro';
+
+  @override
+  String get monthOctFull => 'Outubro';
+
+  @override
+  String get monthNovFull => 'Novembro';
+
+  @override
+  String get monthDecFull => 'Dezembro';
+
+  @override
+  String get thisWeek => 'Esta semana';
+
+  @override
+  String get lastWeek => 'Semana passada';
+
+  @override
+  String get thisMonth => 'Este mês';
+
+  @override
+  String get lastMonth => 'Mês passado';
+
+  @override
+  String get thisYear => 'Este ano';
+
+  @override
+  String get nextYear => 'Próximo ano';
+
+  @override
+  String get selectMonth => 'Selecionar mês';
+
+  @override
+  String get selectYear => 'Selecionar ano';
+
+  @override
+  String get solarDark => 'Escuro';
+
+  @override
+  String get solarCloudy => 'Nublado';
+
+  @override
+  String get solarPartlySunny => 'Parcialmente ensolarado';
+
+  @override
+  String get solarSunny => 'Ensolarado';
+
+  @override
+  String get solarVerySunny => 'Muito ensolarado';
+
+  @override
+  String get batteryFull => 'Cheia';
+
+  @override
+  String get batteryGood => 'Boa';
+
+  @override
+  String get batteryLow => 'Baixa';
+
+  @override
+  String get batteryCritical => 'Crítica';
+
+  @override
+  String get updateAvailable => 'Atualização disponível';
+
+  @override
+  String updateVersion(String version) {
+    return 'Versão $version';
+  }
+
+  @override
+  String get updateDownload => 'Baixar';
+
+  @override
+  String get updateDownloading => 'Baixando atualização...';
+
+  @override
+  String get updateReady => 'Atualização pronta';
+
+  @override
+  String get updateTapToInstall => 'Toque para instalar';
+
+  @override
+  String get updateInstall => 'Instalar';
+
+  @override
+  String get updateError => 'Erro de atualização';
+
+  @override
+  String get updateClose => 'Fechar';
+
+  @override
+  String get schedules => 'Agendamentos';
+
+  @override
+  String get noSchedules => 'Nenhum agendamento';
+
+  @override
+  String get addSchedule => 'Adicionar agendamento';
+
+  @override
+  String get editSchedule => 'Editar';
+
+  @override
+  String get deleteSchedule => 'Excluir';
+
+  @override
+  String get deleteScheduleConfirm =>
+      'Tem certeza que deseja excluir este agendamento?';
+
+  @override
+  String get scheduleTime => 'Horário';
+
+  @override
+  String get scheduleDays => 'Dias';
+
+  @override
+  String get scheduleAction => 'Ação';
+
+  @override
+  String get turnOn => 'Ligar';
+
+  @override
+  String get turnOff => 'Desligar';
+
+  @override
+  String get everyDay => 'Todos os dias';
+
+  @override
+  String get weekdays => 'Dias de semana';
+
+  @override
+  String get weekends => 'Fins de semana';
+
+  @override
+  String get save => 'Salvar';
+
+  @override
+  String get activity => 'Atividade';
+
+  @override
+  String get noActivity => 'Nenhuma atividade recente';
+
+  @override
+  String get sourceButton => 'Botão';
+
+  @override
+  String get sourceSchedule => 'Agendamento';
+
+  @override
+  String get sourceApp => 'App';
+
+  @override
+  String get sourceSystem => 'Sistema';
+
+  @override
+  String get sourceUnknown => 'Desconhecido';
+
+  @override
+  String get justNow => 'Agora mesmo';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Há $count minutos',
+      one: 'Há 1 minuto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Há $count horas',
+      one: 'Há 1 hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get today => 'Hoje';
+
+  @override
+  String get yesterday => 'Ontem';
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Há $count dias',
+      one: 'Há 1 dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deviceInfo => 'Informações do dispositivo';
+
+  @override
+  String get name => 'Nome';
+
+  @override
+  String get model => 'Modelo';
+
+  @override
+  String get type => 'Tipo';
+
+  @override
+  String get generation => 'Geração';
+
+  @override
+  String get deviceId => 'ID do dispositivo';
+
+  @override
+  String get serial => 'Número de série';
+
+  @override
+  String get firmware => 'Firmware';
+
+  @override
+  String get room => 'Cômodo';
+
+  @override
+  String get connection => 'Conexão';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get wifiNetwork => 'Rede WiFi';
+
+  @override
+  String get ipAddress => 'Endereço IP';
+
+  @override
+  String get signalStrength => 'Intensidade do sinal';
+
+  @override
+  String get signalExcellent => 'Excelente';
+
+  @override
+  String get signalGood => 'Bom';
+
+  @override
+  String get signalFair => 'Razoável';
+
+  @override
+  String get signalWeak => 'Fraco';
+
+  @override
+  String get signalUnknown => 'Desconhecido';
+
+  @override
+  String get uptime => 'Tempo de atividade';
+
+  @override
+  String get ramFree => 'RAM livre';
+
+  @override
+  String get deviceOffline => 'Dispositivo está desconectado';
+
+  @override
+  String get tapForHistory => 'Toque para histórico';
+
+  @override
+  String get reorderDevices => 'Reordenar';
+
+  @override
+  String get reorderDevicesDone => 'Concluído';
+
+  @override
+  String get dragToReorder => 'Arraste para reordenar dispositivos';
+
+  @override
+  String get scenes => 'Cenas';
+
+  @override
+  String get noScenes => 'Nenhuma cena encontrada';
+
+  @override
+  String get noScenesDesc => 'Crie cenas na sua conta Shelly Cloud';
+
+  @override
+  String get showScenesTab => 'Mostrar aba Cenas';
+
+  @override
+  String get showScenesTabDesc => 'Exibir cenas de automação na navegação';
+
+  @override
+  String get sceneEnabled => 'Ativada';
+
+  @override
+  String get sceneDisabled => 'Desativada';
+
+  @override
+  String get loadingScenes => 'Carregando cenas...';
+
+  @override
+  String get runScene => 'Executar';
+
+  @override
+  String get sceneRunning => 'Executando...';
+}

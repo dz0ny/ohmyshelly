@@ -41,14 +41,15 @@ class WeatherStationDashboardCard extends StatelessWidget {
   }
 
   /// Get color based on solar irradiance
-  Color get _weatherColor {
+  Color _getWeatherColor(BuildContext context) {
     if (status == null) return AppColors.weatherStation;
 
+    final colorScheme = Theme.of(context).colorScheme;
     final irradiance = status!.solarIrradiance;
     if (irradiance < 10) {
       return const Color(0xFF5C6BC0); // Indigo - night
     } else if (irradiance < 100) {
-      return AppColors.textSecondary; // Cloudy
+      return colorScheme.onSurfaceVariant; // Cloudy
     } else if (irradiance < 500) {
       return AppColors.warning; // Partly sunny
     } else {
@@ -59,6 +60,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     // Get trends (null for now since we don't have historical data)
     final tempTrend = status?.getTemperatureTrend(null);
     final humidityTrend = status?.getHumidityTrend(null);
@@ -79,12 +81,12 @@ class WeatherStationDashboardCard extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: _weatherColor.withValues(alpha: 0.1),
+                      color: _getWeatherColor(context).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       _weatherIcon,
-                      color: _weatherColor,
+                      color: _getWeatherColor(context),
                       size: 22,
                     ),
                   ),
@@ -92,10 +94,10 @@ class WeatherStationDashboardCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       device.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: colorScheme.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -145,9 +147,9 @@ class WeatherStationDashboardCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       status!.humidityDisplay,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     if (humidityTrend != null) ...[
@@ -159,14 +161,14 @@ class WeatherStationDashboardCard extends StatelessWidget {
                     Icon(
                       AppIcons.light,
                       size: 16,
-                      color: _weatherColor,
+                      color: _getWeatherColor(context),
                     ),
                     const SizedBox(width: 4),
                     Text(
                       status!.solarIrradianceDisplay,
                       style: TextStyle(
                         fontSize: 14,
-                        color: _weatherColor,
+                        color: _getWeatherColor(context),
                       ),
                     ),
                   ],
@@ -185,6 +187,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildWeatherStat(
+                        context,
                         AppIcons.wind,
                         l10n.windSpeed,
                         '${status!.windSpeedDisplay} ${status!.windDirectionLocalized(l10n)}',
@@ -192,7 +195,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _buildRainStat(l10n),
+                      child: _buildRainStat(context, l10n),
                     ),
                   ],
                 ),
@@ -215,11 +218,12 @@ class WeatherStationDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildWeatherStat(IconData icon, String label, String value) {
+  Widget _buildWeatherStat(BuildContext context, IconData icon, String label, String value) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -236,17 +240,17 @@ class WeatherStationDashboardCard extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: colorScheme.onSurface,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -259,7 +263,8 @@ class WeatherStationDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRainStat(AppLocalizations l10n) {
+  Widget _buildRainStat(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     final hasRain = status!.precipitation > 0;
     final rainColor = hasRain ? AppColors.info : AppColors.weatherStation;
 
@@ -268,7 +273,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: hasRain
             ? AppColors.info.withValues(alpha: 0.1)
-            : AppColors.surfaceVariant.withValues(alpha: 0.5),
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -285,9 +290,9 @@ class WeatherStationDashboardCard extends StatelessWidget {
               children: [
                 Text(
                   '${l10n.rain} ${l10n.rainToday}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 Text(
@@ -295,7 +300,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: hasRain ? rainColor : AppColors.textPrimary,
+                    color: hasRain ? rainColor : colorScheme.onSurface,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

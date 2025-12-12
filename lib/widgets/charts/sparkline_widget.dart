@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../core/constants/app_colors.dart';
 
 /// A simple sparkline chart for showing trends in a compact space
 class SparklineWidget extends StatelessWidget {
@@ -75,9 +74,9 @@ class SparklineWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       '${index}h',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 9,
-                        color: AppColors.textHint,
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                     ),
                   );

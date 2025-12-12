@@ -34,9 +34,14 @@ class AppIcons {
   static const IconData toggleOn = Icons.toggle_on_rounded;
   static const IconData toggleOff = Icons.toggle_off_rounded;
 
+  // Scenes
+  static const IconData scene = Icons.auto_awesome_rounded;
+  static const IconData sceneRun = Icons.play_arrow_rounded;
+
   // Navigation
   static const IconData devices = Icons.devices_rounded;
   static const IconData dashboard = Icons.dashboard_rounded;
+  static const IconData scenes = Icons.auto_awesome_rounded;
   static const IconData settings = Icons.settings_rounded;
   static const IconData back = Icons.arrow_back_rounded;
   static const IconData forward = Icons.arrow_forward_rounded;

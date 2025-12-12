@@ -28,6 +28,8 @@ class PowerDeviceDashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isOn = status?.isOn ?? false;
 
     return Card(
@@ -59,23 +61,23 @@ class PowerDeviceDashboardCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       device.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: colorScheme.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   // Switch status indicator
-                  _buildSwitchStatus(isOn, l10n),
+                  _buildSwitchStatus(context, isOn, l10n),
                 ],
               ),
               // Power usage
               if (status != null && device.isOnline) ...[
                 const SizedBox(height: 16),
-                _buildPowerDisplay(l10n),
+                _buildPowerDisplay(context, l10n),
               ],
             ],
           ),
@@ -84,13 +86,14 @@ class PowerDeviceDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSwitchStatus(bool isOn, AppLocalizations l10n) {
+  Widget _buildSwitchStatus(BuildContext context, bool isOn, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isOn
             ? AppColors.deviceOn.withValues(alpha: 0.1)
-            : AppColors.surfaceVariant,
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -100,7 +103,7 @@ class PowerDeviceDashboardCard extends StatelessWidget {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: isOn ? AppColors.deviceOn : AppColors.textHint,
+              color: isOn ? AppColors.deviceOn : colorScheme.outline,
               shape: BoxShape.circle,
             ),
           ),
@@ -110,7 +113,7 @@ class PowerDeviceDashboardCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: isOn ? AppColors.deviceOn : AppColors.textSecondary,
+              color: isOn ? AppColors.deviceOn : colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -118,11 +121,12 @@ class PowerDeviceDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPowerDisplay(AppLocalizations l10n) {
+  Widget _buildPowerDisplay(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -135,9 +139,9 @@ class PowerDeviceDashboardCard extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             l10n.currentPowerUsage,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const Spacer(),

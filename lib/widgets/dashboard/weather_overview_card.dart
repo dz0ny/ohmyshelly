@@ -17,6 +17,7 @@ class WeatherOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
       elevation: 0,
@@ -61,17 +62,17 @@ class WeatherOverviewCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         l10n.currentWeather,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
                     if (onTap != null)
                       Icon(
                         Icons.chevron_right_rounded,
-                        color: AppColors.textHint,
+                        color: colorScheme.outline,
                         size: 24,
                       ),
                   ],
@@ -88,22 +89,22 @@ class WeatherOverviewCard extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         _formatTemperature(weather.temperature),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 72,
                           fontWeight: FontWeight.w300,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onSurface,
                           height: 1,
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
                       child: Text(
                         '°C',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w300,
-                          color: AppColors.textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -118,6 +119,7 @@ class WeatherOverviewCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _buildQuickStat(
+                          context: context,
                           icon: AppIcons.humidity,
                           value: weather.humidityDisplay,
                           label: l10n.humidity,
@@ -127,6 +129,7 @@ class WeatherOverviewCard extends StatelessWidget {
                       _buildVerticalDivider(),
                       Expanded(
                         child: _buildQuickStat(
+                          context: context,
                           icon: AppIcons.pressure,
                           value: _formatPressure(weather.pressure),
                           label: l10n.pressure,
@@ -136,10 +139,11 @@ class WeatherOverviewCard extends StatelessWidget {
                       _buildVerticalDivider(),
                       Expanded(
                         child: _buildQuickStat(
+                          context: context,
                           icon: AppIcons.wind,
                           value: weather.windSpeedDisplay,
                           label: l10n.windSpeed,
-                          color: AppColors.textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -163,7 +167,7 @@ class WeatherOverviewCard extends StatelessWidget {
                       label: weather.precipitationDisplay,
                       color: weather.precipitation > 0
                           ? AppColors.info
-                          : AppColors.textSecondary,
+                          : colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -195,11 +199,13 @@ class WeatherOverviewCard extends StatelessWidget {
   }
 
   Widget _buildQuickStat({
+    required BuildContext context,
     required IconData icon,
     required String value,
     required String label,
     required Color color,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -216,19 +222,19 @@ class WeatherOverviewCard extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: colorScheme.onSurface,
             ),
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
-            color: AppColors.textSecondary,
+            color: colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),

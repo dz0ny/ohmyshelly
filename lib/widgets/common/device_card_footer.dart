@@ -11,6 +11,7 @@ class DeviceCardFooter extends StatelessWidget {
   final String? uptime;
   final int? rssi;
   final DateTime? lastUpdated;
+  final String? firmwareVersion;
 
   const DeviceCardFooter({
     super.key,
@@ -19,11 +20,13 @@ class DeviceCardFooter extends StatelessWidget {
     this.uptime,
     this.rssi,
     this.lastUpdated,
+    this.firmwareVersion,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final items = <Widget>[];
 
     // IP Address (tappable to open device web interface)
@@ -34,6 +37,7 @@ class DeviceCardFooter extends StatelessWidget {
     // WiFi SSID
     if (ssid != null && ssid!.isNotEmpty) {
       items.add(_buildInfoItem(
+        context: context,
         icon: Icons.wifi,
         text: ssid!,
       ));
@@ -47,14 +51,25 @@ class DeviceCardFooter extends StatelessWidget {
     // Uptime
     if (uptime != null && uptime!.isNotEmpty) {
       items.add(_buildInfoItem(
+        context: context,
         icon: Icons.schedule,
         text: uptime!,
+      ));
+    }
+
+    // Firmware version
+    if (firmwareVersion != null && firmwareVersion!.isNotEmpty) {
+      items.add(_buildInfoItem(
+        context: context,
+        icon: Icons.memory,
+        text: 'v$firmwareVersion',
       ));
     }
 
     // Last updated
     if (lastUpdated != null) {
       items.add(_buildInfoItem(
+        context: context,
         icon: Icons.update,
         text: Formatters.timeAgo(lastUpdated!, l10n),
       ));
@@ -68,7 +83,7 @@ class DeviceCardFooter extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
-            children: _buildRowWithSeparators(items),
+            children: _buildRowWithSeparators(context, items, colorScheme),
           ),
         ),
       ],
@@ -101,21 +116,22 @@ class DeviceCardFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem({required IconData icon, required String text}) {
+  Widget _buildInfoItem({required BuildContext context, required IconData icon, required String text}) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           icon,
           size: 12,
-          color: AppColors.textHint,
+          color: colorScheme.outline,
         ),
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
-            color: AppColors.textHint,
+            color: colorScheme.outline,
           ),
         ),
       ],
@@ -159,18 +175,18 @@ class DeviceCardFooter extends StatelessWidget {
     return AppColors.error;                     // Weak
   }
 
-  List<Widget> _buildRowWithSeparators(List<Widget> items) {
+  List<Widget> _buildRowWithSeparators(BuildContext context, List<Widget> items, ColorScheme colorScheme) {
     final result = <Widget>[];
     for (int i = 0; i < items.length; i++) {
       result.add(items[i]);
       if (i < items.length - 1) {
-        result.add(const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+        result.add(Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
             '•',
             style: TextStyle(
               fontSize: 11,
-              color: AppColors.textHint,
+              color: colorScheme.outline,
             ),
           ),
         ));

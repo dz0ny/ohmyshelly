@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class PowerStatistics {
   final List<PowerDataPoint> dataPoints;
   final double totalConsumption;
@@ -26,8 +28,9 @@ class PowerStatistics {
       // Skip missing data points
       if (data['missing'] == true) continue;
 
+      // Parse UTC timestamp (with Z suffix) and convert to local time
       dataPoints.add(PowerDataPoint(
-        timestamp: DateTime.parse(data['datetime'] as String),
+        timestamp: DateTime.parse(data['datetime'] as String).toLocal(),
         consumption: (data['consumption'] as num?)?.toDouble() ?? 0.0,
         voltage: (data['voltage'] as num?)?.toDouble() ?? 0.0,
         reversed: (data['reversed'] as num?)?.toDouble() ?? 0.0,
@@ -126,8 +129,18 @@ class WeatherStatistics {
       // Skip missing data points
       if (data['missing'] == true) continue;
 
+      // Parse UTC timestamp (with Z suffix) and convert to local time
+      final rawDatetime = data['datetime'] as String;
+      final parsedUtc = DateTime.parse(rawDatetime);
+      final localTime = parsedUtc.toLocal();
+
+      // Debug: Log first few timestamp conversions
+      if (kDebugMode && dataPoints.length < 3) {
+        debugPrint('WeatherStats parse: raw=$rawDatetime, parsedUtc=$parsedUtc (isUtc=${parsedUtc.isUtc}), local=$localTime (hour=${localTime.hour})');
+      }
+
       dataPoints.add(WeatherDataPoint(
-        timestamp: DateTime.parse(data['datetime'] as String),
+        timestamp: localTime,
         minTemperature: (data['min_temperature'] as num?)?.toDouble() ?? 0.0,
         maxTemperature: (data['max_temperature'] as num?)?.toDouble() ?? 0.0,
         humidity: (data['humidity'] as num?)?.toDouble() ?? 0.0,
