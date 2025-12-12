@@ -188,6 +188,7 @@ class DevicesTab extends StatelessWidget {
       card = PowerDeviceCard(
         device: device,
         status: status?.powerStatus,
+        connectionSource: deviceProvider.getConnectionSource(device.id),
         onTap: () => context.push('/device/${device.id}'),
         onToggle: (turnOn) => deviceProvider.toggleDevice(device.id, turnOn),
       );

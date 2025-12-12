@@ -3,6 +3,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_icons.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
+import '../../data/models/local_device_info.dart';
 import '../common/device_card_footer.dart';
 import '../common/status_badge.dart';
 import '../controls/power_toggle.dart';
@@ -10,6 +11,7 @@ import '../controls/power_toggle.dart';
 class PowerDeviceCard extends StatefulWidget {
   final Device device;
   final PowerDeviceStatus? status;
+  final ConnectionSource? connectionSource;
   final VoidCallback? onTap;
   final Future<bool> Function(bool turnOn)? onToggle;
 
@@ -17,6 +19,7 @@ class PowerDeviceCard extends StatefulWidget {
     super.key,
     required this.device,
     this.status,
+    this.connectionSource,
     this.onTap,
     this.onToggle,
   });
@@ -135,6 +138,7 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
               ssid: widget.status?.ssid,
               lastUpdated: widget.status?.lastUpdated,
               firmwareVersion: widget.status?.firmwareVersion,
+              connectionSource: widget.connectionSource,
             ),
           ],
         ),

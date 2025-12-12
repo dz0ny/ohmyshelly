@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/formatters.dart';
+import '../../data/models/local_device_info.dart';
 
 /// A compact footer for device cards showing connection details and last updated time.
 class DeviceCardFooter extends StatelessWidget {
@@ -12,6 +13,7 @@ class DeviceCardFooter extends StatelessWidget {
   final int? rssi;
   final DateTime? lastUpdated;
   final String? firmwareVersion;
+  final ConnectionSource? connectionSource;
 
   const DeviceCardFooter({
     super.key,
@@ -21,6 +23,7 @@ class DeviceCardFooter extends StatelessWidget {
     this.rssi,
     this.lastUpdated,
     this.firmwareVersion,
+    this.connectionSource,
   });
 
   @override
@@ -28,6 +31,11 @@ class DeviceCardFooter extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final items = <Widget>[];
+
+    // Connection source indicator (Local or Cloud)
+    if (connectionSource != null && connectionSource != ConnectionSource.unknown) {
+      items.add(_buildConnectionIndicator(context));
+    }
 
     // IP Address (tappable to open device web interface)
     if (ipAddress != null && ipAddress!.isNotEmpty) {
@@ -84,6 +92,29 @@ class DeviceCardFooter extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: _buildRowWithSeparators(context, items, colorScheme),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConnectionIndicator(BuildContext context) {
+    final isLocal = connectionSource == ConnectionSource.local;
+    final color = isLocal ? AppColors.success : AppColors.info;
+    final icon = isLocal ? Icons.wifi : Icons.cloud_outlined;
+    final text = isLocal ? 'Local' : 'Cloud';
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 12, color: color),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 11,
+            color: color,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

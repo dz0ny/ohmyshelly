@@ -9,6 +9,10 @@ import 'data/services/api_service.dart';
 import 'data/services/storage_service.dart';
 import 'data/services/update_service.dart';
 import 'data/services/websocket_service.dart';
+import 'data/services/local_device_service.dart';
+import 'data/services/mdns_discovery_service.dart';
+import 'data/services/connection_manager.dart';
+import 'data/services/device_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/device_provider.dart';
 import 'providers/dashboard_provider.dart';
@@ -48,6 +52,16 @@ void main() async {
   // Create WebSocket service for real-time updates
   final webSocketService = WebSocketService();
 
+  // Create local connection services
+  final localDeviceService = LocalDeviceService();
+  final mdnsService = MdnsDiscoveryService();
+  final connectionManager = ConnectionManager(
+    localService: localDeviceService,
+    cloudService: DeviceService(apiService),
+    mdnsService: mdnsService,
+    storageService: storageService,
+  );
+
   // Create settings provider and initialize
   final settingsProvider = SettingsProvider(storageService: storageService);
   await settingsProvider.init();
@@ -62,6 +76,7 @@ void main() async {
       storageService: storageService,
       apiService: apiService,
       webSocketService: webSocketService,
+      connectionManager: connectionManager,
       settingsProvider: settingsProvider,
     ),
   );
@@ -71,6 +86,7 @@ class OhMyShellyApp extends StatelessWidget {
   final StorageService storageService;
   final ApiService apiService;
   final WebSocketService webSocketService;
+  final ConnectionManager connectionManager;
   final SettingsProvider settingsProvider;
 
   const OhMyShellyApp({
@@ -78,6 +94,7 @@ class OhMyShellyApp extends StatelessWidget {
     required this.storageService,
     required this.apiService,
     required this.webSocketService,
+    required this.connectionManager,
     required this.settingsProvider,
   });
 
@@ -100,11 +117,12 @@ class OhMyShellyApp extends StatelessWidget {
           ),
         ),
 
-        // Device provider with WebSocket support
+        // Device provider with WebSocket and local connection support
         ChangeNotifierProvider<DeviceProvider>(
           create: (context) => DeviceProvider(
             apiService: apiService,
             webSocketService: webSocketService,
+            connectionManager: connectionManager,
           ),
         ),
 

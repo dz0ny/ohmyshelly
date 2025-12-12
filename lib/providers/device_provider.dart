@@ -2,12 +2,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../data/models/device.dart';
 import '../data/models/device_status.dart';
+import '../data/models/local_device_info.dart';
 import '../data/models/statistics.dart';
 import '../data/models/websocket_event.dart';
 import '../data/models/action_log.dart';
 import '../data/services/device_service.dart';
 import '../data/services/api_service.dart';
 import '../data/services/websocket_service.dart';
+import '../data/services/connection_manager.dart';
 import '../core/utils/device_type_helper.dart';
 
 enum DeviceLoadState {
@@ -20,6 +22,7 @@ enum DeviceLoadState {
 class DeviceProvider extends ChangeNotifier {
   final DeviceService _deviceService;
   final WebSocketService? _webSocketService;
+  final ConnectionManager? _connectionManager;
   String? _apiUrl;
   String? _token;
 
@@ -60,8 +63,10 @@ class DeviceProvider extends ChangeNotifier {
   DeviceProvider({
     required ApiService apiService,
     WebSocketService? webSocketService,
+    ConnectionManager? connectionManager,
   })  : _deviceService = DeviceService(apiService),
-        _webSocketService = webSocketService;
+        _webSocketService = webSocketService,
+        _connectionManager = connectionManager;
 
   // Getters
   List<Device> get devices => _devices;
@@ -240,6 +245,8 @@ class DeviceProvider extends ChangeNotifier {
     _token = token;
 
     if (apiUrl != null && token != null) {
+      // Initialize ConnectionManager for local connections
+      _connectionManager?.initialize(apiUrl, token);
       // Connect WebSocket and subscribe to events
       _connectWebSocket(apiUrl, token);
       // Start auto-refresh as fallback when credentials are set
@@ -248,6 +255,8 @@ class DeviceProvider extends ChangeNotifier {
       // Stop auto-refresh and disconnect WebSocket when logged out
       _stopAutoRefresh();
       _disconnectWebSocket();
+      // Clear local connection data
+      _connectionManager?.clear();
       _devices = [];
       _deviceStatuses = {};
       _state = DeviceLoadState.initial;
@@ -419,8 +428,14 @@ class DeviceProvider extends ChangeNotifier {
       _devices = result.devices;
       _deviceStatuses = result.statuses;
 
+      // Register device IPs with ConnectionManager for local connections
+      _registerDeviceIpsFromStatuses(result.statuses);
+
       _state = DeviceLoadState.loaded;
       notifyListeners();
+
+      // Probe local devices in background (non-blocking)
+      _probeLocalDevices();
 
       // Fetch history for sparklines (non-blocking)
       _fetchAllHistories();
@@ -432,6 +447,47 @@ class DeviceProvider extends ChangeNotifier {
       _error = 'Failed to load devices';
       _state = DeviceLoadState.error;
       notifyListeners();
+    }
+  }
+
+  /// Extract and register device IPs from cloud API responses
+  void _registerDeviceIpsFromStatuses(Map<String, DeviceStatus> statuses) {
+    final connectionManager = _connectionManager;
+    if (connectionManager == null) return;
+
+    for (final entry in statuses.entries) {
+      final deviceId = entry.key;
+      final status = entry.value;
+
+      // Extract IP from power device status
+      final powerIp = status.powerStatus?.ipAddress;
+      if (powerIp != null) {
+        connectionManager.registerCloudIp(deviceId, powerIp);
+      }
+      // Extract IP from gateway status
+      else {
+        final gatewayIp = status.gatewayStatus?.ipAddress;
+        if (gatewayIp != null) {
+          connectionManager.registerCloudIp(deviceId, gatewayIp);
+        }
+      }
+    }
+  }
+
+  /// Probe local devices to check which are reachable (non-blocking)
+  Future<void> _probeLocalDevices() async {
+    final connectionManager = _connectionManager;
+    if (connectionManager == null) return;
+
+    try {
+      await connectionManager.probeLocalDevices();
+      // Notify listeners so UI can update connection indicators
+      notifyListeners();
+    } catch (e) {
+      // Probe failure is non-fatal
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Probe failed: $e');
+      }
     }
   }
 
@@ -519,30 +575,45 @@ class DeviceProvider extends ChangeNotifier {
     }
   }
 
-  // Toggle device
+  // Toggle device (uses local-first strategy via ConnectionManager)
   Future<bool> toggleDevice(String deviceId, bool turnOn) async {
     if (_apiUrl == null || _token == null) return false;
 
     try {
-      await _deviceService.toggleDevice(_apiUrl!, _token!, deviceId, turnOn);
+      bool success = false;
+
+      // Try local-first via ConnectionManager if available
+      final connectionManager = _connectionManager;
+      if (connectionManager != null) {
+        success = await connectionManager.toggleDevice(deviceId, turnOn);
+      } else {
+        // Fall back to cloud API directly
+        await _deviceService.toggleDevice(_apiUrl!, _token!, deviceId, turnOn);
+        success = true;
+      }
+
+      if (!success) return false;
 
       // Optimistically update local state
       final status = _deviceStatuses[deviceId];
-      if (status?.powerStatus != null) {
+      final powerStatus = status?.powerStatus;
+      if (status != null && powerStatus != null) {
+        final connectionSource = getConnectionSource(deviceId);
         _deviceStatuses[deviceId] = DeviceStatus(
           powerStatus: PowerDeviceStatus(
             isOn: turnOn,
-            power: status!.powerStatus!.power,
-            voltage: status.powerStatus!.voltage,
-            current: status.powerStatus!.current,
-            frequency: status.powerStatus!.frequency,
-            temperature: status.powerStatus!.temperature,
-            totalEnergy: status.powerStatus!.totalEnergy,
+            power: powerStatus.power,
+            voltage: powerStatus.voltage,
+            current: powerStatus.current,
+            frequency: powerStatus.frequency,
+            temperature: powerStatus.temperature,
+            totalEnergy: powerStatus.totalEnergy,
             lastUpdated: DateTime.now(),
           ),
           weatherStatus: status.weatherStatus,
           gatewayStatus: status.gatewayStatus,
           rawJson: status.rawJson,
+          connectionSource: connectionSource,
         );
         notifyListeners();
       }
@@ -558,6 +629,16 @@ class DeviceProvider extends ChangeNotifier {
       debugPrint('Failed to toggle device: $e');
       return false;
     }
+  }
+
+  /// Get the connection source for a device (local or cloud)
+  ConnectionSource getConnectionSource(String deviceId) {
+    return _connectionManager?.getConnectionSource(deviceId) ?? ConnectionSource.cloud;
+  }
+
+  /// Get local connection info for a device
+  LocalDeviceInfo? getLocalInfo(String deviceId) {
+    return _connectionManager?.getLocalInfo(deviceId);
   }
 
   // Auto-refresh management
@@ -598,6 +679,7 @@ class DeviceProvider extends ChangeNotifier {
   void dispose() {
     _stopAutoRefresh();
     _disconnectWebSocket();
+    _connectionManager?.dispose();
     _actionLogController.close();
     super.dispose();
   }

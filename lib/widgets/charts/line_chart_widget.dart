@@ -394,6 +394,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     List<FlSpot>? maxSpots,
   }) {
     final hasRange = minSpots != null && maxSpots != null && minSpots.isNotEmpty;
+    // Extract to non-null locals for type safety
+    final safeMinSpots = minSpots ?? [];
+    final safeMaxSpots = maxSpots ?? [];
 
     return LineChart(
       LineChartData(
@@ -497,7 +500,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         lineBarsData: hasRange ? [
           // Max line (top of range) - warmer/red tint
           LineChartBarData(
-            spots: maxSpots!,
+            spots: safeMaxSpots,
             isCurved: false,
             color: Colors.red.shade400,
             barWidth: 1.5,
@@ -516,7 +519,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ),
           // Min line (bottom of range) - cooler/blue tint
           LineChartBarData(
-            spots: minSpots!,
+            spots: safeMinSpots,
             isCurved: false,
             color: Colors.blue.shade400,
             barWidth: 1.5,

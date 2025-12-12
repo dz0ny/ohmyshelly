@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/formatters.dart';
+import 'local_device_info.dart';
 
 /// UV Index danger levels based on WHO/EPA guidelines
 enum UvDangerLevel {
@@ -544,15 +545,31 @@ class DeviceStatus {
   final WeatherStationStatus? weatherStatus;
   final GatewayStatus? gatewayStatus;
   final Map<String, dynamic> rawJson;
+  final ConnectionSource connectionSource;
 
   DeviceStatus({
     this.powerStatus,
     this.weatherStatus,
     this.gatewayStatus,
     required this.rawJson,
+    this.connectionSource = ConnectionSource.cloud,
   });
 
   bool get hasPowerStatus => powerStatus != null;
   bool get hasWeatherStatus => weatherStatus != null;
   bool get hasGatewayStatus => gatewayStatus != null;
+
+  /// Whether this status was fetched via local connection
+  bool get isLocalConnection => connectionSource == ConnectionSource.local;
+
+  /// Create a copy with a different connection source
+  DeviceStatus copyWithSource(ConnectionSource source) {
+    return DeviceStatus(
+      powerStatus: powerStatus,
+      weatherStatus: weatherStatus,
+      gatewayStatus: gatewayStatus,
+      rawJson: rawJson,
+      connectionSource: source,
+    );
+  }
 }
