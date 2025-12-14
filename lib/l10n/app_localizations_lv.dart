@@ -130,6 +130,9 @@ class AppLocalizationsLv extends AppLocalizations {
   String get feelsLike => 'Šķiet kā';
 
   @override
+  String get dewPoint => 'Rasas punkts';
+
+  @override
   String get totalEnergy => 'Kopējā Enerģija';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsLv extends AppLocalizations {
 
   @override
   String get languageGreek => 'Grieķu';
-
-  @override
-  String get languageSpanishMexico => 'Spāņu (Meksika)';
-
-  @override
-  String get languageFrenchCanada => 'Franču (Kanāda)';
-
-  @override
-  String get languageEnglishUS => 'Angļu (ASV)';
 
   @override
   String get cancel => 'Atcelt';
@@ -744,16 +738,26 @@ class AppLocalizationsLv extends AppLocalizations {
   String get save => 'Saglabāt';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automātiskā atjaunināšana';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Programmatūras atjauninājumi pusnaktī';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Pievienot Automātisko Atjaunināšanu';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Rediģēt Automātisko Atjaunināšanu';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Ieplānot, kad ierīce pārbauda programmatūras atjauninājumus';
+
+  @override
+  String get systemSchedule => 'Sistēma';
+
+  @override
+  String get userSchedules => 'Lietotāja grafiki';
 
   @override
   String get activity => 'Aktivitāte';
@@ -762,16 +766,16 @@ class AppLocalizationsLv extends AppLocalizations {
   String get noActivity => 'Nav nesenas aktivitātes';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Nesena aktivitāte';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nav nesenās aktivitātes';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Ieslēgts';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Izslēgts';
 
   @override
   String get sourceButton => 'Poga';
@@ -927,6 +931,25 @@ class AppLocalizationsLv extends AppLocalizations {
   String get showScenesTabDesc => 'Rādīt automatizācijas ainas navigācijā';
 
   @override
+  String get showDeviceInfoButton => 'Rādīt Ierīces Informācijas Pogu';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Parādīt informācijas pogu ierīces ekrānā';
+
+  @override
+  String get showScheduleButton => 'Rādīt Grafika Pogu';
+
+  @override
+  String get showScheduleButtonDesc => 'Parādīt grafika pogu jaudas ierīcēm';
+
+  @override
+  String get showActionsButton => 'Rādīt Darbību Pogu';
+
+  @override
+  String get showActionsButtonDesc => 'Parādīt darbību pogu ierīces ekrānā';
+
+  @override
   String get sceneEnabled => 'Iespējots';
 
   @override
@@ -948,6 +971,48 @@ class AppLocalizationsLv extends AppLocalizations {
   String get hideFromDashboardDesc => 'Ierīce būs redzama tikai cilnē Ierīces';
 
   @override
+  String get backupSettings => 'Dublējums';
+
+  @override
+  String get backupSettingsDesc => 'Saglabāt grafikus un darbības lokāli';
+
+  @override
+  String get backupCreate => 'Izveidot dublējumu';
+
+  @override
+  String get backupRestore => 'Atjaunot dublējumu';
+
+  @override
+  String get backupDelete => 'Dzēst dublējumu';
+
+  @override
+  String get backupCreated => 'Dublējums izveidots';
+
+  @override
+  String get backupRestored => 'Dublējums atjaunots';
+
+  @override
+  String get backupDeleted => 'Dublējums dzēsts';
+
+  @override
+  String get backupNotFound => 'Dublējums nav atrasts';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Tas aizstās pašreizējos grafikus un darbības ar dublējumu. Turpināt?';
+
+  @override
+  String get backupDeleteConfirm => 'Dzēst šīs ierīces dublējumu?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Pēdējais dublējums: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Nav dublējuma';
+
+  @override
   String get unsupportedDevice => 'Neatbalstīta ierīce';
 
   @override
@@ -963,4 +1028,123 @@ class AppLocalizationsLv extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Nokopēts starpliktuvē';
+
+  @override
+  String get webhooks => 'Darbības';
+
+  @override
+  String get noWebhooks => 'Nav darbību';
+
+  @override
+  String get noWebhooksDesc =>
+      'Izveidojiet darbības, lai aktivizētu citas ierīces, kad notiek notikumi';
+
+  @override
+  String get addWebhook => 'Pievienot Darbību';
+
+  @override
+  String get editWebhook => 'Rediģēt';
+
+  @override
+  String get deleteWebhook => 'Dzēst';
+
+  @override
+  String get deleteWebhookConfirm => 'Vai tiešām vēlaties dzēst šo darbību?';
+
+  @override
+  String get webhookNoName => 'Nenosaukta Darbība';
+
+  @override
+  String get webhookName => 'Nosaukums';
+
+  @override
+  String get webhookNameHint => 'piemēram, Ieslēgt gaismas';
+
+  @override
+  String get webhookEvent => 'Aktivizācijas Notikums';
+
+  @override
+  String get webhookUrls => 'Mērķa URL';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Pievienot URL';
+
+  @override
+  String get webhookRemoveUrl => 'Noņemt';
+
+  @override
+  String get webhookRepeatPeriod => 'Atkārtošanas Atdzišana';
+
+  @override
+  String get webhookRepeatNone => 'Bez atdzišanas';
+
+  @override
+  String get webhookRepeat5s => '5 sekundes';
+
+  @override
+  String get webhookRepeat15s => '15 sekundes';
+
+  @override
+  String get webhookRepeat30s => '30 sekundes';
+
+  @override
+  String get webhookRepeat1min => '1 minūte';
+
+  @override
+  String get webhookRepeat5min => '5 minūtes';
+
+  @override
+  String get webhookRepeat15min => '15 minūtes';
+
+  @override
+  String get webhookRepeat1hour => '1 stunda';
+
+  @override
+  String get webhookModeDevice => 'Ierīce';
+
+  @override
+  String get webhookModeCustom => 'Pielāgots URL';
+
+  @override
+  String get webhookTargetDevice => 'Mērķa Ierīce';
+
+  @override
+  String get webhookSelectDevice => 'Izvēlieties ierīci';
+
+  @override
+  String get webhookNoDevices => 'Nav citu pieejamu ierīču';
+
+  @override
+  String get webhookToggle => 'Pārslēgt';
+
+  @override
+  String get webhookToggleAfter => 'Automātiska Atgriešana Pēc';
+
+  @override
+  String get webhookToggleAfterNone => 'Neatgriezt';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekundēm';
+
+  @override
+  String get webhookToggleAfter1min => '1 minūtes';
+
+  @override
+  String get webhookToggleAfter5min => '5 minūtēm';
+
+  @override
+  String get webhookToggleAfter10min => '10 minūtēm';
+
+  @override
+  String get webhookToggleAfter30min => '30 minūtēm';
+
+  @override
+  String get webhookToggleAfter1hour => '1 stundas';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automātiska atgriešana nav pieejama pārslēgšanas darbībai';
 }

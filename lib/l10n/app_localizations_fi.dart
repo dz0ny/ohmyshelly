@@ -130,6 +130,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get feelsLike => 'Tuntuu kuin';
 
   @override
+  String get dewPoint => 'Kastepiste';
+
+  @override
   String get totalEnergy => 'Kokonaisenergia';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get languageGreek => 'Kreikka';
-
-  @override
-  String get languageSpanishMexico => 'Espanja (Meksiko)';
-
-  @override
-  String get languageFrenchCanada => 'Ranska (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Englanti (USA)';
 
   @override
   String get cancel => 'Peruuta';
@@ -746,16 +740,26 @@ class AppLocalizationsFi extends AppLocalizations {
   String get save => 'Tallenna';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automaattinen päivitys';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Laiteohjelmistopäivitykset keskiyöllä';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Lisää Automaattinen Päivitys';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Muokkaa Automaattista Päivitystä';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Ajoita milloin laite tarkistaa laiteohjelmistopäivitykset';
+
+  @override
+  String get systemSchedule => 'Järjestelmä';
+
+  @override
+  String get userSchedules => 'Käyttäjäaikataulut';
 
   @override
   String get activity => 'Toiminta';
@@ -764,16 +768,16 @@ class AppLocalizationsFi extends AppLocalizations {
   String get noActivity => 'Ei viimeaikaista toimintaa';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Viimeaikainen toiminta';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Ei viimeaikaista toimintaa';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Kytketty päälle';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Kytketty pois';
 
   @override
   String get sourceButton => 'Painike';
@@ -926,6 +930,24 @@ class AppLocalizationsFi extends AppLocalizations {
   String get showScenesTabDesc => 'Näytä automaatiokohtaukset navigaatiossa';
 
   @override
+  String get showDeviceInfoButton => 'Näytä Laitetietonappi';
+
+  @override
+  String get showDeviceInfoButtonDesc => 'Näytä infonappi laitenäytössä';
+
+  @override
+  String get showScheduleButton => 'Näytä Aikataulunappi';
+
+  @override
+  String get showScheduleButtonDesc => 'Näytä aikataulunappi virtalaitteille';
+
+  @override
+  String get showActionsButton => 'Näytä Toimintonappi';
+
+  @override
+  String get showActionsButtonDesc => 'Näytä toimintonappi laitenäytössä';
+
+  @override
   String get sceneEnabled => 'Käytössä';
 
   @override
@@ -947,6 +969,49 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hideFromDashboardDesc => 'Laite näkyy vain Laitteet-välilehdessä';
 
   @override
+  String get backupSettings => 'Varmuuskopio';
+
+  @override
+  String get backupSettingsDesc =>
+      'Tallenna aikataulut ja toiminnot paikallisesti';
+
+  @override
+  String get backupCreate => 'Luo varmuuskopio';
+
+  @override
+  String get backupRestore => 'Palauta varmuuskopio';
+
+  @override
+  String get backupDelete => 'Poista varmuuskopio';
+
+  @override
+  String get backupCreated => 'Varmuuskopio luotu';
+
+  @override
+  String get backupRestored => 'Varmuuskopio palautettu';
+
+  @override
+  String get backupDeleted => 'Varmuuskopio poistettu';
+
+  @override
+  String get backupNotFound => 'Varmuuskopiota ei löytynyt';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Tämä korvaa nykyiset aikataulut ja toiminnot varmuuskopiolla. Jatka?';
+
+  @override
+  String get backupDeleteConfirm => 'Poista tämän laitteen varmuuskopio?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Viimeisin varmuuskopio: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Ei varmuuskopiota';
+
+  @override
   String get unsupportedDevice => 'Ei-tuettu laite';
 
   @override
@@ -962,4 +1027,124 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Kopioitu leikepöydälle';
+
+  @override
+  String get webhooks => 'Toiminnot';
+
+  @override
+  String get noWebhooks => 'Ei toimintoja';
+
+  @override
+  String get noWebhooksDesc =>
+      'Luo toimintoja laukaistaksesi muita laitteita tapahtumien sattuessa';
+
+  @override
+  String get addWebhook => 'Lisää Toiminto';
+
+  @override
+  String get editWebhook => 'Muokkaa';
+
+  @override
+  String get deleteWebhook => 'Poista';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Haluatko varmasti poistaa tämän toiminnon?';
+
+  @override
+  String get webhookNoName => 'Nimetön Toiminto';
+
+  @override
+  String get webhookName => 'Nimi';
+
+  @override
+  String get webhookNameHint => 'esim., Kytke valot päälle';
+
+  @override
+  String get webhookEvent => 'Laukaisutapahtuma';
+
+  @override
+  String get webhookUrls => 'Kohde-URL:t';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Lisää URL';
+
+  @override
+  String get webhookRemoveUrl => 'Poista';
+
+  @override
+  String get webhookRepeatPeriod => 'Toiston Jäähdytys';
+
+  @override
+  String get webhookRepeatNone => 'Ei jäähdytystä';
+
+  @override
+  String get webhookRepeat5s => '5 sekuntia';
+
+  @override
+  String get webhookRepeat15s => '15 sekuntia';
+
+  @override
+  String get webhookRepeat30s => '30 sekuntia';
+
+  @override
+  String get webhookRepeat1min => '1 minuutti';
+
+  @override
+  String get webhookRepeat5min => '5 minuuttia';
+
+  @override
+  String get webhookRepeat15min => '15 minuuttia';
+
+  @override
+  String get webhookRepeat1hour => '1 tunti';
+
+  @override
+  String get webhookModeDevice => 'Laite';
+
+  @override
+  String get webhookModeCustom => 'Mukautettu URL';
+
+  @override
+  String get webhookTargetDevice => 'Kohdelaite';
+
+  @override
+  String get webhookSelectDevice => 'Valitse laite';
+
+  @override
+  String get webhookNoDevices => 'Ei muita laitteita saatavilla';
+
+  @override
+  String get webhookToggle => 'Vaihda';
+
+  @override
+  String get webhookToggleAfter => 'Automaattinen Palautus';
+
+  @override
+  String get webhookToggleAfterNone => 'Älä palauta';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekuntia';
+
+  @override
+  String get webhookToggleAfter1min => '1 minuutti';
+
+  @override
+  String get webhookToggleAfter5min => '5 minuuttia';
+
+  @override
+  String get webhookToggleAfter10min => '10 minuuttia';
+
+  @override
+  String get webhookToggleAfter30min => '30 minuuttia';
+
+  @override
+  String get webhookToggleAfter1hour => '1 tunti';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automaattinen palautus ei ole saatavilla vaihtotoiminnolle';
 }

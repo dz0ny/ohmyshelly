@@ -9,6 +9,7 @@ import '../../data/models/action_log.dart';
 import '../../data/models/device.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/schedule_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../widgets/devices/power_device/power_device_detail.dart';
 import '../../widgets/devices/power_device/relay_detail.dart';
 import '../../widgets/devices/weather_station/weather_station_detail.dart';
@@ -71,8 +72,8 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DeviceProvider, ScheduleProvider>(
-      builder: (context, deviceProvider, scheduleProvider, _) {
+    return Consumer3<DeviceProvider, ScheduleProvider, SettingsProvider>(
+      builder: (context, deviceProvider, scheduleProvider, settingsProvider, _) {
         final device = deviceProvider.devices.firstWhere(
           (d) => d.id == widget.deviceId,
           orElse: () => Device(
@@ -106,18 +107,27 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
               ],
             ),
             actions: [
-              // Schedule icon only for power devices
-              if (device.isPowerDevice)
+              // Schedule icon only for power devices (if enabled in settings)
+              if (device.isPowerDevice && settingsProvider.showScheduleButton)
                 IconButton(
                   icon: const Icon(AppIcons.schedule),
                   tooltip: 'Schedules',
                   onPressed: () => context.push('/device/${device.id}/schedules'),
                 ),
-              IconButton(
-                icon: const Icon(AppIcons.info),
-                tooltip: 'Info',
-                onPressed: () => context.push('/device/${device.id}/settings'),
-              ),
+              // Webhook/Actions icon for power devices only (if enabled in settings)
+              if (device.isPowerDevice && device.isOnline && settingsProvider.showActionsButton)
+                IconButton(
+                  icon: const Icon(AppIcons.webhook),
+                  tooltip: 'Actions',
+                  onPressed: () => context.push('/device/${device.id}/webhooks'),
+                ),
+              // Info icon (if enabled in settings)
+              if (settingsProvider.showDeviceInfoButton)
+                IconButton(
+                  icon: const Icon(AppIcons.info),
+                  tooltip: 'Info',
+                  onPressed: () => context.push('/device/${device.id}/settings'),
+                ),
             ],
           ),
           body: RefreshIndicator(

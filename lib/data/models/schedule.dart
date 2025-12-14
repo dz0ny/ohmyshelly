@@ -177,6 +177,14 @@ class ScheduleCall {
       params: {'on': on, 'id': switchId},
     );
   }
+
+  /// Create a Shelly.Update call for firmware updates.
+  static ScheduleCall shellyUpdate({String stage = 'stable'}) {
+    return ScheduleCall(
+      method: 'Shelly.Update',
+      params: {'stage': stage},
+    );
+  }
 }
 
 /// Helper class to parse and build timespec strings.

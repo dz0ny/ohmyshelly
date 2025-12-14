@@ -130,6 +130,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get feelsLike => 'Gevoelstemperatuur';
 
   @override
+  String get dewPoint => 'Dauwpunt';
+
+  @override
   String get totalEnergy => 'Totale energie';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get languageGreek => 'Grieks';
-
-  @override
-  String get languageSpanishMexico => 'Spaans (Mexico)';
-
-  @override
-  String get languageFrenchCanada => 'Frans (Canada)';
-
-  @override
-  String get languageEnglishUS => 'Engels (VS)';
 
   @override
   String get cancel => 'Annuleren';
@@ -746,16 +740,26 @@ class AppLocalizationsNl extends AppLocalizations {
   String get save => 'Opslaan';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatisch bijwerken';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Firmware-updates om middernacht';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Auto-update toevoegen';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Auto-update bewerken';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Plan wanneer het apparaat controleert op firmware-updates';
+
+  @override
+  String get systemSchedule => 'Systeem';
+
+  @override
+  String get userSchedules => 'Gebruikersschema\'s';
 
   @override
   String get activity => 'Activiteit';
@@ -764,16 +768,16 @@ class AppLocalizationsNl extends AppLocalizations {
   String get noActivity => 'Geen recente activiteit';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Recente activiteit';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Geen recente activiteit';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Ingeschakeld';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Uitgeschakeld';
 
   @override
   String get sourceButton => 'Knop';
@@ -927,6 +931,26 @@ class AppLocalizationsNl extends AppLocalizations {
       'Automatiseringsscènes weergeven in navigatie';
 
   @override
+  String get showDeviceInfoButton => 'Toon apparaatinfo-knop';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Info-knop weergeven in apparaatscherm';
+
+  @override
+  String get showScheduleButton => 'Toon schema-knop';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Schema-knop weergeven voor stroomapparaten';
+
+  @override
+  String get showActionsButton => 'Toon acties-knop';
+
+  @override
+  String get showActionsButtonDesc => 'Acties-knop weergeven in apparaatscherm';
+
+  @override
   String get sceneEnabled => 'Ingeschakeld';
 
   @override
@@ -949,6 +973,48 @@ class AppLocalizationsNl extends AppLocalizations {
       'Apparaat verschijnt alleen in het tabblad Apparaten';
 
   @override
+  String get backupSettings => 'Back-up';
+
+  @override
+  String get backupSettingsDesc => 'Planningen en acties lokaal opslaan';
+
+  @override
+  String get backupCreate => 'Back-up maken';
+
+  @override
+  String get backupRestore => 'Back-up herstellen';
+
+  @override
+  String get backupDelete => 'Back-up verwijderen';
+
+  @override
+  String get backupCreated => 'Back-up gemaakt';
+
+  @override
+  String get backupRestored => 'Back-up hersteld';
+
+  @override
+  String get backupDeleted => 'Back-up verwijderd';
+
+  @override
+  String get backupNotFound => 'Geen back-up gevonden';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Dit vervangt huidige planningen en acties met de back-up. Doorgaan?';
+
+  @override
+  String get backupDeleteConfirm => 'Back-up voor dit apparaat verwijderen?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Laatste back-up: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Geen back-up';
+
+  @override
   String get unsupportedDevice => 'Niet-ondersteund apparaat';
 
   @override
@@ -964,4 +1030,124 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Gekopieerd naar klembord';
+
+  @override
+  String get webhooks => 'Acties';
+
+  @override
+  String get noWebhooks => 'Geen acties';
+
+  @override
+  String get noWebhooksDesc =>
+      'Maak acties om andere apparaten te activeren wanneer gebeurtenissen plaatsvinden';
+
+  @override
+  String get addWebhook => 'Actie toevoegen';
+
+  @override
+  String get editWebhook => 'Bewerken';
+
+  @override
+  String get deleteWebhook => 'Verwijderen';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Weet je zeker dat je deze actie wilt verwijderen?';
+
+  @override
+  String get webhookNoName => 'Naamloze actie';
+
+  @override
+  String get webhookName => 'Naam';
+
+  @override
+  String get webhookNameHint => 'bijv. Verlichting inschakelen';
+
+  @override
+  String get webhookEvent => 'Trigger-gebeurtenis';
+
+  @override
+  String get webhookUrls => 'Doel-URL\'s';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'URL toevoegen';
+
+  @override
+  String get webhookRemoveUrl => 'Verwijderen';
+
+  @override
+  String get webhookRepeatPeriod => 'Herhalingsblokkering';
+
+  @override
+  String get webhookRepeatNone => 'Geen blokkering';
+
+  @override
+  String get webhookRepeat5s => '5 seconden';
+
+  @override
+  String get webhookRepeat15s => '15 seconden';
+
+  @override
+  String get webhookRepeat30s => '30 seconden';
+
+  @override
+  String get webhookRepeat1min => '1 minuut';
+
+  @override
+  String get webhookRepeat5min => '5 minuten';
+
+  @override
+  String get webhookRepeat15min => '15 minuten';
+
+  @override
+  String get webhookRepeat1hour => '1 uur';
+
+  @override
+  String get webhookModeDevice => 'Apparaat';
+
+  @override
+  String get webhookModeCustom => 'Aangepaste URL';
+
+  @override
+  String get webhookTargetDevice => 'Doelapparaat';
+
+  @override
+  String get webhookSelectDevice => 'Selecteer een apparaat';
+
+  @override
+  String get webhookNoDevices => 'Geen andere apparaten beschikbaar';
+
+  @override
+  String get webhookToggle => 'Schakelen';
+
+  @override
+  String get webhookToggleAfter => 'Automatisch terugzetten na';
+
+  @override
+  String get webhookToggleAfterNone => 'Niet terugzetten';
+
+  @override
+  String get webhookToggleAfter30s => '30 seconden';
+
+  @override
+  String get webhookToggleAfter1min => '1 minuut';
+
+  @override
+  String get webhookToggleAfter5min => '5 minuten';
+
+  @override
+  String get webhookToggleAfter10min => '10 minuten';
+
+  @override
+  String get webhookToggleAfter30min => '30 minuten';
+
+  @override
+  String get webhookToggleAfter1hour => '1 uur';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automatisch terugzetten is niet beschikbaar voor schakelactie';
 }

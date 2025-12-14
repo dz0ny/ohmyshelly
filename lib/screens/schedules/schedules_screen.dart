@@ -11,6 +11,7 @@ import '../../providers/schedule_provider.dart';
 import '../../widgets/schedule/schedule_list_tile.dart';
 import '../../widgets/schedule/update_schedule_list_tile.dart';
 import '../../widgets/schedule/schedule_editor_sheet.dart';
+import '../../widgets/schedule/update_schedule_editor_sheet.dart';
 import '../../widgets/schedule/action_log_list.dart';
 
 class SchedulesScreen extends StatefulWidget {
@@ -98,10 +99,39 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
             title: Text(l10n.schedules),
             actions: [
               if (device.isOnline && scheduleProvider.isConnected)
-                IconButton(
+                PopupMenuButton<String>(
                   icon: const Icon(Icons.add),
-                  onPressed: () => _addSchedule(context, l10n, scheduleProvider),
                   tooltip: l10n.addSchedule,
+                  onSelected: (value) {
+                    if (value == 'power') {
+                      _addSchedule(context, l10n, scheduleProvider);
+                    } else if (value == 'update') {
+                      _addAutoUpdateSchedule(context, l10n, scheduleProvider);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'power',
+                      child: Row(
+                        children: [
+                          Icon(Icons.power_settings_new,
+                              color: AppColors.deviceOn),
+                          const SizedBox(width: 12),
+                          Text(l10n.addSchedule),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'update',
+                      child: Row(
+                        children: [
+                          Icon(Icons.system_update, color: AppColors.info),
+                          const SizedBox(width: 12),
+                          Text(l10n.addAutoUpdateSchedule),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -242,6 +272,13 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                   backgroundColor: AppColors.primary,
                 ),
               ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () =>
+                    _addAutoUpdateSchedule(context, l10n, scheduleProvider),
+                icon: Icon(Icons.system_update, size: 18, color: AppColors.info),
+                label: Text(l10n.addAutoUpdateSchedule),
+              ),
             ],
           ),
         ),
@@ -252,8 +289,8 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // System schedules (firmware update)
+        _buildSectionHeader(l10n.systemSchedule),
         if (systemSchedules.isNotEmpty) ...[
-          _buildSectionHeader(l10n.systemSchedule),
           ...systemSchedules.map(
             (schedule) => UpdateScheduleListTile(
               schedule: schedule,
@@ -265,12 +302,26 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+        ] else ...[
+          // No system schedules - show option to add one
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: OutlinedButton.icon(
+              onPressed: () =>
+                  _addAutoUpdateSchedule(context, l10n, scheduleProvider),
+              icon: Icon(Icons.system_update, size: 18, color: AppColors.info),
+              label: Text(l10n.addAutoUpdateSchedule),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 44),
+              ),
+            ),
+          ),
         ],
+        const SizedBox(height: 8),
 
         // User schedules (power toggle)
+        _buildSectionHeader(l10n.userSchedules),
         if (userSchedules.isNotEmpty) ...[
-          if (systemSchedules.isNotEmpty) _buildSectionHeader(l10n.userSchedules),
           ...userSchedules.map(
             (schedule) => ScheduleListTile(
               schedule: schedule,
@@ -294,23 +345,20 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
               ),
             ),
           ),
-        ],
-
-        // Show empty state only if no user schedules but system schedules exist
-        if (userSchedules.isEmpty && systemSchedules.isNotEmpty)
+        ] else ...[
+          // No user schedules - show option to add one
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Center(
-              child: FilledButton.icon(
-                onPressed: () => _addSchedule(context, l10n, scheduleProvider),
-                icon: const Icon(Icons.add, size: 18),
-                label: Text(l10n.addSchedule),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: OutlinedButton.icon(
+              onPressed: () => _addSchedule(context, l10n, scheduleProvider),
+              icon: Icon(Icons.add, size: 18, color: AppColors.primary),
+              label: Text(l10n.addSchedule),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 44),
               ),
             ),
           ),
+        ],
       ],
     );
   }
@@ -344,6 +392,32 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
       minute: result.minute,
       days: result.days,
       turnOn: result.turnOn,
+    );
+
+    if (!success && mounted) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.errorGeneric),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> _addAutoUpdateSchedule(
+    BuildContext context,
+    AppLocalizations l10n,
+    ScheduleProvider scheduleProvider,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final result = await UpdateScheduleEditorSheet.show(context);
+    if (result == null) return;
+
+    final success = await scheduleProvider.createAutoUpdateSchedule(
+      widget.deviceId,
+      hour: result.hour,
+      minute: result.minute,
+      days: result.days,
     );
 
     if (!success && mounted) {

@@ -130,6 +130,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get feelsLike => 'Tundub nagu';
 
   @override
+  String get dewPoint => 'Kastepunkt';
+
+  @override
   String get totalEnergy => 'Kogu Energia';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get languageGreek => 'Kreeka';
-
-  @override
-  String get languageSpanishMexico => 'Hispaania (Mehhiko)';
-
-  @override
-  String get languageFrenchCanada => 'Prantsuse (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Inglise (USA)';
 
   @override
   String get cancel => 'Tühista';
@@ -746,16 +740,26 @@ class AppLocalizationsEt extends AppLocalizations {
   String get save => 'Salvesta';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automaatne uuendus';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Püsivara uuendused keskööl';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Lisa Automaatne Uuendus';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Muuda Automaatset Uuendust';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Ajasta, millal seade kontrollib püsivara uuendusi';
+
+  @override
+  String get systemSchedule => 'Süsteem';
+
+  @override
+  String get userSchedules => 'Kasutaja ajakavad';
 
   @override
   String get activity => 'Tegevus';
@@ -764,16 +768,16 @@ class AppLocalizationsEt extends AppLocalizations {
   String get noActivity => 'Hiljutist tegevust pole';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Hiljutine tegevus';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Hiljutist tegevust pole';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Sisse lülitatud';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Välja lülitatud';
 
   @override
   String get sourceButton => 'Nupp';
@@ -926,6 +930,25 @@ class AppLocalizationsEt extends AppLocalizations {
   String get showScenesTabDesc => 'Kuva automaatikastseenid navigatsioonis';
 
   @override
+  String get showDeviceInfoButton => 'Näita Seadme Info Nuppu';
+
+  @override
+  String get showDeviceInfoButtonDesc => 'Kuva info nupp seadme ekraanil';
+
+  @override
+  String get showScheduleButton => 'Näita Ajakava Nuppu';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Kuva ajakava nupp võimsusseadmete jaoks';
+
+  @override
+  String get showActionsButton => 'Näita Toimingute Nuppu';
+
+  @override
+  String get showActionsButtonDesc => 'Kuva toimingute nupp seadme ekraanil';
+
+  @override
   String get sceneEnabled => 'Lubatud';
 
   @override
@@ -948,6 +971,48 @@ class AppLocalizationsEt extends AppLocalizations {
       'Seade kuvatakse ainult vahekaardil Seadmed';
 
   @override
+  String get backupSettings => 'Varundus';
+
+  @override
+  String get backupSettingsDesc => 'Salvesta ajakavad ja tegevused kohapeal';
+
+  @override
+  String get backupCreate => 'Loo varukoopia';
+
+  @override
+  String get backupRestore => 'Taasta varukoopia';
+
+  @override
+  String get backupDelete => 'Kustuta varukoopia';
+
+  @override
+  String get backupCreated => 'Varukoopia loodud';
+
+  @override
+  String get backupRestored => 'Varukoopia taastatud';
+
+  @override
+  String get backupDeleted => 'Varukoopia kustutatud';
+
+  @override
+  String get backupNotFound => 'Varukoopiat ei leitud';
+
+  @override
+  String get backupRestoreConfirm =>
+      'See asendab praegused ajakavad ja tegevused varukoopiaga. Jätka?';
+
+  @override
+  String get backupDeleteConfirm => 'Kustutada selle seadme varukoopia?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Viimane varukoopia: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Varukoopia puudub';
+
+  @override
   String get unsupportedDevice => 'Toetamata seade';
 
   @override
@@ -963,4 +1028,124 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Kopeeritud lõikelauale';
+
+  @override
+  String get webhooks => 'Toimingud';
+
+  @override
+  String get noWebhooks => 'Toiminguid pole';
+
+  @override
+  String get noWebhooksDesc =>
+      'Looge toimingud, et käivitada teisi seadmeid sündmuste toimumisel';
+
+  @override
+  String get addWebhook => 'Lisa Toiming';
+
+  @override
+  String get editWebhook => 'Muuda';
+
+  @override
+  String get deleteWebhook => 'Kustuta';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Kas olete kindel, et soovite selle toimingu kustutada?';
+
+  @override
+  String get webhookNoName => 'Nimetu Toiming';
+
+  @override
+  String get webhookName => 'Nimi';
+
+  @override
+  String get webhookNameHint => 'nt, Lülita tuled sisse';
+
+  @override
+  String get webhookEvent => 'Käivitussündmus';
+
+  @override
+  String get webhookUrls => 'Siht-URL-id';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Lisa URL';
+
+  @override
+  String get webhookRemoveUrl => 'Eemalda';
+
+  @override
+  String get webhookRepeatPeriod => 'Kordamise Jahtumisaeg';
+
+  @override
+  String get webhookRepeatNone => 'Jahtumisajata';
+
+  @override
+  String get webhookRepeat5s => '5 sekundit';
+
+  @override
+  String get webhookRepeat15s => '15 sekundit';
+
+  @override
+  String get webhookRepeat30s => '30 sekundit';
+
+  @override
+  String get webhookRepeat1min => '1 minut';
+
+  @override
+  String get webhookRepeat5min => '5 minutit';
+
+  @override
+  String get webhookRepeat15min => '15 minutit';
+
+  @override
+  String get webhookRepeat1hour => '1 tund';
+
+  @override
+  String get webhookModeDevice => 'Seade';
+
+  @override
+  String get webhookModeCustom => 'Kohandatud URL';
+
+  @override
+  String get webhookTargetDevice => 'Sihtseade';
+
+  @override
+  String get webhookSelectDevice => 'Valige seade';
+
+  @override
+  String get webhookNoDevices => 'Teisi seadmeid pole saadaval';
+
+  @override
+  String get webhookToggle => 'Lülita';
+
+  @override
+  String get webhookToggleAfter => 'Automaatne Tagasipööramine Pärast';
+
+  @override
+  String get webhookToggleAfterNone => 'Ära pöördu tagasi';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekundit';
+
+  @override
+  String get webhookToggleAfter1min => '1 minut';
+
+  @override
+  String get webhookToggleAfter5min => '5 minutit';
+
+  @override
+  String get webhookToggleAfter10min => '10 minutit';
+
+  @override
+  String get webhookToggleAfter30min => '30 minutit';
+
+  @override
+  String get webhookToggleAfter1hour => '1 tund';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automaatne tagasipööramine pole lülitustegevuse jaoks saadaval';
 }

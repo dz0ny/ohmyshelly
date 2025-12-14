@@ -130,6 +130,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get feelsLike => 'Hőérzet';
 
   @override
+  String get dewPoint => 'Harmatpont';
+
+  @override
   String get totalEnergy => 'Összes Energia';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get languageGreek => 'Görög';
-
-  @override
-  String get languageSpanishMexico => 'Spanyol (Mexikó)';
-
-  @override
-  String get languageFrenchCanada => 'Francia (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Angol (USA)';
 
   @override
   String get cancel => 'Mégse';
@@ -746,16 +740,26 @@ class AppLocalizationsHu extends AppLocalizations {
   String get save => 'Mentés';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatikus frissítés';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Firmware frissítések éjfélkor';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Automatikus Frissítés Hozzáadása';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Automatikus Frissítés Szerkesztése';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Ütemezze, hogy mikor ellenőrizze az eszköz a firmware frissítéseket';
+
+  @override
+  String get systemSchedule => 'Rendszer';
+
+  @override
+  String get userSchedules => 'Felhasználói ütemezések';
 
   @override
   String get activity => 'Tevékenység';
@@ -764,16 +768,16 @@ class AppLocalizationsHu extends AppLocalizations {
   String get noActivity => 'Nincs közelmúltbeli tevékenység';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Legutóbbi tevékenység';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nincs legutóbbi tevékenység';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Bekapcsolva';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Kikapcsolva';
 
   @override
   String get sourceButton => 'Gomb';
@@ -928,6 +932,27 @@ class AppLocalizationsHu extends AppLocalizations {
       'Automatizálási jelenetek megjelenítése a navigációban';
 
   @override
+  String get showDeviceInfoButton => 'Eszközinformáció Gomb Megjelenítése';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Információs gomb megjelenítése az eszköz képernyőjén';
+
+  @override
+  String get showScheduleButton => 'Ütemezés Gomb Megjelenítése';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Ütemezés gomb megjelenítése teljesítményeszközökhöz';
+
+  @override
+  String get showActionsButton => 'Műveletek Gomb Megjelenítése';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Műveletek gomb megjelenítése az eszköz képernyőjén';
+
+  @override
   String get sceneEnabled => 'Engedélyezve';
 
   @override
@@ -950,6 +975,49 @@ class AppLocalizationsHu extends AppLocalizations {
       'Az eszköz csak az Eszközök fülön jelenik meg';
 
   @override
+  String get backupSettings => 'Biztonsági mentés';
+
+  @override
+  String get backupSettingsDesc => 'Ütemezések és műveletek helyi mentése';
+
+  @override
+  String get backupCreate => 'Mentés létrehozása';
+
+  @override
+  String get backupRestore => 'Mentés visszaállítása';
+
+  @override
+  String get backupDelete => 'Mentés törlése';
+
+  @override
+  String get backupCreated => 'Biztonsági mentés létrehozva';
+
+  @override
+  String get backupRestored => 'Biztonsági mentés visszaállítva';
+
+  @override
+  String get backupDeleted => 'Biztonsági mentés törölve';
+
+  @override
+  String get backupNotFound => 'Nem található biztonsági mentés';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Ez lecseréli az aktuális ütemezéseket és műveleteket a biztonsági mentésre. Folytatja?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Törli a biztonsági mentést ehhez az eszközhöz?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Utolsó mentés: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Nincs biztonsági mentés';
+
+  @override
   String get unsupportedDevice => 'Nem támogatott eszköz';
 
   @override
@@ -965,4 +1033,124 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Vágólapra másolva';
+
+  @override
+  String get webhooks => 'Műveletek';
+
+  @override
+  String get noWebhooks => 'Nincs művelet';
+
+  @override
+  String get noWebhooksDesc =>
+      'Hozzon létre műveleteket más eszközök aktiválásához események bekövetkezésekor';
+
+  @override
+  String get addWebhook => 'Művelet Hozzáadása';
+
+  @override
+  String get editWebhook => 'Szerkesztés';
+
+  @override
+  String get deleteWebhook => 'Törlés';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Biztosan törölni szeretné ezt a műveletet?';
+
+  @override
+  String get webhookNoName => 'Névtelen Művelet';
+
+  @override
+  String get webhookName => 'Név';
+
+  @override
+  String get webhookNameHint => 'pl., Lámpák bekapcsolása';
+
+  @override
+  String get webhookEvent => 'Kiváltó Esemény';
+
+  @override
+  String get webhookUrls => 'Cél URL-ek';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'URL Hozzáadása';
+
+  @override
+  String get webhookRemoveUrl => 'Eltávolítás';
+
+  @override
+  String get webhookRepeatPeriod => 'Ismétlési Lehűlés';
+
+  @override
+  String get webhookRepeatNone => 'Nincs lehűlés';
+
+  @override
+  String get webhookRepeat5s => '5 másodperc';
+
+  @override
+  String get webhookRepeat15s => '15 másodperc';
+
+  @override
+  String get webhookRepeat30s => '30 másodperc';
+
+  @override
+  String get webhookRepeat1min => '1 perc';
+
+  @override
+  String get webhookRepeat5min => '5 perc';
+
+  @override
+  String get webhookRepeat15min => '15 perc';
+
+  @override
+  String get webhookRepeat1hour => '1 óra';
+
+  @override
+  String get webhookModeDevice => 'Eszköz';
+
+  @override
+  String get webhookModeCustom => 'Egyéni URL';
+
+  @override
+  String get webhookTargetDevice => 'Céleszköz';
+
+  @override
+  String get webhookSelectDevice => 'Válasszon eszközt';
+
+  @override
+  String get webhookNoDevices => 'Nincs más elérhető eszköz';
+
+  @override
+  String get webhookToggle => 'Váltás';
+
+  @override
+  String get webhookToggleAfter => 'Automatikus Visszaállítás Után';
+
+  @override
+  String get webhookToggleAfterNone => 'Ne állítsa vissza';
+
+  @override
+  String get webhookToggleAfter30s => '30 másodperc';
+
+  @override
+  String get webhookToggleAfter1min => '1 perc';
+
+  @override
+  String get webhookToggleAfter5min => '5 perc';
+
+  @override
+  String get webhookToggleAfter10min => '10 perc';
+
+  @override
+  String get webhookToggleAfter30min => '30 perc';
+
+  @override
+  String get webhookToggleAfter1hour => '1 óra';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Az automatikus visszaállítás nem érhető el a váltási művelethez';
 }

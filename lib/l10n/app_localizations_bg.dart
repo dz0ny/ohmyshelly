@@ -129,6 +129,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get feelsLike => 'Усеща се като';
 
   @override
+  String get dewPoint => 'Точка на оросяване';
+
+  @override
   String get totalEnergy => 'Обща Енергия';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get languageGreek => 'Гръцки';
-
-  @override
-  String get languageSpanishMexico => 'Испански (Мексико)';
-
-  @override
-  String get languageFrenchCanada => 'Френски (Канада)';
-
-  @override
-  String get languageEnglishUS => 'Английски (САЩ)';
 
   @override
   String get cancel => 'Отказ';
@@ -745,16 +739,26 @@ class AppLocalizationsBg extends AppLocalizations {
   String get save => 'Запази';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Автоматично обновяване';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Обновления на фърмуера в полунощ';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Добави автообновяване';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Редактирай автообновяване';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'График кога устройството проверява за обновления на фърмуера';
+
+  @override
+  String get systemSchedule => 'Система';
+
+  @override
+  String get userSchedules => 'Потребителски графици';
 
   @override
   String get activity => 'Активност';
@@ -763,16 +767,16 @@ class AppLocalizationsBg extends AppLocalizations {
   String get noActivity => 'Няма скорошна активност';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Скорошна активност';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Няма скорошна активност';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Включено';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Изключено';
 
   @override
   String get sourceButton => 'Бутон';
@@ -926,6 +930,27 @@ class AppLocalizationsBg extends AppLocalizations {
       'Показване на автоматизирани сцени в навигацията';
 
   @override
+  String get showDeviceInfoButton => 'Покажи бутон информация';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Показване на бутон информация в екрана на устройството';
+
+  @override
+  String get showScheduleButton => 'Покажи бутон график';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Показване на бутон график за енергийни устройства';
+
+  @override
+  String get showActionsButton => 'Покажи бутон действия';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Показване на бутон действия в екрана на устройството';
+
+  @override
   String get sceneEnabled => 'Активирана';
 
   @override
@@ -948,6 +973,49 @@ class AppLocalizationsBg extends AppLocalizations {
       'Устройството ще се показва само в раздел Устройства';
 
   @override
+  String get backupSettings => 'Резервно копие';
+
+  @override
+  String get backupSettingsDesc => 'Запазване на графици и действия локално';
+
+  @override
+  String get backupCreate => 'Създай резервно копие';
+
+  @override
+  String get backupRestore => 'Възстанови резервно копие';
+
+  @override
+  String get backupDelete => 'Изтрий резервно копие';
+
+  @override
+  String get backupCreated => 'Резервното копие е създадено';
+
+  @override
+  String get backupRestored => 'Резервното копие е възстановено';
+
+  @override
+  String get backupDeleted => 'Резервното копие е изтрито';
+
+  @override
+  String get backupNotFound => 'Няма намерено резервно копие';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Това ще замени текущите графици и действия с резервното копие. Продължи?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Изтриване на резервното копие за това устройство?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Последно резервно копие: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Няма резервно копие';
+
+  @override
   String get unsupportedDevice => 'Неподдържано устройство';
 
   @override
@@ -963,4 +1031,124 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Копирано в клипборда';
+
+  @override
+  String get webhooks => 'Действия';
+
+  @override
+  String get noWebhooks => 'Няма действия';
+
+  @override
+  String get noWebhooksDesc =>
+      'Създайте действия за задействане на други устройства при възникване на събития';
+
+  @override
+  String get addWebhook => 'Добави действие';
+
+  @override
+  String get editWebhook => 'Редактирай';
+
+  @override
+  String get deleteWebhook => 'Изтрий';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Сигурни ли сте, че искате да изтриете това действие?';
+
+  @override
+  String get webhookNoName => 'Действие без име';
+
+  @override
+  String get webhookName => 'Име';
+
+  @override
+  String get webhookNameHint => 'напр., Включи светлините';
+
+  @override
+  String get webhookEvent => 'Събитие задействане';
+
+  @override
+  String get webhookUrls => 'Целеви URL адреси';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Добави URL';
+
+  @override
+  String get webhookRemoveUrl => 'Премахни';
+
+  @override
+  String get webhookRepeatPeriod => 'Пауза повторение';
+
+  @override
+  String get webhookRepeatNone => 'Без пауза';
+
+  @override
+  String get webhookRepeat5s => '5 секунди';
+
+  @override
+  String get webhookRepeat15s => '15 секунди';
+
+  @override
+  String get webhookRepeat30s => '30 секунди';
+
+  @override
+  String get webhookRepeat1min => '1 минута';
+
+  @override
+  String get webhookRepeat5min => '5 минути';
+
+  @override
+  String get webhookRepeat15min => '15 минути';
+
+  @override
+  String get webhookRepeat1hour => '1 час';
+
+  @override
+  String get webhookModeDevice => 'Устройство';
+
+  @override
+  String get webhookModeCustom => 'Персонализиран URL';
+
+  @override
+  String get webhookTargetDevice => 'Целево устройство';
+
+  @override
+  String get webhookSelectDevice => 'Изберете устройство';
+
+  @override
+  String get webhookNoDevices => 'Няма други налични устройства';
+
+  @override
+  String get webhookToggle => 'Превключи';
+
+  @override
+  String get webhookToggleAfter => 'Автоматично възстанови след';
+
+  @override
+  String get webhookToggleAfterNone => 'Не възстановявай';
+
+  @override
+  String get webhookToggleAfter30s => '30 секунди';
+
+  @override
+  String get webhookToggleAfter1min => '1 минута';
+
+  @override
+  String get webhookToggleAfter5min => '5 минути';
+
+  @override
+  String get webhookToggleAfter10min => '10 минути';
+
+  @override
+  String get webhookToggleAfter30min => '30 минути';
+
+  @override
+  String get webhookToggleAfter1hour => '1 час';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Автоматичното възстановяване не е налично за действие превключване';
 }

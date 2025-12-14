@@ -130,6 +130,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get feelsLike => 'Ощущается как';
 
   @override
+  String get dewPoint => 'Точка росы';
+
+  @override
   String get totalEnergy => 'Общая Энергия';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get languageGreek => 'Греческий';
-
-  @override
-  String get languageSpanishMexico => 'Испанский (Мексика)';
-
-  @override
-  String get languageFrenchCanada => 'Французский (Канада)';
-
-  @override
-  String get languageEnglishUS => 'Английский (США)';
 
   @override
   String get cancel => 'Отмена';
@@ -746,16 +740,26 @@ class AppLocalizationsRu extends AppLocalizations {
   String get save => 'Сохранить';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Автообновление';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Обновления прошивки в полночь';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Добавить автообновление';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Редактировать автообновление';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Расписание когда устройство проверяет обновления прошивки';
+
+  @override
+  String get systemSchedule => 'Система';
+
+  @override
+  String get userSchedules => 'Пользовательские расписания';
 
   @override
   String get activity => 'Активность';
@@ -764,16 +768,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noActivity => 'Нет недавней активности';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Недавняя активность';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Нет недавней активности';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Включено';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Выключено';
 
   @override
   String get sourceButton => 'Кнопка';
@@ -933,6 +937,27 @@ class AppLocalizationsRu extends AppLocalizations {
       'Отображать автоматизированные сцены в навигации';
 
   @override
+  String get showDeviceInfoButton => 'Показать кнопку информации';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Показывать кнопку информации на экране устройства';
+
+  @override
+  String get showScheduleButton => 'Показать кнопку расписания';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Показывать кнопку расписания для энергетических устройств';
+
+  @override
+  String get showActionsButton => 'Показать кнопку действий';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Показывать кнопку действий на экране устройства';
+
+  @override
   String get sceneEnabled => 'Включено';
 
   @override
@@ -955,6 +980,49 @@ class AppLocalizationsRu extends AppLocalizations {
       'Устройство будет отображаться только на вкладке Устройства';
 
   @override
+  String get backupSettings => 'Резервная копия';
+
+  @override
+  String get backupSettingsDesc => 'Сохранить расписания и действия локально';
+
+  @override
+  String get backupCreate => 'Создать копию';
+
+  @override
+  String get backupRestore => 'Восстановить копию';
+
+  @override
+  String get backupDelete => 'Удалить копию';
+
+  @override
+  String get backupCreated => 'Резервная копия создана';
+
+  @override
+  String get backupRestored => 'Резервная копия восстановлена';
+
+  @override
+  String get backupDeleted => 'Резервная копия удалена';
+
+  @override
+  String get backupNotFound => 'Резервная копия не найдена';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Это заменит текущие расписания и действия резервной копией. Продолжить?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Удалить резервную копию для этого устройства?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Последняя копия: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Нет резервной копии';
+
+  @override
   String get unsupportedDevice => 'Неподдерживаемое устройство';
 
   @override
@@ -970,4 +1038,124 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Скопировано в буфер обмена';
+
+  @override
+  String get webhooks => 'Действия';
+
+  @override
+  String get noWebhooks => 'Нет действий';
+
+  @override
+  String get noWebhooksDesc =>
+      'Создайте действия для запуска других устройств при возникновении событий';
+
+  @override
+  String get addWebhook => 'Добавить действие';
+
+  @override
+  String get editWebhook => 'Редактировать';
+
+  @override
+  String get deleteWebhook => 'Удалить';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Вы уверены, что хотите удалить это действие?';
+
+  @override
+  String get webhookNoName => 'Действие без названия';
+
+  @override
+  String get webhookName => 'Название';
+
+  @override
+  String get webhookNameHint => 'напр., Включить свет';
+
+  @override
+  String get webhookEvent => 'Событие триггера';
+
+  @override
+  String get webhookUrls => 'Целевые URL';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Добавить URL';
+
+  @override
+  String get webhookRemoveUrl => 'Удалить';
+
+  @override
+  String get webhookRepeatPeriod => 'Пауза повторения';
+
+  @override
+  String get webhookRepeatNone => 'Без паузы';
+
+  @override
+  String get webhookRepeat5s => '5 секунд';
+
+  @override
+  String get webhookRepeat15s => '15 секунд';
+
+  @override
+  String get webhookRepeat30s => '30 секунд';
+
+  @override
+  String get webhookRepeat1min => '1 минута';
+
+  @override
+  String get webhookRepeat5min => '5 минут';
+
+  @override
+  String get webhookRepeat15min => '15 минут';
+
+  @override
+  String get webhookRepeat1hour => '1 час';
+
+  @override
+  String get webhookModeDevice => 'Устройство';
+
+  @override
+  String get webhookModeCustom => 'Пользовательский URL';
+
+  @override
+  String get webhookTargetDevice => 'Целевое устройство';
+
+  @override
+  String get webhookSelectDevice => 'Выберите устройство';
+
+  @override
+  String get webhookNoDevices => 'Нет других доступных устройств';
+
+  @override
+  String get webhookToggle => 'Переключить';
+
+  @override
+  String get webhookToggleAfter => 'Автоматически вернуть после';
+
+  @override
+  String get webhookToggleAfterNone => 'Не возвращать';
+
+  @override
+  String get webhookToggleAfter30s => '30 секунд';
+
+  @override
+  String get webhookToggleAfter1min => '1 минута';
+
+  @override
+  String get webhookToggleAfter5min => '5 минут';
+
+  @override
+  String get webhookToggleAfter10min => '10 минут';
+
+  @override
+  String get webhookToggleAfter30min => '30 минут';
+
+  @override
+  String get webhookToggleAfter1hour => '1 час';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Автоматический возврат недоступен для действия переключения';
 }

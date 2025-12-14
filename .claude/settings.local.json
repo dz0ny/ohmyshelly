@@ -18,7 +18,10 @@
       "Bash(mkdir:*)",
       "WebFetch(domain:shelly-api-docs.shelly.cloud)",
       "WebFetch(domain:pub.dev)",
-      "Bash(flutter pub upgrade:*)"
+      "Bash(flutter pub upgrade:*)",
+      "Bash(python3:*)",
+      "Bash(flutter pub run:*)",
+      "Bash(ls:*)"
     ]
   }
 }

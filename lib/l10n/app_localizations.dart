@@ -127,13 +127,10 @@ abstract class AppLocalizations {
     Locale('de'),
     Locale('el'),
     Locale('en'),
-    Locale('en', 'US'),
     Locale('es'),
-    Locale('es', 'MX'),
     Locale('et'),
     Locale('fi'),
     Locale('fr'),
-    Locale('fr', 'CA'),
     Locale('hr'),
     Locale('hu'),
     Locale('is'),
@@ -386,6 +383,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Feels like'**
   String get feelsLike;
+
+  /// No description provided for @dewPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dew point'**
+  String get dewPoint;
 
   /// No description provided for @totalEnergy.
   ///
@@ -920,24 +923,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Greek'**
   String get languageGreek;
-
-  /// No description provided for @languageSpanishMexico.
-  ///
-  /// In en, this message translates to:
-  /// **'Spanish (Mexico)'**
-  String get languageSpanishMexico;
-
-  /// No description provided for @languageFrenchCanada.
-  ///
-  /// In en, this message translates to:
-  /// **'French (Canada)'**
-  String get languageFrenchCanada;
-
-  /// No description provided for @languageEnglishUS.
-  ///
-  /// In en, this message translates to:
-  /// **'English (US)'**
-  String get languageEnglishUS;
 
   /// No description provided for @cancel.
   ///
@@ -1623,6 +1608,24 @@ abstract class AppLocalizations {
   /// **'Firmware updates at midnight'**
   String get autoUpdateScheduleDesc;
 
+  /// No description provided for @addAutoUpdateSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Auto-Update'**
+  String get addAutoUpdateSchedule;
+
+  /// No description provided for @editAutoUpdateSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Auto-Update'**
+  String get editAutoUpdateSchedule;
+
+  /// No description provided for @autoUpdateScheduleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule when the device checks for firmware updates'**
+  String get autoUpdateScheduleHint;
+
   /// No description provided for @systemSchedule.
   ///
   /// In en, this message translates to:
@@ -1923,6 +1926,42 @@ abstract class AppLocalizations {
   /// **'Display automation scenes in navigation'**
   String get showScenesTabDesc;
 
+  /// No description provided for @showDeviceInfoButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Device Info'**
+  String get showDeviceInfoButton;
+
+  /// No description provided for @showDeviceInfoButtonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display info button in device screen'**
+  String get showDeviceInfoButtonDesc;
+
+  /// No description provided for @showScheduleButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Schedule Button'**
+  String get showScheduleButton;
+
+  /// No description provided for @showScheduleButtonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display schedule button for power devices'**
+  String get showScheduleButtonDesc;
+
+  /// No description provided for @showActionsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Actions Button'**
+  String get showActionsButton;
+
+  /// No description provided for @showActionsButtonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display actions button in device screen'**
+  String get showActionsButtonDesc;
+
   /// No description provided for @sceneEnabled.
   ///
   /// In en, this message translates to:
@@ -1965,6 +2004,84 @@ abstract class AppLocalizations {
   /// **'Device will only appear in the Devices tab'**
   String get hideFromDashboardDesc;
 
+  /// No description provided for @backupSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backupSettings;
+
+  /// No description provided for @backupSettingsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save schedules and actions locally'**
+  String get backupSettingsDesc;
+
+  /// No description provided for @backupCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get backupCreate;
+
+  /// No description provided for @backupRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Backup'**
+  String get backupRestore;
+
+  /// No description provided for @backupDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Backup'**
+  String get backupDelete;
+
+  /// No description provided for @backupCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup created'**
+  String get backupCreated;
+
+  /// No description provided for @backupRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored'**
+  String get backupRestored;
+
+  /// No description provided for @backupDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup deleted'**
+  String get backupDeleted;
+
+  /// No description provided for @backupNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup found'**
+  String get backupNotFound;
+
+  /// No description provided for @backupRestoreConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This will replace current schedules and actions with the backup. Continue?'**
+  String get backupRestoreConfirm;
+
+  /// No description provided for @backupDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the backup for this device?'**
+  String get backupDeleteConfirm;
+
+  /// No description provided for @backupInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String backupInfo(String date);
+
+  /// No description provided for @backupNoBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup'**
+  String get backupNoBackup;
+
   /// No description provided for @unsupportedDevice.
   ///
   /// In en, this message translates to:
@@ -1994,6 +2111,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied to clipboard'**
   String get copiedToClipboard;
+
+  /// No description provided for @webhooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get webhooks;
+
+  /// No description provided for @noWebhooks.
+  ///
+  /// In en, this message translates to:
+  /// **'No actions'**
+  String get noWebhooks;
+
+  /// No description provided for @noWebhooksDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create actions to trigger other devices when events occur'**
+  String get noWebhooksDesc;
+
+  /// No description provided for @addWebhook.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Action'**
+  String get addWebhook;
+
+  /// No description provided for @editWebhook.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editWebhook;
+
+  /// No description provided for @deleteWebhook.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteWebhook;
+
+  /// No description provided for @deleteWebhookConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this action?'**
+  String get deleteWebhookConfirm;
+
+  /// No description provided for @webhookNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed Action'**
+  String get webhookNoName;
+
+  /// No description provided for @webhookName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get webhookName;
+
+  /// No description provided for @webhookNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Turn on lights'**
+  String get webhookNameHint;
+
+  /// No description provided for @webhookEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger Event'**
+  String get webhookEvent;
+
+  /// No description provided for @webhookUrls.
+  ///
+  /// In en, this message translates to:
+  /// **'Target URLs'**
+  String get webhookUrls;
+
+  /// No description provided for @webhookUrlHint.
+  ///
+  /// In en, this message translates to:
+  /// **'http://192.168.1.x/rpc/...'**
+  String get webhookUrlHint;
+
+  /// No description provided for @webhookAddUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Add URL'**
+  String get webhookAddUrl;
+
+  /// No description provided for @webhookRemoveUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get webhookRemoveUrl;
+
+  /// No description provided for @webhookRepeatPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat Cooldown'**
+  String get webhookRepeatPeriod;
+
+  /// No description provided for @webhookRepeatNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No cooldown'**
+  String get webhookRepeatNone;
+
+  /// No description provided for @webhookRepeat5s.
+  ///
+  /// In en, this message translates to:
+  /// **'5 seconds'**
+  String get webhookRepeat5s;
+
+  /// No description provided for @webhookRepeat15s.
+  ///
+  /// In en, this message translates to:
+  /// **'15 seconds'**
+  String get webhookRepeat15s;
+
+  /// No description provided for @webhookRepeat30s.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get webhookRepeat30s;
+
+  /// No description provided for @webhookRepeat1min.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute'**
+  String get webhookRepeat1min;
+
+  /// No description provided for @webhookRepeat5min.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get webhookRepeat5min;
+
+  /// No description provided for @webhookRepeat15min.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes'**
+  String get webhookRepeat15min;
+
+  /// No description provided for @webhookRepeat1hour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get webhookRepeat1hour;
+
+  /// No description provided for @webhookModeDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get webhookModeDevice;
+
+  /// No description provided for @webhookModeCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom URL'**
+  String get webhookModeCustom;
+
+  /// No description provided for @webhookTargetDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Device'**
+  String get webhookTargetDevice;
+
+  /// No description provided for @webhookSelectDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a device'**
+  String get webhookSelectDevice;
+
+  /// No description provided for @webhookNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No other devices available'**
+  String get webhookNoDevices;
+
+  /// No description provided for @webhookToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle'**
+  String get webhookToggle;
+
+  /// No description provided for @webhookToggleAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Revert After'**
+  String get webhookToggleAfter;
+
+  /// No description provided for @webhookToggleAfterNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t revert'**
+  String get webhookToggleAfterNone;
+
+  /// No description provided for @webhookToggleAfter30s.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get webhookToggleAfter30s;
+
+  /// No description provided for @webhookToggleAfter1min.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute'**
+  String get webhookToggleAfter1min;
+
+  /// No description provided for @webhookToggleAfter5min.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get webhookToggleAfter5min;
+
+  /// No description provided for @webhookToggleAfter10min.
+  ///
+  /// In en, this message translates to:
+  /// **'10 minutes'**
+  String get webhookToggleAfter10min;
+
+  /// No description provided for @webhookToggleAfter30min.
+  ///
+  /// In en, this message translates to:
+  /// **'30 minutes'**
+  String get webhookToggleAfter30min;
+
+  /// No description provided for @webhookToggleAfter1hour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get webhookToggleAfter1hour;
+
+  /// No description provided for @webhookToggleAfterNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-revert is not available for toggle action'**
+  String get webhookToggleAfterNotAvailable;
 }
 
 class _AppLocalizationsDelegate
@@ -2042,34 +2393,6 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'en':
-      {
-        switch (locale.countryCode) {
-          case 'US':
-            return AppLocalizationsEnUs();
-        }
-        break;
-      }
-    case 'es':
-      {
-        switch (locale.countryCode) {
-          case 'MX':
-            return AppLocalizationsEsMx();
-        }
-        break;
-      }
-    case 'fr':
-      {
-        switch (locale.countryCode) {
-          case 'CA':
-            return AppLocalizationsFrCa();
-        }
-        break;
-      }
-  }
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'bg':

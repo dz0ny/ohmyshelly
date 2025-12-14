@@ -83,6 +83,7 @@ class AppIcons {
   static const IconData info = Icons.info_outline_rounded;
   static const IconData schedule = Icons.schedule_rounded;
   static const IconData reorder = Icons.swap_vert_rounded;
+  static const IconData webhook = Icons.webhook_rounded;
 
   // Auth
   static const IconData email = Icons.email_outlined;

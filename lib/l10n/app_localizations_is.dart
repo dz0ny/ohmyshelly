@@ -130,6 +130,9 @@ class AppLocalizationsIs extends AppLocalizations {
   String get feelsLike => 'Finnst eins og';
 
   @override
+  String get dewPoint => 'Döggpunktur';
+
+  @override
   String get totalEnergy => 'Heildarorka';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get languageGreek => 'Gríska';
-
-  @override
-  String get languageSpanishMexico => 'Spænska (Mexíkó)';
-
-  @override
-  String get languageFrenchCanada => 'Franska (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Enska (Bandaríkin)';
 
   @override
   String get cancel => 'Hætta Við';
@@ -745,16 +739,26 @@ class AppLocalizationsIs extends AppLocalizations {
   String get save => 'Vista';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Sjálfvirk uppfærsla';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Hugbúnaðaruppfærslur á miðnætti';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Bæta Við Sjálfvirkri Uppfærslu';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Breyta Sjálfvirkri Uppfærslu';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Skipuleggðu hvenær tækið leitar að hugbúnaðaruppfærslum';
+
+  @override
+  String get systemSchedule => 'Kerfi';
+
+  @override
+  String get userSchedules => 'Notendaáætlanir';
 
   @override
   String get activity => 'Virkni';
@@ -763,16 +767,16 @@ class AppLocalizationsIs extends AppLocalizations {
   String get noActivity => 'Engin nýleg virkni';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Nýleg virkni';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Engin nýleg virkni';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Kveikt';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Slökkt';
 
   @override
   String get sourceButton => 'Hnappur';
@@ -925,6 +929,24 @@ class AppLocalizationsIs extends AppLocalizations {
   String get showScenesTabDesc => 'Sýna sjálfvirkniatriði í valmynd';
 
   @override
+  String get showDeviceInfoButton => 'Sýna Tækjaupplýsingahnappur';
+
+  @override
+  String get showDeviceInfoButtonDesc => 'Birta upplýsingahnappur í tækjaskjá';
+
+  @override
+  String get showScheduleButton => 'Sýna Dagskrárhnappur';
+
+  @override
+  String get showScheduleButtonDesc => 'Birta dagskrárhnappur fyrir afl tæki';
+
+  @override
+  String get showActionsButton => 'Sýna Aðgerðahnappur';
+
+  @override
+  String get showActionsButtonDesc => 'Birta aðgerðahnappur í tækjaskjá';
+
+  @override
   String get sceneEnabled => 'Virkt';
 
   @override
@@ -946,6 +968,48 @@ class AppLocalizationsIs extends AppLocalizations {
   String get hideFromDashboardDesc => 'Tækið birtist aðeins í Tæki-flipanum';
 
   @override
+  String get backupSettings => 'Öryggisafrit';
+
+  @override
+  String get backupSettingsDesc => 'Vista áætlanir og aðgerðir staðbundið';
+
+  @override
+  String get backupCreate => 'Búa til öryggisafrit';
+
+  @override
+  String get backupRestore => 'Endurheimta öryggisafrit';
+
+  @override
+  String get backupDelete => 'Eyða öryggisafriti';
+
+  @override
+  String get backupCreated => 'Öryggisafrit búið til';
+
+  @override
+  String get backupRestored => 'Öryggisafrit endurheimt';
+
+  @override
+  String get backupDeleted => 'Öryggisafriti eytt';
+
+  @override
+  String get backupNotFound => 'Ekkert öryggisafrit fannst';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Þetta mun skipta út núverandi áætlunum og aðgerðum fyrir öryggisafritið. Halda áfram?';
+
+  @override
+  String get backupDeleteConfirm => 'Eyða öryggisafriti fyrir þetta tæki?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Síðasta öryggisafrit: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Ekkert öryggisafrit';
+
+  @override
   String get unsupportedDevice => 'Óstutt tæki';
 
   @override
@@ -961,4 +1025,124 @@ class AppLocalizationsIs extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Afritað á klippiborð';
+
+  @override
+  String get webhooks => 'Aðgerðir';
+
+  @override
+  String get noWebhooks => 'Engar aðgerðir';
+
+  @override
+  String get noWebhooksDesc =>
+      'Búðu til aðgerðir til að kveikja á öðrum tækjum þegar atburðir eiga sér stað';
+
+  @override
+  String get addWebhook => 'Bæta Við Aðgerð';
+
+  @override
+  String get editWebhook => 'Breyta';
+
+  @override
+  String get deleteWebhook => 'Eyða';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Ertu viss um að þú viljir eyða þessari aðgerð?';
+
+  @override
+  String get webhookNoName => 'Ónefnd Aðgerð';
+
+  @override
+  String get webhookName => 'Nafn';
+
+  @override
+  String get webhookNameHint => 't.d., Kveikja á ljósum';
+
+  @override
+  String get webhookEvent => 'Kveikja Atburður';
+
+  @override
+  String get webhookUrls => 'Markmið-URL-slóðir';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Bæta Við URL';
+
+  @override
+  String get webhookRemoveUrl => 'Fjarlægja';
+
+  @override
+  String get webhookRepeatPeriod => 'Endurtaka Kælingu';
+
+  @override
+  String get webhookRepeatNone => 'Engin kæling';
+
+  @override
+  String get webhookRepeat5s => '5 sekúndur';
+
+  @override
+  String get webhookRepeat15s => '15 sekúndur';
+
+  @override
+  String get webhookRepeat30s => '30 sekúndur';
+
+  @override
+  String get webhookRepeat1min => '1 mínúta';
+
+  @override
+  String get webhookRepeat5min => '5 mínútur';
+
+  @override
+  String get webhookRepeat15min => '15 mínútur';
+
+  @override
+  String get webhookRepeat1hour => '1 klukkustund';
+
+  @override
+  String get webhookModeDevice => 'Tæki';
+
+  @override
+  String get webhookModeCustom => 'Sérsniðin URL';
+
+  @override
+  String get webhookTargetDevice => 'Marktæki';
+
+  @override
+  String get webhookSelectDevice => 'Veldu tæki';
+
+  @override
+  String get webhookNoDevices => 'Engin önnur tæki tiltæk';
+
+  @override
+  String get webhookToggle => 'Skipta';
+
+  @override
+  String get webhookToggleAfter => 'Sjálfvirk Endurstilling Eftir';
+
+  @override
+  String get webhookToggleAfterNone => 'Ekki endurstilla';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekúndur';
+
+  @override
+  String get webhookToggleAfter1min => '1 mínúta';
+
+  @override
+  String get webhookToggleAfter5min => '5 mínútur';
+
+  @override
+  String get webhookToggleAfter10min => '10 mínútur';
+
+  @override
+  String get webhookToggleAfter30min => '30 mínútur';
+
+  @override
+  String get webhookToggleAfter1hour => '1 klukkustund';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Sjálfvirk endurstilling er ekki tiltæk fyrir skiptaaðgerð';
 }

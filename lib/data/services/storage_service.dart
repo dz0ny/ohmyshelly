@@ -13,9 +13,13 @@ class StorageService {
   static const String _themeModeKey = 'theme_mode';
   static const String _showDevicesTabKey = 'show_devices_tab';
   static const String _showScenesTabKey = 'show_scenes_tab';
+  static const String _showDeviceInfoButtonKey = 'show_device_info_button';
+  static const String _showScheduleButtonKey = 'show_schedule_button';
+  static const String _showActionsButtonKey = 'show_actions_button';
   static const String _dashboardDeviceOrderKey = 'dashboard_device_order';
   static const String _dashboardExcludedDevicesKey = 'dashboard_excluded_devices';
   static const String _localDeviceInfoKey = 'local_device_info';
+  static const String _credentialsKey = 'auth_credentials';
 
   Future<void> init() async {
     _storage = const FlutterSecureStorage(
@@ -55,6 +59,35 @@ class StorageService {
   Future<bool> hasUser() async {
     final user = await getUser();
     return user != null;
+  }
+
+  // Credentials methods (for auto-reauthentication)
+  Future<void> saveCredentials(String email, String hashedPassword) async {
+    final data = jsonEncode({
+      'email': email,
+      'hashedPassword': hashedPassword,
+    });
+    await _storage.write(key: _credentialsKey, value: data);
+  }
+
+  Future<Map<String, String>?> getCredentials() async {
+    final json = await _storage.read(key: _credentialsKey);
+    if (json == null) return null;
+
+    try {
+      final data = jsonDecode(json) as Map<String, dynamic>;
+      return {
+        'email': data['email'] as String,
+        'hashedPassword': data['hashedPassword'] as String,
+      };
+    } catch (e) {
+      await deleteCredentials();
+      return null;
+    }
+  }
+
+  Future<void> deleteCredentials() async {
+    await _storage.delete(key: _credentialsKey);
   }
 
   // Onboarding methods
@@ -115,6 +148,36 @@ class StorageService {
 
   Future<void> setShowScenesTab(bool show) async {
     await _storage.write(key: _showScenesTabKey, value: show.toString());
+  }
+
+  // Show device info button setting (default: false - hidden by default)
+  Future<bool> getShowDeviceInfoButton() async {
+    final value = await _storage.read(key: _showDeviceInfoButtonKey);
+    return value == 'true'; // Default to false
+  }
+
+  Future<void> setShowDeviceInfoButton(bool show) async {
+    await _storage.write(key: _showDeviceInfoButtonKey, value: show.toString());
+  }
+
+  // Show schedule button setting (default: true)
+  Future<bool> getShowScheduleButton() async {
+    final value = await _storage.read(key: _showScheduleButtonKey);
+    return value != 'false'; // Default to true
+  }
+
+  Future<void> setShowScheduleButton(bool show) async {
+    await _storage.write(key: _showScheduleButtonKey, value: show.toString());
+  }
+
+  // Show actions button setting (default: false - hidden by default)
+  Future<bool> getShowActionsButton() async {
+    final value = await _storage.read(key: _showActionsButtonKey);
+    return value == 'true'; // Default to false
+  }
+
+  Future<void> setShowActionsButton(bool show) async {
+    await _storage.write(key: _showActionsButtonKey, value: show.toString());
   }
 
   // Dashboard device order (list of device IDs)
@@ -203,6 +266,34 @@ class StorageService {
 
   Future<void> clearCachedDevices() async {
     await _storage.delete(key: _cachedDevicesKey);
+  }
+
+  // Device backup (schedules and webhooks)
+  static const String _deviceBackupPrefix = 'device_backup_';
+
+  Future<void> saveDeviceBackup(String deviceId, Map<String, dynamic> backup) async {
+    final encoded = jsonEncode(backup);
+    await _storage.write(key: '$_deviceBackupPrefix$deviceId', value: encoded);
+  }
+
+  Future<Map<String, dynamic>?> getDeviceBackup(String deviceId) async {
+    final json = await _storage.read(key: '$_deviceBackupPrefix$deviceId');
+    if (json == null) return null;
+
+    try {
+      return jsonDecode(json) as Map<String, dynamic>;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<bool> hasDeviceBackup(String deviceId) async {
+    final json = await _storage.read(key: '$_deviceBackupPrefix$deviceId');
+    return json != null;
+  }
+
+  Future<void> deleteDeviceBackup(String deviceId) async {
+    await _storage.delete(key: '$_deviceBackupPrefix$deviceId');
   }
 
   // Clear all data (for logout)

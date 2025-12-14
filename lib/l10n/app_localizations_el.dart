@@ -130,6 +130,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get feelsLike => 'Αίσθηση';
 
   @override
+  String get dewPoint => 'Σημείο δρόσου';
+
+  @override
   String get totalEnergy => 'Συνολική ενέργεια';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get languageGreek => 'Ελληνικά';
-
-  @override
-  String get languageSpanishMexico => 'Ισπανικά (Μεξικό)';
-
-  @override
-  String get languageFrenchCanada => 'Γαλλικά (Καναδάς)';
-
-  @override
-  String get languageEnglishUS => 'Αγγλικά (ΗΠΑ)';
 
   @override
   String get cancel => 'Ακύρωση';
@@ -750,16 +744,26 @@ class AppLocalizationsEl extends AppLocalizations {
   String get save => 'Αποθήκευση';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Αυτόματη ενημέρωση';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Ενημερώσεις firmware τα μεσάνυχτα';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Προσθήκη Αυτόματης Ενημέρωσης';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Επεξεργασία Αυτόματης Ενημέρωσης';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Προγραμματίστε πότε η συσκευή ελέγχει για ενημερώσεις firmware';
+
+  @override
+  String get systemSchedule => 'Σύστημα';
+
+  @override
+  String get userSchedules => 'Χρονοδιαγράμματα χρήστη';
 
   @override
   String get activity => 'Δραστηριότητα';
@@ -768,16 +772,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get noActivity => 'Δεν υπάρχει πρόσφατη δραστηριότητα';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Πρόσφατη δραστηριότητα';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Δεν υπάρχει πρόσφατη δραστηριότητα';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Ενεργοποιήθηκε';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Απενεργοποιήθηκε';
 
   @override
   String get sourceButton => 'Κουμπί';
@@ -931,6 +935,27 @@ class AppLocalizationsEl extends AppLocalizations {
   String get showScenesTabDesc => 'Εμφάνιση σκηνών αυτοματισμού στην πλοήγηση';
 
   @override
+  String get showDeviceInfoButton => 'Εμφάνιση Κουμπιού Πληροφοριών Συσκευής';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Εμφάνιση κουμπιού πληροφοριών στην οθόνη συσκευής';
+
+  @override
+  String get showScheduleButton => 'Εμφάνιση Κουμπιού Προγράμματος';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Εμφάνιση κουμπιού προγράμματος για συσκευές ισχύος';
+
+  @override
+  String get showActionsButton => 'Εμφάνιση Κουμπιού Ενεργειών';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Εμφάνιση κουμπιού ενεργειών στην οθόνη συσκευής';
+
+  @override
   String get sceneEnabled => 'Ενεργοποιημένη';
 
   @override
@@ -953,6 +978,50 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η συσκευή θα εμφανίζεται μόνο στην καρτέλα Συσκευές';
 
   @override
+  String get backupSettings => 'Αντίγραφο Ασφαλείας';
+
+  @override
+  String get backupSettingsDesc =>
+      'Αποθήκευση χρονοδιαγραμμάτων και ενεργειών τοπικά';
+
+  @override
+  String get backupCreate => 'Δημιουργία αντιγράφου';
+
+  @override
+  String get backupRestore => 'Επαναφορά αντιγράφου';
+
+  @override
+  String get backupDelete => 'Διαγραφή αντιγράφου';
+
+  @override
+  String get backupCreated => 'Το αντίγραφο δημιουργήθηκε';
+
+  @override
+  String get backupRestored => 'Το αντίγραφο επαναφέρθηκε';
+
+  @override
+  String get backupDeleted => 'Το αντίγραφο διαγράφηκε';
+
+  @override
+  String get backupNotFound => 'Δεν βρέθηκε αντίγραφο';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Αυτό θα αντικαταστήσει τα τρέχοντα χρονοδιαγράμματα και ενέργειες με το αντίγραφο. Συνέχεια;';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Διαγραφή του αντιγράφου για αυτή τη συσκευή;';
+
+  @override
+  String backupInfo(String date) {
+    return 'Τελευταίο αντίγραφο: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Χωρίς αντίγραφο';
+
+  @override
   String get unsupportedDevice => 'Μη υποστηριζόμενη συσκευή';
 
   @override
@@ -968,4 +1037,124 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Αντιγράφηκε στο πρόχειρο';
+
+  @override
+  String get webhooks => 'Ενέργειες';
+
+  @override
+  String get noWebhooks => 'Δεν υπάρχουν ενέργειες';
+
+  @override
+  String get noWebhooksDesc =>
+      'Δημιουργήστε ενέργειες για να ενεργοποιήσετε άλλες συσκευές όταν συμβαίνουν γεγονότα';
+
+  @override
+  String get addWebhook => 'Προσθήκη Ενέργειας';
+
+  @override
+  String get editWebhook => 'Επεξεργασία';
+
+  @override
+  String get deleteWebhook => 'Διαγραφή';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτή την ενέργεια;';
+
+  @override
+  String get webhookNoName => 'Ενέργεια Χωρίς Όνομα';
+
+  @override
+  String get webhookName => 'Όνομα';
+
+  @override
+  String get webhookNameHint => 'π.χ., Άνοιγμα φώτων';
+
+  @override
+  String get webhookEvent => 'Γεγονός Ενεργοποίησης';
+
+  @override
+  String get webhookUrls => 'URL Στόχου';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Προσθήκη URL';
+
+  @override
+  String get webhookRemoveUrl => 'Αφαίρεση';
+
+  @override
+  String get webhookRepeatPeriod => 'Χρόνος Ψύξης Επανάληψης';
+
+  @override
+  String get webhookRepeatNone => 'Χωρίς χρόνο ψύξης';
+
+  @override
+  String get webhookRepeat5s => '5 δευτερόλεπτα';
+
+  @override
+  String get webhookRepeat15s => '15 δευτερόλεπτα';
+
+  @override
+  String get webhookRepeat30s => '30 δευτερόλεπτα';
+
+  @override
+  String get webhookRepeat1min => '1 λεπτό';
+
+  @override
+  String get webhookRepeat5min => '5 λεπτά';
+
+  @override
+  String get webhookRepeat15min => '15 λεπτά';
+
+  @override
+  String get webhookRepeat1hour => '1 ώρα';
+
+  @override
+  String get webhookModeDevice => 'Συσκευή';
+
+  @override
+  String get webhookModeCustom => 'Προσαρμοσμένο URL';
+
+  @override
+  String get webhookTargetDevice => 'Συσκευή Στόχος';
+
+  @override
+  String get webhookSelectDevice => 'Επιλέξτε συσκευή';
+
+  @override
+  String get webhookNoDevices => 'Δεν υπάρχουν άλλες διαθέσιμες συσκευές';
+
+  @override
+  String get webhookToggle => 'Εναλλαγή';
+
+  @override
+  String get webhookToggleAfter => 'Αυτόματη Επαναφορά Μετά από';
+
+  @override
+  String get webhookToggleAfterNone => 'Χωρίς επαναφορά';
+
+  @override
+  String get webhookToggleAfter30s => '30 δευτερόλεπτα';
+
+  @override
+  String get webhookToggleAfter1min => '1 λεπτό';
+
+  @override
+  String get webhookToggleAfter5min => '5 λεπτά';
+
+  @override
+  String get webhookToggleAfter10min => '10 λεπτά';
+
+  @override
+  String get webhookToggleAfter30min => '30 λεπτά';
+
+  @override
+  String get webhookToggleAfter1hour => '1 ώρα';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Η αυτόματη επαναφορά δεν είναι διαθέσιμη για ενέργεια εναλλαγής';
 }

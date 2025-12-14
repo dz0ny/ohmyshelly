@@ -130,6 +130,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get feelsLike => 'Osjeća se kao';
 
   @override
+  String get dewPoint => 'Točka rose';
+
+  @override
   String get totalEnergy => 'Ukupna energija';
 
   @override
@@ -396,15 +399,6 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get languageGreek => 'Grčki';
-
-  @override
-  String get languageSpanishMexico => 'Španjolski (Meksiko)';
-
-  @override
-  String get languageFrenchCanada => 'Francuski (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Engleski (SAD)';
 
   @override
   String get cancel => 'Odustani';
@@ -746,16 +740,26 @@ class AppLocalizationsHr extends AppLocalizations {
   String get save => 'Spremi';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatsko ažuriranje';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Ažuriranja firmvera u ponoć';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Dodaj auto-ažuriranje';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Uredi auto-ažuriranje';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Rasporedi kada uređaj provjerava ažuriranja firmvera';
+
+  @override
+  String get systemSchedule => 'Sustav';
+
+  @override
+  String get userSchedules => 'Korisnički rasporedi';
 
   @override
   String get activity => 'Aktivnost';
@@ -764,16 +768,16 @@ class AppLocalizationsHr extends AppLocalizations {
   String get noActivity => 'Nema nedavne aktivnosti';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Nedavna aktivnost';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nema nedavne aktivnosti';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Uključeno';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Isključeno';
 
   @override
   String get sourceButton => 'Gumb';
@@ -932,6 +936,26 @@ class AppLocalizationsHr extends AppLocalizations {
   String get showScenesTabDesc => 'Prikaži automatizacijske scene u navigaciji';
 
   @override
+  String get showDeviceInfoButton => 'Prikaži gumb informacija';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Prikaži gumb informacija na zaslonu uređaja';
+
+  @override
+  String get showScheduleButton => 'Prikaži gumb rasporeda';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Prikaži gumb rasporeda za energetske uređaje';
+
+  @override
+  String get showActionsButton => 'Prikaži gumb akcija';
+
+  @override
+  String get showActionsButtonDesc => 'Prikaži gumb akcija na zaslonu uređaja';
+
+  @override
   String get sceneEnabled => 'Omogućeno';
 
   @override
@@ -954,6 +978,49 @@ class AppLocalizationsHr extends AppLocalizations {
       'Uređaj će se prikazivati samo na kartici Uređaji';
 
   @override
+  String get backupSettings => 'Sigurnosna kopija';
+
+  @override
+  String get backupSettingsDesc => 'Spremi rasporede i akcije lokalno';
+
+  @override
+  String get backupCreate => 'Stvori sigurnosnu kopiju';
+
+  @override
+  String get backupRestore => 'Vrati sigurnosnu kopiju';
+
+  @override
+  String get backupDelete => 'Obriši sigurnosnu kopiju';
+
+  @override
+  String get backupCreated => 'Sigurnosna kopija stvorena';
+
+  @override
+  String get backupRestored => 'Sigurnosna kopija vraćena';
+
+  @override
+  String get backupDeleted => 'Sigurnosna kopija obrisana';
+
+  @override
+  String get backupNotFound => 'Sigurnosna kopija nije pronađena';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Ovo će zamijeniti trenutne rasporede i akcije sigurnosnom kopijom. Nastaviti?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Obrisati sigurnosnu kopiju za ovaj uređaj?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Zadnja sigurnosna kopija: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Nema sigurnosne kopije';
+
+  @override
   String get unsupportedDevice => 'Nepodržani uređaj';
 
   @override
@@ -969,4 +1036,124 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Kopirano u međuspremnik';
+
+  @override
+  String get webhooks => 'Akcije';
+
+  @override
+  String get noWebhooks => 'Nema akcija';
+
+  @override
+  String get noWebhooksDesc =>
+      'Stvorite akcije za pokretanje drugih uređaja kada se dogode događaji';
+
+  @override
+  String get addWebhook => 'Dodaj akciju';
+
+  @override
+  String get editWebhook => 'Uredi';
+
+  @override
+  String get deleteWebhook => 'Obriši';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Jeste li sigurni da želite obrisati ovu akciju?';
+
+  @override
+  String get webhookNoName => 'Akcija bez naziva';
+
+  @override
+  String get webhookName => 'Naziv';
+
+  @override
+  String get webhookNameHint => 'npr., Upali svjetla';
+
+  @override
+  String get webhookEvent => 'Događaj okidača';
+
+  @override
+  String get webhookUrls => 'Ciljni URL-ovi';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Dodaj URL';
+
+  @override
+  String get webhookRemoveUrl => 'Ukloni';
+
+  @override
+  String get webhookRepeatPeriod => 'Pauza ponavljanja';
+
+  @override
+  String get webhookRepeatNone => 'Bez pauze';
+
+  @override
+  String get webhookRepeat5s => '5 sekundi';
+
+  @override
+  String get webhookRepeat15s => '15 sekundi';
+
+  @override
+  String get webhookRepeat30s => '30 sekundi';
+
+  @override
+  String get webhookRepeat1min => '1 minuta';
+
+  @override
+  String get webhookRepeat5min => '5 minuta';
+
+  @override
+  String get webhookRepeat15min => '15 minuta';
+
+  @override
+  String get webhookRepeat1hour => '1 sat';
+
+  @override
+  String get webhookModeDevice => 'Uređaj';
+
+  @override
+  String get webhookModeCustom => 'Prilagođeni URL';
+
+  @override
+  String get webhookTargetDevice => 'Ciljni uređaj';
+
+  @override
+  String get webhookSelectDevice => 'Odaberite uređaj';
+
+  @override
+  String get webhookNoDevices => 'Nema drugih dostupnih uređaja';
+
+  @override
+  String get webhookToggle => 'Prebaci';
+
+  @override
+  String get webhookToggleAfter => 'Automatski vrati nakon';
+
+  @override
+  String get webhookToggleAfterNone => 'Ne vraćaj';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekundi';
+
+  @override
+  String get webhookToggleAfter1min => '1 minuta';
+
+  @override
+  String get webhookToggleAfter5min => '5 minuta';
+
+  @override
+  String get webhookToggleAfter10min => '10 minuta';
+
+  @override
+  String get webhookToggleAfter30min => '30 minuta';
+
+  @override
+  String get webhookToggleAfter1hour => '1 sat';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automatsko vraćanje nije dostupno za akciju prebacivanja';
 }

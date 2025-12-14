@@ -131,6 +131,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get feelsLike => 'Percepita';
 
   @override
+  String get dewPoint => 'Punto di rugiada';
+
+  @override
   String get totalEnergy => 'Energia totale';
 
   @override
@@ -397,15 +400,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get languageGreek => 'Greco';
-
-  @override
-  String get languageSpanishMexico => 'Spagnolo (Messico)';
-
-  @override
-  String get languageFrenchCanada => 'Francese (Canada)';
-
-  @override
-  String get languageEnglishUS => 'Inglese (USA)';
 
   @override
   String get cancel => 'Annulla';
@@ -748,16 +742,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get save => 'Salva';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Aggiornamento auto';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Aggiornamenti firmware a mezzanotte';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Aggiungi Auto-Aggiornamento';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Modifica Auto-Aggiornamento';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Programmazione per il controllo aggiornamenti firmware';
+
+  @override
+  String get systemSchedule => 'Sistema';
+
+  @override
+  String get userSchedules => 'Orari utente';
 
   @override
   String get activity => 'Attività';
@@ -766,16 +770,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noActivity => 'Nessuna attività recente';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Attività recente';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nessuna attività recente';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Acceso';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Spento';
 
   @override
   String get sourceButton => 'Pulsante';
@@ -929,6 +933,27 @@ class AppLocalizationsIt extends AppLocalizations {
       'Visualizza scene di automazione nella navigazione';
 
   @override
+  String get showDeviceInfoButton => 'Mostra Pulsante Info';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Visualizza il pulsante info nella schermata del dispositivo';
+
+  @override
+  String get showScheduleButton => 'Mostra Pulsante Programmazioni';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Visualizza il pulsante programmazioni per i dispositivi di potenza';
+
+  @override
+  String get showActionsButton => 'Mostra Pulsante Azioni';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Visualizza il pulsante azioni nella schermata del dispositivo';
+
+  @override
   String get sceneEnabled => 'Abilitata';
 
   @override
@@ -951,6 +976,49 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il dispositivo apparirà solo nella scheda Dispositivi';
 
   @override
+  String get backupSettings => 'Backup';
+
+  @override
+  String get backupSettingsDesc => 'Salva pianificazioni e azioni localmente';
+
+  @override
+  String get backupCreate => 'Crea backup';
+
+  @override
+  String get backupRestore => 'Ripristina backup';
+
+  @override
+  String get backupDelete => 'Elimina backup';
+
+  @override
+  String get backupCreated => 'Backup creato';
+
+  @override
+  String get backupRestored => 'Backup ripristinato';
+
+  @override
+  String get backupDeleted => 'Backup eliminato';
+
+  @override
+  String get backupNotFound => 'Nessun backup trovato';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Questo sostituirà le pianificazioni e azioni attuali con il backup. Continuare?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Eliminare il backup per questo dispositivo?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Ultimo backup: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Nessun backup';
+
+  @override
   String get unsupportedDevice => 'Dispositivo non supportato';
 
   @override
@@ -966,4 +1034,124 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Copiato negli appunti';
+
+  @override
+  String get webhooks => 'Azioni';
+
+  @override
+  String get noWebhooks => 'Nessuna azione';
+
+  @override
+  String get noWebhooksDesc =>
+      'Crea azioni per attivare altri dispositivi quando si verificano eventi';
+
+  @override
+  String get addWebhook => 'Aggiungi Azione';
+
+  @override
+  String get editWebhook => 'Modifica';
+
+  @override
+  String get deleteWebhook => 'Elimina';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Sei sicuro di voler eliminare questa azione?';
+
+  @override
+  String get webhookNoName => 'Azione Senza Nome';
+
+  @override
+  String get webhookName => 'Nome';
+
+  @override
+  String get webhookNameHint => 'es. Accendi luci';
+
+  @override
+  String get webhookEvent => 'Evento Trigger';
+
+  @override
+  String get webhookUrls => 'URL di Destinazione';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Aggiungi URL';
+
+  @override
+  String get webhookRemoveUrl => 'Rimuovi';
+
+  @override
+  String get webhookRepeatPeriod => 'Tempo di Attesa';
+
+  @override
+  String get webhookRepeatNone => 'Nessuna attesa';
+
+  @override
+  String get webhookRepeat5s => '5 secondi';
+
+  @override
+  String get webhookRepeat15s => '15 secondi';
+
+  @override
+  String get webhookRepeat30s => '30 secondi';
+
+  @override
+  String get webhookRepeat1min => '1 minuto';
+
+  @override
+  String get webhookRepeat5min => '5 minuti';
+
+  @override
+  String get webhookRepeat15min => '15 minuti';
+
+  @override
+  String get webhookRepeat1hour => '1 ora';
+
+  @override
+  String get webhookModeDevice => 'Dispositivo';
+
+  @override
+  String get webhookModeCustom => 'URL Personalizzato';
+
+  @override
+  String get webhookTargetDevice => 'Dispositivo Destinazione';
+
+  @override
+  String get webhookSelectDevice => 'Seleziona un dispositivo';
+
+  @override
+  String get webhookNoDevices => 'Nessun altro dispositivo disponibile';
+
+  @override
+  String get webhookToggle => 'Interruttore';
+
+  @override
+  String get webhookToggleAfter => 'Ripristino Auto Dopo';
+
+  @override
+  String get webhookToggleAfterNone => 'Non ripristinare';
+
+  @override
+  String get webhookToggleAfter30s => '30 secondi';
+
+  @override
+  String get webhookToggleAfter1min => '1 minuto';
+
+  @override
+  String get webhookToggleAfter5min => '5 minuti';
+
+  @override
+  String get webhookToggleAfter10min => '10 minuti';
+
+  @override
+  String get webhookToggleAfter30min => '30 minuti';
+
+  @override
+  String get webhookToggleAfter1hour => '1 ora';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Il ripristino automatico non è disponibile per l\'azione interruttore';
 }

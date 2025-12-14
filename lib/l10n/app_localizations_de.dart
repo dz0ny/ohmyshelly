@@ -131,6 +131,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get feelsLike => 'Gefühlt';
 
   @override
+  String get dewPoint => 'Taupunkt';
+
+  @override
   String get totalEnergy => 'Gesamtenergie';
 
   @override
@@ -397,15 +400,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get languageGreek => 'Griechisch';
-
-  @override
-  String get languageSpanishMexico => 'Spanisch (Mexiko)';
-
-  @override
-  String get languageFrenchCanada => 'Französisch (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Englisch (US)';
 
   @override
   String get cancel => 'Abbrechen';
@@ -750,13 +744,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get autoUpdateSchedule => 'Auto-Update';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Firmware-Updates um Mitternacht';
+
+  @override
+  String get addAutoUpdateSchedule => 'Auto-Update hinzufügen';
+
+  @override
+  String get editAutoUpdateSchedule => 'Auto-Update bearbeiten';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Planen Sie, wann das Gerät nach Firmware-Updates sucht';
 
   @override
   String get systemSchedule => 'System';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get userSchedules => 'Benutzer-Zeitpläne';
 
   @override
   String get activity => 'Aktivität';
@@ -765,16 +769,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noActivity => 'Keine aktuelle Aktivität';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Letzte Aktivität';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Keine aktuelle Aktivität';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Eingeschaltet';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Ausgeschaltet';
 
   @override
   String get sourceButton => 'Taste';
@@ -928,6 +932,27 @@ class AppLocalizationsDe extends AppLocalizations {
       'Automatisierungsszenen in der Navigation anzeigen';
 
   @override
+  String get showDeviceInfoButton => 'Geräteinfo-Schaltfläche anzeigen';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Info-Schaltfläche im Gerätebildschirm anzeigen';
+
+  @override
+  String get showScheduleButton => 'Zeitplan-Schaltfläche anzeigen';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Zeitplan-Schaltfläche für Stromgeräte anzeigen';
+
+  @override
+  String get showActionsButton => 'Aktionen-Schaltfläche anzeigen';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Aktionen-Schaltfläche im Gerätebildschirm anzeigen';
+
+  @override
   String get sceneEnabled => 'Aktiviert';
 
   @override
@@ -949,6 +974,48 @@ class AppLocalizationsDe extends AppLocalizations {
   String get hideFromDashboardDesc => 'Gerät wird nur im Geräte-Tab angezeigt';
 
   @override
+  String get backupSettings => 'Sicherung';
+
+  @override
+  String get backupSettingsDesc => 'Zeitpläne und Aktionen lokal speichern';
+
+  @override
+  String get backupCreate => 'Sicherung erstellen';
+
+  @override
+  String get backupRestore => 'Sicherung wiederherstellen';
+
+  @override
+  String get backupDelete => 'Sicherung löschen';
+
+  @override
+  String get backupCreated => 'Sicherung erstellt';
+
+  @override
+  String get backupRestored => 'Sicherung wiederhergestellt';
+
+  @override
+  String get backupDeleted => 'Sicherung gelöscht';
+
+  @override
+  String get backupNotFound => 'Keine Sicherung gefunden';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Dies ersetzt aktuelle Zeitpläne und Aktionen durch die Sicherung. Fortfahren?';
+
+  @override
+  String get backupDeleteConfirm => 'Sicherung für dieses Gerät löschen?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Letzte Sicherung: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Keine Sicherung';
+
+  @override
   String get unsupportedDevice => 'Nicht unterstütztes Gerät';
 
   @override
@@ -964,4 +1031,124 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'In Zwischenablage kopiert';
+
+  @override
+  String get webhooks => 'Aktionen';
+
+  @override
+  String get noWebhooks => 'Keine Aktionen';
+
+  @override
+  String get noWebhooksDesc =>
+      'Erstellen Sie Aktionen, um andere Geräte bei Ereignissen auszulösen';
+
+  @override
+  String get addWebhook => 'Aktion hinzufügen';
+
+  @override
+  String get editWebhook => 'Bearbeiten';
+
+  @override
+  String get deleteWebhook => 'Löschen';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Möchten Sie diese Aktion wirklich löschen?';
+
+  @override
+  String get webhookNoName => 'Unbenannte Aktion';
+
+  @override
+  String get webhookName => 'Name';
+
+  @override
+  String get webhookNameHint => 'z.B. Licht einschalten';
+
+  @override
+  String get webhookEvent => 'Auslöse-Ereignis';
+
+  @override
+  String get webhookUrls => 'Ziel-URLs';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'URL hinzufügen';
+
+  @override
+  String get webhookRemoveUrl => 'Entfernen';
+
+  @override
+  String get webhookRepeatPeriod => 'Wiederholungssperre';
+
+  @override
+  String get webhookRepeatNone => 'Keine Sperre';
+
+  @override
+  String get webhookRepeat5s => '5 Sekunden';
+
+  @override
+  String get webhookRepeat15s => '15 Sekunden';
+
+  @override
+  String get webhookRepeat30s => '30 Sekunden';
+
+  @override
+  String get webhookRepeat1min => '1 Minute';
+
+  @override
+  String get webhookRepeat5min => '5 Minuten';
+
+  @override
+  String get webhookRepeat15min => '15 Minuten';
+
+  @override
+  String get webhookRepeat1hour => '1 Stunde';
+
+  @override
+  String get webhookModeDevice => 'Gerät';
+
+  @override
+  String get webhookModeCustom => 'Benutzerdefinierte URL';
+
+  @override
+  String get webhookTargetDevice => 'Zielgerät';
+
+  @override
+  String get webhookSelectDevice => 'Gerät auswählen';
+
+  @override
+  String get webhookNoDevices => 'Keine anderen Geräte verfügbar';
+
+  @override
+  String get webhookToggle => 'Umschalten';
+
+  @override
+  String get webhookToggleAfter => 'Automatisch zurücksetzen nach';
+
+  @override
+  String get webhookToggleAfterNone => 'Nicht zurücksetzen';
+
+  @override
+  String get webhookToggleAfter30s => '30 Sekunden';
+
+  @override
+  String get webhookToggleAfter1min => '1 Minute';
+
+  @override
+  String get webhookToggleAfter5min => '5 Minuten';
+
+  @override
+  String get webhookToggleAfter10min => '10 Minuten';
+
+  @override
+  String get webhookToggleAfter30min => '30 Minuten';
+
+  @override
+  String get webhookToggleAfter1hour => '1 Stunde';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automatisches Zurücksetzen ist für Umschalt-Aktion nicht verfügbar';
 }

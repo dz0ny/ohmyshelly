@@ -12,6 +12,7 @@ import '../data/services/websocket_service.dart';
 import '../data/services/connection_manager.dart';
 import '../data/services/storage_service.dart';
 import '../core/utils/device_type_helper.dart';
+import '../core/utils/api_retry_mixin.dart';
 
 enum DeviceLoadState {
   initial,
@@ -20,13 +21,26 @@ enum DeviceLoadState {
   error,
 }
 
-class DeviceProvider extends ChangeNotifier {
+class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   final DeviceService _deviceService;
   final WebSocketService? _webSocketService;
   final ConnectionManager? _connectionManager;
   final StorageService? _storageService;
   String? _apiUrl;
   String? _token;
+
+  // ApiRetryMixin implementation
+  @override
+  String? get currentApiUrl => _apiUrl;
+
+  @override
+  String? get currentToken => _token;
+
+  @override
+  void onCredentialsUpdated(String apiUrl, String token) {
+    _apiUrl = apiUrl;
+    _token = token;
+  }
 
   List<Device> _devices = [];
   Map<String, DeviceStatus> _deviceStatuses = {};
@@ -150,11 +164,14 @@ class DeviceProvider extends ChangeNotifier {
     _isLoadingHistory = true;
 
     try {
-      final stats = await _deviceService.fetchWeatherStatistics(
-        _apiUrl!,
-        _token!,
-        deviceId,
-        DateRange.day, // Get today's hourly data
+      // Use withAutoReauth to handle session expiration
+      final stats = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchWeatherStatistics(
+          apiUrl,
+          token,
+          deviceId,
+          DateRange.day, // Get today's hourly data
+        ),
       );
 
       if (stats.dataPoints.isNotEmpty) {
@@ -196,11 +213,14 @@ class DeviceProvider extends ChangeNotifier {
     if (_apiUrl == null || _token == null) return;
 
     try {
-      final stats = await _deviceService.fetchPowerStatistics(
-        _apiUrl!,
-        _token!,
-        deviceId,
-        DateRange.day, // Get today's hourly data
+      // Use withAutoReauth to handle session expiration
+      final stats = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchPowerStatistics(
+          apiUrl,
+          token,
+          deviceId,
+          DateRange.day, // Get today's hourly data
+        ),
       );
 
       if (stats.dataPoints.isNotEmpty) {
@@ -452,7 +472,10 @@ class DeviceProvider extends ChangeNotifier {
 
     try {
       // v2 API returns both devices and statuses in one call
-      final result = await _deviceService.fetchDevicesWithStatuses(_apiUrl!, _token!);
+      // Use withAutoReauth to handle session expiration
+      final result = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchDevicesWithStatuses(apiUrl, token),
+      );
       _devices = result.devices;
       _deviceStatuses = result.statuses;
       _isOffline = false;
@@ -579,7 +602,10 @@ class DeviceProvider extends ChangeNotifier {
     if (_apiUrl == null || _token == null) return;
 
     try {
-      final result = await _deviceService.fetchDevicesWithStatuses(_apiUrl!, _token!);
+      // Use withAutoReauth to handle session expiration
+      final result = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchDevicesWithStatuses(apiUrl, token),
+      );
       _devices = result.devices;
 
       // Merge statuses: protect recent WebSocket data from API overwrites
@@ -673,8 +699,10 @@ class DeviceProvider extends ChangeNotifier {
       if (connectionManager != null) {
         success = await connectionManager.toggleDevice(deviceId, turnOn);
       } else {
-        // Fall back to cloud API directly
-        await _deviceService.toggleDevice(_apiUrl!, _token!, deviceId, turnOn);
+        // Fall back to cloud API directly with auto-reauth
+        await withAutoReauth(
+          (apiUrl, token) => _deviceService.toggleDevice(apiUrl, token, deviceId, turnOn),
+        );
         success = true;
       }
 

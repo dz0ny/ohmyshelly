@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import '../data/models/scene.dart';
 import '../data/services/scene_service.dart';
+import '../data/services/api_service.dart';
+import '../core/utils/api_retry_mixin.dart';
 
 enum SceneLoadState {
   initial,
@@ -9,10 +11,23 @@ enum SceneLoadState {
   error,
 }
 
-class SceneProvider extends ChangeNotifier {
+class SceneProvider extends ChangeNotifier with ApiRetryMixin {
   final SceneService _sceneService;
   String? _apiUrl;
   String? _token;
+
+  // ApiRetryMixin implementation
+  @override
+  String? get currentApiUrl => _apiUrl;
+
+  @override
+  String? get currentToken => _token;
+
+  @override
+  void onCredentialsUpdated(String apiUrl, String token) {
+    _apiUrl = apiUrl;
+    _token = token;
+  }
 
   List<Scene> _scenes = [];
   SceneLoadState _state = SceneLoadState.initial;
@@ -66,9 +81,16 @@ class SceneProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _scenes = await _sceneService.fetchScenes(_apiUrl!, _token!);
+      // Use withAutoReauth to handle session expiration
+      _scenes = await withAutoReauth(
+        (apiUrl, token) => _sceneService.fetchScenes(apiUrl, token),
+      );
       _state = SceneLoadState.loaded;
       _error = null;
+    } on ApiException catch (e) {
+      _state = SceneLoadState.error;
+      _error = e.friendlyMessage;
+      debugPrint('Failed to fetch scenes: $e');
     } catch (e) {
       _state = SceneLoadState.error;
       _error = e.toString();
@@ -87,7 +109,10 @@ class SceneProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _scenes = await _sceneService.fetchScenes(_apiUrl!, _token!);
+      // Use withAutoReauth to handle session expiration
+      _scenes = await withAutoReauth(
+        (apiUrl, token) => _sceneService.fetchScenes(apiUrl, token),
+      );
       _state = SceneLoadState.loaded;
       _error = null;
     } catch (e) {
@@ -111,8 +136,10 @@ class SceneProvider extends ChangeNotifier {
         notifyListeners();
       }
 
-      // API call
-      await _sceneService.toggleScene(_apiUrl!, _token!, sceneId, enabled);
+      // API call with auto-reauth
+      await withAutoReauth(
+        (apiUrl, token) => _sceneService.toggleScene(apiUrl, token, sceneId, enabled),
+      );
       return true;
     } catch (e) {
       debugPrint('Failed to toggle scene: $e');
@@ -133,7 +160,10 @@ class SceneProvider extends ChangeNotifier {
     if (_apiUrl == null || _token == null) return false;
 
     try {
-      await _sceneService.runScene(_apiUrl!, _token!, sceneId);
+      // API call with auto-reauth
+      await withAutoReauth(
+        (apiUrl, token) => _sceneService.runScene(apiUrl, token, sceneId),
+      );
       return true;
     } catch (e) {
       debugPrint('Failed to run scene: $e');

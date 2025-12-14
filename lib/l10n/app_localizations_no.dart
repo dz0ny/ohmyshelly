@@ -130,6 +130,9 @@ class AppLocalizationsNo extends AppLocalizations {
   String get feelsLike => 'Føles som';
 
   @override
+  String get dewPoint => 'Duggpunkt';
+
+  @override
   String get totalEnergy => 'Total Energi';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsNo extends AppLocalizations {
 
   @override
   String get languageGreek => 'Gresk';
-
-  @override
-  String get languageSpanishMexico => 'Spansk (Mexico)';
-
-  @override
-  String get languageFrenchCanada => 'Fransk (Canada)';
-
-  @override
-  String get languageEnglishUS => 'Engelsk (USA)';
 
   @override
   String get cancel => 'Avbryt';
@@ -745,16 +739,26 @@ class AppLocalizationsNo extends AppLocalizations {
   String get save => 'Lagre';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatisk oppdatering';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Fastvareoppdateringer ved midnatt';
+
+  @override
+  String get addAutoUpdateSchedule => 'Legg Til Auto-Oppdatering';
+
+  @override
+  String get editAutoUpdateSchedule => 'Rediger Auto-Oppdatering';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Planlegg når enheten sjekker for fastvareoppdateringer';
 
   @override
   String get systemSchedule => 'System';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get userSchedules => 'Brukerplaner';
 
   @override
   String get activity => 'Aktivitet';
@@ -763,16 +767,16 @@ class AppLocalizationsNo extends AppLocalizations {
   String get noActivity => 'Ingen nylig aktivitet';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Nylig aktivitet';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Ingen nylig aktivitet';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Slått på';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Slått av';
 
   @override
   String get sourceButton => 'Knapp';
@@ -925,6 +929,24 @@ class AppLocalizationsNo extends AppLocalizations {
   String get showScenesTabDesc => 'Vis automatiseringsscener i navigasjon';
 
   @override
+  String get showDeviceInfoButton => 'Vis Enhetsinfoknapp';
+
+  @override
+  String get showDeviceInfoButtonDesc => 'Vis infoknapp i enhetsskjerm';
+
+  @override
+  String get showScheduleButton => 'Vis Tidsplanknapp';
+
+  @override
+  String get showScheduleButtonDesc => 'Vis tidsplanknapp for strømenheter';
+
+  @override
+  String get showActionsButton => 'Vis Handlingsknapp';
+
+  @override
+  String get showActionsButtonDesc => 'Vis handlingsknapp i enhetsskjerm';
+
+  @override
   String get sceneEnabled => 'Aktivert';
 
   @override
@@ -946,6 +968,49 @@ class AppLocalizationsNo extends AppLocalizations {
   String get hideFromDashboardDesc => 'Enheten vises kun i Enheter-fanen';
 
   @override
+  String get backupSettings => 'Sikkerhetskopi';
+
+  @override
+  String get backupSettingsDesc => 'Lagre tidsplaner og handlinger lokalt';
+
+  @override
+  String get backupCreate => 'Opprett sikkerhetskopi';
+
+  @override
+  String get backupRestore => 'Gjenopprett sikkerhetskopi';
+
+  @override
+  String get backupDelete => 'Slett sikkerhetskopi';
+
+  @override
+  String get backupCreated => 'Sikkerhetskopi opprettet';
+
+  @override
+  String get backupRestored => 'Sikkerhetskopi gjenopprettet';
+
+  @override
+  String get backupDeleted => 'Sikkerhetskopi slettet';
+
+  @override
+  String get backupNotFound => 'Ingen sikkerhetskopi funnet';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Dette vil erstatte nåværende tidsplaner og handlinger med sikkerhetskopien. Fortsette?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Slette sikkerhetskopien for denne enheten?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Siste sikkerhetskopi: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Ingen sikkerhetskopi';
+
+  @override
   String get unsupportedDevice => 'Ustøttet enhet';
 
   @override
@@ -961,4 +1026,124 @@ class AppLocalizationsNo extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Kopiert til utklippstavle';
+
+  @override
+  String get webhooks => 'Handlinger';
+
+  @override
+  String get noWebhooks => 'Ingen handlinger';
+
+  @override
+  String get noWebhooksDesc =>
+      'Opprett handlinger for å utløse andre enheter når hendelser inntreffer';
+
+  @override
+  String get addWebhook => 'Legg Til Handling';
+
+  @override
+  String get editWebhook => 'Rediger';
+
+  @override
+  String get deleteWebhook => 'Slett';
+
+  @override
+  String get deleteWebhookConfirm =>
+      'Er du sikker på at du vil slette denne handlingen?';
+
+  @override
+  String get webhookNoName => 'Navnløs Handling';
+
+  @override
+  String get webhookName => 'Navn';
+
+  @override
+  String get webhookNameHint => 'f.eks., Slå på lys';
+
+  @override
+  String get webhookEvent => 'Utløsende Hendelse';
+
+  @override
+  String get webhookUrls => 'Mål-URL-er';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Legg Til URL';
+
+  @override
+  String get webhookRemoveUrl => 'Fjern';
+
+  @override
+  String get webhookRepeatPeriod => 'Gjenta Nedkjøling';
+
+  @override
+  String get webhookRepeatNone => 'Ingen nedkjøling';
+
+  @override
+  String get webhookRepeat5s => '5 sekunder';
+
+  @override
+  String get webhookRepeat15s => '15 sekunder';
+
+  @override
+  String get webhookRepeat30s => '30 sekunder';
+
+  @override
+  String get webhookRepeat1min => '1 minutt';
+
+  @override
+  String get webhookRepeat5min => '5 minutter';
+
+  @override
+  String get webhookRepeat15min => '15 minutter';
+
+  @override
+  String get webhookRepeat1hour => '1 time';
+
+  @override
+  String get webhookModeDevice => 'Enhet';
+
+  @override
+  String get webhookModeCustom => 'Egendefinert URL';
+
+  @override
+  String get webhookTargetDevice => 'Målenhet';
+
+  @override
+  String get webhookSelectDevice => 'Velg en enhet';
+
+  @override
+  String get webhookNoDevices => 'Ingen andre enheter tilgjengelige';
+
+  @override
+  String get webhookToggle => 'Veksle';
+
+  @override
+  String get webhookToggleAfter => 'Auto-Tilbakestill Etter';
+
+  @override
+  String get webhookToggleAfterNone => 'Ikke tilbakestill';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekunder';
+
+  @override
+  String get webhookToggleAfter1min => '1 minutt';
+
+  @override
+  String get webhookToggleAfter5min => '5 minutter';
+
+  @override
+  String get webhookToggleAfter10min => '10 minutter';
+
+  @override
+  String get webhookToggleAfter30min => '30 minutter';
+
+  @override
+  String get webhookToggleAfter1hour => '1 time';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Auto-tilbakestilling er ikke tilgjengelig for vekslingshandling';
 }

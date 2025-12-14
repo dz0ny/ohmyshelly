@@ -155,6 +155,73 @@ class ScheduleProvider extends ChangeNotifier {
     }
   }
 
+  /// Create a new auto-update schedule for firmware updates.
+  Future<bool> createAutoUpdateSchedule(
+    String deviceId, {
+    required int hour,
+    required int minute,
+    required List<int> days,
+    String stage = 'stable',
+  }) async {
+    if (!_webSocketService.isConnected) return false;
+
+    try {
+      final timespec = TimespecHelper.build(hour, minute, days);
+      final call = ScheduleCall.shellyUpdate(stage: stage);
+
+      final response = await _webSocketService.sendRpc(
+        deviceId: deviceId,
+        method: 'schedule.create',
+        params: {
+          'enable': true,
+          'timespec': timespec,
+          'calls': [call.toJson()],
+        },
+      );
+
+      final result = response['result'] as Map<String, dynamic>?;
+      if (result != null && result['id'] != null) {
+        // Refresh schedules to get updated list
+        await fetchSchedules(deviceId);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ScheduleProvider] Failed to create auto-update schedule: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Create a schedule from backup data.
+  Future<bool> createScheduleFromBackup(
+    String deviceId,
+    Schedule schedule,
+  ) async {
+    if (!_webSocketService.isConnected) return false;
+
+    try {
+      final response = await _webSocketService.sendRpc(
+        deviceId: deviceId,
+        method: 'schedule.create',
+        params: {
+          'enable': schedule.enabled,
+          'timespec': schedule.timespec,
+          'calls': schedule.calls.map((c) => c.toJson()).toList(),
+        },
+      );
+
+      final result = response['result'] as Map<String, dynamic>?;
+      return result != null && result['id'] != null;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ScheduleProvider] Failed to create schedule from backup: $e');
+      }
+      return false;
+    }
+  }
+
   /// Update an existing schedule.
   Future<bool> updateSchedule(
     String deviceId,

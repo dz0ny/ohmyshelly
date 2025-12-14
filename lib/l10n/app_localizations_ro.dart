@@ -129,6 +129,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get feelsLike => 'Se simte ca';
 
   @override
+  String get dewPoint => 'Punct de rouă';
+
+  @override
   String get totalEnergy => 'Energie Totală';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get languageGreek => 'Greacă';
-
-  @override
-  String get languageSpanishMexico => 'Spaniolă (Mexic)';
-
-  @override
-  String get languageFrenchCanada => 'Franceză (Canada)';
-
-  @override
-  String get languageEnglishUS => 'Engleză (SUA)';
 
   @override
   String get cancel => 'Anulează';
@@ -744,16 +738,26 @@ class AppLocalizationsRo extends AppLocalizations {
   String get save => 'Salvează';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Actualizare automată';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Actualizări firmware la miezul nopții';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Adaugă Actualizare Automată';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Editează Actualizare Automată';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Programează când dispozitivul verifică actualizări firmware';
+
+  @override
+  String get systemSchedule => 'Sistem';
+
+  @override
+  String get userSchedules => 'Programări utilizator';
 
   @override
   String get activity => 'Activitate';
@@ -762,16 +766,16 @@ class AppLocalizationsRo extends AppLocalizations {
   String get noActivity => 'Fără activitate recentă';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Activitate recentă';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nicio activitate recentă';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Pornit';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Oprit';
 
   @override
   String get sourceButton => 'Buton';
@@ -928,6 +932,27 @@ class AppLocalizationsRo extends AppLocalizations {
       'Afișează scenele de automatizare în navigare';
 
   @override
+  String get showDeviceInfoButton => 'Afișează Butonul Info Dispozitiv';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Afișează butonul de informații în ecranul dispozitivului';
+
+  @override
+  String get showScheduleButton => 'Afișează Butonul Program';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Afișează butonul de program pentru dispozitivele de putere';
+
+  @override
+  String get showActionsButton => 'Afișează Butonul Acțiuni';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Afișează butonul de acțiuni în ecranul dispozitivului';
+
+  @override
   String get sceneEnabled => 'Activat';
 
   @override
@@ -950,6 +975,49 @@ class AppLocalizationsRo extends AppLocalizations {
       'Dispozitivul va apărea doar în fila Dispozitive';
 
   @override
+  String get backupSettings => 'Copie de rezervă';
+
+  @override
+  String get backupSettingsDesc => 'Salvează programele și acțiunile local';
+
+  @override
+  String get backupCreate => 'Creează copie';
+
+  @override
+  String get backupRestore => 'Restaurează copie';
+
+  @override
+  String get backupDelete => 'Șterge copie';
+
+  @override
+  String get backupCreated => 'Copie de rezervă creată';
+
+  @override
+  String get backupRestored => 'Copie de rezervă restaurată';
+
+  @override
+  String get backupDeleted => 'Copie de rezervă ștearsă';
+
+  @override
+  String get backupNotFound => 'Nu s-a găsit nicio copie de rezervă';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Aceasta va înlocui programele și acțiunile curente cu copia de rezervă. Continuați?';
+
+  @override
+  String get backupDeleteConfirm =>
+      'Ștergeți copia de rezervă pentru acest dispozitiv?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Ultima copie: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Fără copie de rezervă';
+
+  @override
   String get unsupportedDevice => 'Dispozitiv neacceptat';
 
   @override
@@ -965,4 +1033,123 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Copiat în clipboard';
+
+  @override
+  String get webhooks => 'Acțiuni';
+
+  @override
+  String get noWebhooks => 'Fără acțiuni';
+
+  @override
+  String get noWebhooksDesc =>
+      'Creează acțiuni pentru a declanșa alte dispozitive când apar evenimente';
+
+  @override
+  String get addWebhook => 'Adaugă Acțiune';
+
+  @override
+  String get editWebhook => 'Editează';
+
+  @override
+  String get deleteWebhook => 'Șterge';
+
+  @override
+  String get deleteWebhookConfirm => 'Sigur vrei să ștergi această acțiune?';
+
+  @override
+  String get webhookNoName => 'Acțiune Fără Nume';
+
+  @override
+  String get webhookName => 'Nume';
+
+  @override
+  String get webhookNameHint => 'ex., Pornește luminile';
+
+  @override
+  String get webhookEvent => 'Eveniment Declanșator';
+
+  @override
+  String get webhookUrls => 'URL-uri Țintă';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Adaugă URL';
+
+  @override
+  String get webhookRemoveUrl => 'Elimină';
+
+  @override
+  String get webhookRepeatPeriod => 'Răcire Repetare';
+
+  @override
+  String get webhookRepeatNone => 'Fără răcire';
+
+  @override
+  String get webhookRepeat5s => '5 secunde';
+
+  @override
+  String get webhookRepeat15s => '15 secunde';
+
+  @override
+  String get webhookRepeat30s => '30 secunde';
+
+  @override
+  String get webhookRepeat1min => '1 minut';
+
+  @override
+  String get webhookRepeat5min => '5 minute';
+
+  @override
+  String get webhookRepeat15min => '15 minute';
+
+  @override
+  String get webhookRepeat1hour => '1 oră';
+
+  @override
+  String get webhookModeDevice => 'Dispozitiv';
+
+  @override
+  String get webhookModeCustom => 'URL Personalizat';
+
+  @override
+  String get webhookTargetDevice => 'Dispozitiv Țintă';
+
+  @override
+  String get webhookSelectDevice => 'Selectează un dispozitiv';
+
+  @override
+  String get webhookNoDevices => 'Niciun alt dispozitiv disponibil';
+
+  @override
+  String get webhookToggle => 'Comutare';
+
+  @override
+  String get webhookToggleAfter => 'Revenire Automată După';
+
+  @override
+  String get webhookToggleAfterNone => 'Nu reveni';
+
+  @override
+  String get webhookToggleAfter30s => '30 secunde';
+
+  @override
+  String get webhookToggleAfter1min => '1 minut';
+
+  @override
+  String get webhookToggleAfter5min => '5 minute';
+
+  @override
+  String get webhookToggleAfter10min => '10 minute';
+
+  @override
+  String get webhookToggleAfter30min => '30 minute';
+
+  @override
+  String get webhookToggleAfter1hour => '1 oră';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Revenirea automată nu este disponibilă pentru acțiunea de comutare';
 }

@@ -130,6 +130,9 @@ class AppLocalizationsLt extends AppLocalizations {
   String get feelsLike => 'Jaučiasi kaip';
 
   @override
+  String get dewPoint => 'Rasos taškas';
+
+  @override
   String get totalEnergy => 'Bendra Energija';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get languageGreek => 'Graikų';
-
-  @override
-  String get languageSpanishMexico => 'Ispanų (Meksika)';
-
-  @override
-  String get languageFrenchCanada => 'Prancūzų (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Anglų (JAV)';
 
   @override
   String get cancel => 'Atšaukti';
@@ -745,16 +739,27 @@ class AppLocalizationsLt extends AppLocalizations {
   String get save => 'Išsaugoti';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatinis atnaujinimas';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc =>
+      'Programinės įrangos atnaujinimai vidurnaktį';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Pridėti Automatinį Atnaujinimą';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Redaguoti Automatinį Atnaujinimą';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Suplanuoti, kada įrenginys tikrina programinės įrangos atnaujinimus';
+
+  @override
+  String get systemSchedule => 'Sistema';
+
+  @override
+  String get userSchedules => 'Naudotojo tvarkaraščiai';
 
   @override
   String get activity => 'Veikla';
@@ -763,16 +768,16 @@ class AppLocalizationsLt extends AppLocalizations {
   String get noActivity => 'Nėra naujos veiklos';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Pastaroji veikla';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Nėra pastarosios veiklos';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Įjungta';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Išjungta';
 
   @override
   String get sourceButton => 'Mygtukas';
@@ -931,6 +936,26 @@ class AppLocalizationsLt extends AppLocalizations {
   String get showScenesTabDesc => 'Rodyti automatizavimo scenas navigacijoje';
 
   @override
+  String get showDeviceInfoButton => 'Rodyti Įrenginio Informacijos Mygtuką';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Rodyti informacijos mygtuką įrenginio ekrane';
+
+  @override
+  String get showScheduleButton => 'Rodyti Tvarkaraščio Mygtuką';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Rodyti tvarkaraščio mygtuką maitinimo įrenginiams';
+
+  @override
+  String get showActionsButton => 'Rodyti Veiksmų Mygtuką';
+
+  @override
+  String get showActionsButtonDesc => 'Rodyti veiksmų mygtuką įrenginio ekrane';
+
+  @override
   String get sceneEnabled => 'Įjungta';
 
   @override
@@ -953,6 +978,49 @@ class AppLocalizationsLt extends AppLocalizations {
       'Įrenginys bus rodomas tik skirtuke Įrenginiai';
 
   @override
+  String get backupSettings => 'Atsarginė kopija';
+
+  @override
+  String get backupSettingsDesc =>
+      'Išsaugoti tvarkaraščius ir veiksmus vietoje';
+
+  @override
+  String get backupCreate => 'Sukurti atsarginę kopiją';
+
+  @override
+  String get backupRestore => 'Atkurti atsarginę kopiją';
+
+  @override
+  String get backupDelete => 'Ištrinti atsarginę kopiją';
+
+  @override
+  String get backupCreated => 'Atsarginė kopija sukurta';
+
+  @override
+  String get backupRestored => 'Atsarginė kopija atkurta';
+
+  @override
+  String get backupDeleted => 'Atsarginė kopija ištrinta';
+
+  @override
+  String get backupNotFound => 'Atsarginė kopija nerasta';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Tai pakeis dabartinius tvarkaraščius ir veiksmus atsargine kopija. Tęsti?';
+
+  @override
+  String get backupDeleteConfirm => 'Ištrinti šio įrenginio atsarginę kopiją?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Paskutinė atsarginė kopija: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Nėra atsarginės kopijos';
+
+  @override
   String get unsupportedDevice => 'Nepalaikomas įrenginys';
 
   @override
@@ -968,4 +1036,123 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Nukopijuota į iškarpinę';
+
+  @override
+  String get webhooks => 'Veiksmai';
+
+  @override
+  String get noWebhooks => 'Veiksmų nėra';
+
+  @override
+  String get noWebhooksDesc =>
+      'Kurkite veiksmus, kad aktyvuotumėte kitus įrenginius, kai įvyksta įvykiai';
+
+  @override
+  String get addWebhook => 'Pridėti Veiksmą';
+
+  @override
+  String get editWebhook => 'Redaguoti';
+
+  @override
+  String get deleteWebhook => 'Ištrinti';
+
+  @override
+  String get deleteWebhookConfirm => 'Ar tikrai norite ištrinti šį veiksmą?';
+
+  @override
+  String get webhookNoName => 'Bevardis Veiksmas';
+
+  @override
+  String get webhookName => 'Pavadinimas';
+
+  @override
+  String get webhookNameHint => 'pvz., Įjungti šviesas';
+
+  @override
+  String get webhookEvent => 'Aktyvavimo Įvykis';
+
+  @override
+  String get webhookUrls => 'Tiksliniai URL';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Pridėti URL';
+
+  @override
+  String get webhookRemoveUrl => 'Pašalinti';
+
+  @override
+  String get webhookRepeatPeriod => 'Kartojimo Atvėsimas';
+
+  @override
+  String get webhookRepeatNone => 'Be atvėsimo';
+
+  @override
+  String get webhookRepeat5s => '5 sekundės';
+
+  @override
+  String get webhookRepeat15s => '15 sekundžių';
+
+  @override
+  String get webhookRepeat30s => '30 sekundžių';
+
+  @override
+  String get webhookRepeat1min => '1 minutė';
+
+  @override
+  String get webhookRepeat5min => '5 minutės';
+
+  @override
+  String get webhookRepeat15min => '15 minučių';
+
+  @override
+  String get webhookRepeat1hour => '1 valanda';
+
+  @override
+  String get webhookModeDevice => 'Įrenginys';
+
+  @override
+  String get webhookModeCustom => 'Pasirinktinis URL';
+
+  @override
+  String get webhookTargetDevice => 'Tikslo Įrenginys';
+
+  @override
+  String get webhookSelectDevice => 'Pasirinkite įrenginį';
+
+  @override
+  String get webhookNoDevices => 'Nėra kitų prieinamų įrenginių';
+
+  @override
+  String get webhookToggle => 'Perjungti';
+
+  @override
+  String get webhookToggleAfter => 'Automatinis Grąžinimas Po';
+
+  @override
+  String get webhookToggleAfterNone => 'Negrąžinti';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekundžių';
+
+  @override
+  String get webhookToggleAfter1min => '1 minutės';
+
+  @override
+  String get webhookToggleAfter5min => '5 minučių';
+
+  @override
+  String get webhookToggleAfter10min => '10 minučių';
+
+  @override
+  String get webhookToggleAfter30min => '30 minučių';
+
+  @override
+  String get webhookToggleAfter1hour => '1 valandos';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Automatinis grąžinimas neprieinamas perjungimo veiksmui';
 }

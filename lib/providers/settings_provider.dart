@@ -8,6 +8,9 @@ class SettingsProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   bool _showDevicesTab = true;
   bool _showScenesTab = false;
+  bool _showDeviceInfoButton = false;
+  bool _showScheduleButton = true;
+  bool _showActionsButton = false;
   bool _isInitialized = false;
   List<String> _dashboardDeviceOrder = [];
   List<String> _dashboardExcludedDevices = [];
@@ -19,6 +22,9 @@ class SettingsProvider extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
   bool get showDevicesTab => _showDevicesTab;
   bool get showScenesTab => _showScenesTab;
+  bool get showDeviceInfoButton => _showDeviceInfoButton;
+  bool get showScheduleButton => _showScheduleButton;
+  bool get showActionsButton => _showActionsButton;
   bool get isInitialized => _isInitialized;
   List<String> get dashboardDeviceOrder => _dashboardDeviceOrder;
   List<String> get dashboardExcludedDevices => _dashboardExcludedDevices;
@@ -32,6 +38,9 @@ class SettingsProvider extends ChangeNotifier {
     _themeMode = _themeModeFromString(themeModeStr);
     _showDevicesTab = await _storageService.getShowDevicesTab();
     _showScenesTab = await _storageService.getShowScenesTab();
+    _showDeviceInfoButton = await _storageService.getShowDeviceInfoButton();
+    _showScheduleButton = await _storageService.getShowScheduleButton();
+    _showActionsButton = await _storageService.getShowActionsButton();
     _dashboardDeviceOrder = await _storageService.getDashboardDeviceOrder();
     _dashboardExcludedDevices = await _storageService.getDashboardExcludedDevices();
     _isInitialized = true;
@@ -81,6 +90,24 @@ class SettingsProvider extends ChangeNotifier {
   Future<void> setShowScenesTab(bool show) async {
     _showScenesTab = show;
     await _storageService.setShowScenesTab(show);
+    notifyListeners();
+  }
+
+  Future<void> setShowDeviceInfoButton(bool show) async {
+    _showDeviceInfoButton = show;
+    await _storageService.setShowDeviceInfoButton(show);
+    notifyListeners();
+  }
+
+  Future<void> setShowScheduleButton(bool show) async {
+    _showScheduleButton = show;
+    await _storageService.setShowScheduleButton(show);
+    notifyListeners();
+  }
+
+  Future<void> setShowActionsButton(bool show) async {
+    _showActionsButton = show;
+    await _storageService.setShowActionsButton(show);
     notifyListeners();
   }
 

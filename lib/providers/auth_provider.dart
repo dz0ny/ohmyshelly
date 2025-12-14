@@ -71,6 +71,9 @@ class AuthProvider extends ChangeNotifier {
     try {
       final user = await _authService.login(email, password);
       await _storageService.saveUser(user);
+      // Store hashed credentials for auto-reauthentication
+      final hashedPassword = _authService.hashPassword(password);
+      await _storageService.saveCredentials(email, hashedPassword);
       _user = user;
       _state = AuthState.authenticated;
       notifyListeners();
@@ -88,6 +91,33 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Attempt to reauthenticate using stored credentials.
+  /// Returns true if successful, false otherwise.
+  /// Does not change UI state on failure - caller handles that.
+  Future<bool> reauthenticate() async {
+    try {
+      final credentials = await _storageService.getCredentials();
+      if (credentials == null) {
+        debugPrint('Reauthentication failed: no stored credentials');
+        return false;
+      }
+
+      final user = await _authService.loginWithHashedPassword(
+        credentials['email']!,
+        credentials['hashedPassword']!,
+      );
+      await _storageService.saveUser(user);
+      _user = user;
+      _state = AuthState.authenticated;
+      notifyListeners();
+      debugPrint('Reauthentication successful');
+      return true;
+    } catch (e) {
+      debugPrint('Reauthentication failed: $e');
+      return false;
+    }
+  }
+
   // Logout
   Future<void> logout() async {
     _state = AuthState.loading;
@@ -95,6 +125,7 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       await _storageService.deleteUser();
+      await _storageService.deleteCredentials();
       _user = null;
       _state = AuthState.unauthenticated;
     } catch (e) {

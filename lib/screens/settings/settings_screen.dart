@@ -125,6 +125,39 @@ class SettingsScreen extends StatelessWidget {
               value: settings.showScenesTab,
               onChanged: (value) => settings.setShowScenesTab(value),
             ),
+            SwitchListTile(
+              title: Text(l10n.showDeviceInfoButton),
+              subtitle: Text(
+                l10n.showDeviceInfoButtonDesc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+              value: settings.showDeviceInfoButton,
+              onChanged: (value) => settings.setShowDeviceInfoButton(value),
+            ),
+            SwitchListTile(
+              title: Text(l10n.showScheduleButton),
+              subtitle: Text(
+                l10n.showScheduleButtonDesc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+              value: settings.showScheduleButton,
+              onChanged: (value) => settings.setShowScheduleButton(value),
+            ),
+            SwitchListTile(
+              title: Text(l10n.showActionsButton),
+              subtitle: Text(
+                l10n.showActionsButtonDesc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+              value: settings.showActionsButton,
+              onChanged: (value) => settings.setShowActionsButton(value),
+            ),
           ],
         );
       },
@@ -161,13 +194,6 @@ class SettingsScreen extends StatelessWidget {
               isSelected: settings.currentLanguageCode == 'en',
               onTap: () => settings.setLocale(const Locale('en')),
             ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageEnglishUS,
-              subtitle: 'English (US)',
-              isSelected: settings.currentLanguageCode == 'en_US',
-              onTap: () => settings.setLocale(const Locale('en', 'US')),
-            ),
             // Western Europe
             _buildLanguageOption(
               context: context,
@@ -185,24 +211,10 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildLanguageOption(
               context: context,
-              title: l10n.languageFrenchCanada,
-              subtitle: 'Français (Canada)',
-              isSelected: settings.currentLanguageCode == 'fr_CA',
-              onTap: () => settings.setLocale(const Locale('fr', 'CA')),
-            ),
-            _buildLanguageOption(
-              context: context,
               title: l10n.languageSpanish,
               subtitle: 'Español',
               isSelected: settings.currentLanguageCode == 'es',
               onTap: () => settings.setLocale(const Locale('es')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSpanishMexico,
-              subtitle: 'Español (México)',
-              isSelected: settings.currentLanguageCode == 'es_MX',
-              onTap: () => settings.setLocale(const Locale('es', 'MX')),
             ),
             _buildLanguageOption(
               context: context,

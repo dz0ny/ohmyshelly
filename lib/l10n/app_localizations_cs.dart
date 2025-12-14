@@ -129,6 +129,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get feelsLike => 'Pocitově';
 
   @override
+  String get dewPoint => 'Rosný bod';
+
+  @override
   String get totalEnergy => 'Celková Energie';
 
   @override
@@ -395,15 +398,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get languageGreek => 'Řečtina';
-
-  @override
-  String get languageSpanishMexico => 'Španělština (Mexiko)';
-
-  @override
-  String get languageFrenchCanada => 'Francouzština (Kanada)';
-
-  @override
-  String get languageEnglishUS => 'Angličtina (USA)';
 
   @override
   String get cancel => 'Zrušit';
@@ -744,16 +738,26 @@ class AppLocalizationsCs extends AppLocalizations {
   String get save => 'Uložit';
 
   @override
-  String get autoUpdateSchedule => 'Auto-Update';
+  String get autoUpdateSchedule => 'Automatická aktualizace';
 
   @override
-  String get autoUpdateScheduleDesc => 'Firmware updates at midnight';
+  String get autoUpdateScheduleDesc => 'Aktualizace firmwaru o půlnoci';
 
   @override
-  String get systemSchedule => 'System';
+  String get addAutoUpdateSchedule => 'Přidat Auto-Aktualizaci';
 
   @override
-  String get userSchedules => 'User Schedules';
+  String get editAutoUpdateSchedule => 'Upravit Auto-Aktualizaci';
+
+  @override
+  String get autoUpdateScheduleHint =>
+      'Naplánovat kdy zařízení kontroluje aktualizace firmwaru';
+
+  @override
+  String get systemSchedule => 'Systém';
+
+  @override
+  String get userSchedules => 'Uživatelské plány';
 
   @override
   String get activity => 'Aktivita';
@@ -762,16 +766,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get noActivity => 'Žádná nedávná aktivita';
 
   @override
-  String get recentActivity => 'Recent Activity';
+  String get recentActivity => 'Nedávná aktivita';
 
   @override
-  String get noRecentActivity => 'No recent activity';
+  String get noRecentActivity => 'Žádná nedávná aktivita';
 
   @override
-  String get turnedOn => 'Turned on';
+  String get turnedOn => 'Zapnuto';
 
   @override
-  String get turnedOff => 'Turned off';
+  String get turnedOff => 'Vypnuto';
 
   @override
   String get sourceButton => 'Tlačítko';
@@ -930,6 +934,27 @@ class AppLocalizationsCs extends AppLocalizations {
   String get showScenesTabDesc => 'Zobrazit automatizační scény v navigaci';
 
   @override
+  String get showDeviceInfoButton => 'Zobrazit Tlačítko Informací';
+
+  @override
+  String get showDeviceInfoButtonDesc =>
+      'Zobrazit tlačítko informací na obrazovce zařízení';
+
+  @override
+  String get showScheduleButton => 'Zobrazit Tlačítko Plánu';
+
+  @override
+  String get showScheduleButtonDesc =>
+      'Zobrazit tlačítko plánu pro napájecí zařízení';
+
+  @override
+  String get showActionsButton => 'Zobrazit Tlačítko Akcí';
+
+  @override
+  String get showActionsButtonDesc =>
+      'Zobrazit tlačítko akcí na obrazovce zařízení';
+
+  @override
   String get sceneEnabled => 'Povolena';
 
   @override
@@ -952,6 +977,48 @@ class AppLocalizationsCs extends AppLocalizations {
       'Zařízení se zobrazí pouze na záložce Zařízení';
 
   @override
+  String get backupSettings => 'Záloha';
+
+  @override
+  String get backupSettingsDesc => 'Uložit rozvrhy a akce lokálně';
+
+  @override
+  String get backupCreate => 'Vytvořit zálohu';
+
+  @override
+  String get backupRestore => 'Obnovit zálohu';
+
+  @override
+  String get backupDelete => 'Smazat zálohu';
+
+  @override
+  String get backupCreated => 'Záloha vytvořena';
+
+  @override
+  String get backupRestored => 'Záloha obnovena';
+
+  @override
+  String get backupDeleted => 'Záloha smazána';
+
+  @override
+  String get backupNotFound => 'Záloha nenalezena';
+
+  @override
+  String get backupRestoreConfirm =>
+      'Toto nahradí aktuální rozvrhy a akce zálohou. Pokračovat?';
+
+  @override
+  String get backupDeleteConfirm => 'Smazat zálohu pro toto zařízení?';
+
+  @override
+  String backupInfo(String date) {
+    return 'Poslední záloha: $date';
+  }
+
+  @override
+  String get backupNoBackup => 'Žádná záloha';
+
+  @override
   String get unsupportedDevice => 'Nepodporované zařízení';
 
   @override
@@ -967,4 +1034,123 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get copiedToClipboard => 'Zkopírováno do schránky';
+
+  @override
+  String get webhooks => 'Akce';
+
+  @override
+  String get noWebhooks => 'Žádné akce';
+
+  @override
+  String get noWebhooksDesc =>
+      'Vytvořte akce pro spouštění jiných zařízení při výskytu událostí';
+
+  @override
+  String get addWebhook => 'Přidat Akci';
+
+  @override
+  String get editWebhook => 'Upravit';
+
+  @override
+  String get deleteWebhook => 'Smazat';
+
+  @override
+  String get deleteWebhookConfirm => 'Opravdu chcete smazat tuto akci?';
+
+  @override
+  String get webhookNoName => 'Akce Bez Názvu';
+
+  @override
+  String get webhookName => 'Název';
+
+  @override
+  String get webhookNameHint => 'např. Zapnout světla';
+
+  @override
+  String get webhookEvent => 'Spouštěcí Událost';
+
+  @override
+  String get webhookUrls => 'Cílové URL';
+
+  @override
+  String get webhookUrlHint => 'http://192.168.1.x/rpc/...';
+
+  @override
+  String get webhookAddUrl => 'Přidat URL';
+
+  @override
+  String get webhookRemoveUrl => 'Odebrat';
+
+  @override
+  String get webhookRepeatPeriod => 'Prodleva Opakování';
+
+  @override
+  String get webhookRepeatNone => 'Bez prodlevy';
+
+  @override
+  String get webhookRepeat5s => '5 sekund';
+
+  @override
+  String get webhookRepeat15s => '15 sekund';
+
+  @override
+  String get webhookRepeat30s => '30 sekund';
+
+  @override
+  String get webhookRepeat1min => '1 minuta';
+
+  @override
+  String get webhookRepeat5min => '5 minut';
+
+  @override
+  String get webhookRepeat15min => '15 minut';
+
+  @override
+  String get webhookRepeat1hour => '1 hodina';
+
+  @override
+  String get webhookModeDevice => 'Zařízení';
+
+  @override
+  String get webhookModeCustom => 'Vlastní URL';
+
+  @override
+  String get webhookTargetDevice => 'Cílové Zařízení';
+
+  @override
+  String get webhookSelectDevice => 'Vyberte zařízení';
+
+  @override
+  String get webhookNoDevices => 'Žádná další zařízení nejsou k dispozici';
+
+  @override
+  String get webhookToggle => 'Přepnout';
+
+  @override
+  String get webhookToggleAfter => 'Auto-Vrácení Po';
+
+  @override
+  String get webhookToggleAfterNone => 'Nevracet';
+
+  @override
+  String get webhookToggleAfter30s => '30 sekund';
+
+  @override
+  String get webhookToggleAfter1min => '1 minuta';
+
+  @override
+  String get webhookToggleAfter5min => '5 minut';
+
+  @override
+  String get webhookToggleAfter10min => '10 minut';
+
+  @override
+  String get webhookToggleAfter30min => '30 minut';
+
+  @override
+  String get webhookToggleAfter1hour => '1 hodina';
+
+  @override
+  String get webhookToggleAfterNotAvailable =>
+      'Auto-vrácení není k dispozici pro akci přepnutí';
 }

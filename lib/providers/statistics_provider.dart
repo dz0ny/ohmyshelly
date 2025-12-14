@@ -3,6 +3,7 @@ import '../data/models/statistics.dart';
 import '../data/services/device_service.dart';
 import '../data/services/api_service.dart';
 import '../widgets/common/date_range_picker.dart';
+import '../core/utils/api_retry_mixin.dart';
 
 enum StatisticsLoadState {
   initial,
@@ -11,10 +12,23 @@ enum StatisticsLoadState {
   error,
 }
 
-class StatisticsProvider extends ChangeNotifier {
+class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
   final DeviceService _deviceService;
   String? _apiUrl;
   String? _token;
+
+  // ApiRetryMixin implementation
+  @override
+  String? get currentApiUrl => _apiUrl;
+
+  @override
+  String? get currentToken => _token;
+
+  @override
+  void onCredentialsUpdated(String apiUrl, String token) {
+    _apiUrl = apiUrl;
+    _token = token;
+  }
 
   PowerStatistics? _powerStatistics;
   WeatherStatistics? _weatherStatistics;
@@ -85,12 +99,15 @@ class StatisticsProvider extends ChangeNotifier {
 
     try {
       final dateRange = _selection.getDateRange();
-      _powerStatistics = await _deviceService.fetchPowerStatisticsForRange(
-        _apiUrl!,
-        _token!,
-        deviceId,
-        dateRange.from,
-        dateRange.to,
+      // Use withAutoReauth to handle session expiration
+      _powerStatistics = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchPowerStatisticsForRange(
+          apiUrl,
+          token,
+          deviceId,
+          dateRange.from,
+          dateRange.to,
+        ),
       );
       _state = StatisticsLoadState.loaded;
     } on ApiException catch (e) {
@@ -124,12 +141,15 @@ class StatisticsProvider extends ChangeNotifier {
 
     try {
       final dateRange = _selection.getDateRange();
-      _weatherStatistics = await _deviceService.fetchWeatherStatisticsForRange(
-        _apiUrl!,
-        _token!,
-        deviceId,
-        dateRange.from,
-        dateRange.to,
+      // Use withAutoReauth to handle session expiration
+      _weatherStatistics = await withAutoReauth(
+        (apiUrl, token) => _deviceService.fetchWeatherStatisticsForRange(
+          apiUrl,
+          token,
+          deviceId,
+          dateRange.from,
+          dateRange.to,
+        ),
       );
       _state = StatisticsLoadState.loaded;
     } on ApiException catch (e) {

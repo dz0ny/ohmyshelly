@@ -33,8 +33,12 @@ class AuthService {
 
   Future<User> login(String email, String password) async {
     // Hash password with SHA1 as required by Shelly API
-    final hashedPassword = _hashPassword(password);
+    final hashedPassword = hashPassword(password);
+    return loginWithHashedPassword(email, hashedPassword);
+  }
 
+  /// Login with an already-hashed password (for auto-reauthentication)
+  Future<User> loginWithHashedPassword(String email, String hashedPassword) async {
     try {
       final response = await _apiService.post(
         '${ApiService.authBaseUrl}/auth/login',
@@ -58,7 +62,8 @@ class AuthService {
     }
   }
 
-  String _hashPassword(String password) {
+  /// Hash password with SHA1 (public for storing credentials)
+  String hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha1.convert(bytes);
     return digest.toString();

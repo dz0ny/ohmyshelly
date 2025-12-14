@@ -9,6 +9,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/device_detail/device_detail_screen.dart';
 import '../screens/device_settings/device_settings_screen.dart';
 import '../screens/schedules/schedules_screen.dart';
+import '../screens/webhooks/webhooks_screen.dart';
 import '../screens/statistics/statistics_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/profile/profile_screen.dart';
@@ -97,6 +98,13 @@ class AppRouter {
           builder: (context, state) {
             final deviceId = state.pathParameters['id']!;
             return SchedulesScreen(deviceId: deviceId);
+          },
+        ),
+        GoRoute(
+          path: '/device/:id/webhooks',
+          builder: (context, state) {
+            final deviceId = state.pathParameters['id']!;
+            return WebhooksScreen(deviceId: deviceId);
           },
         ),
         GoRoute(

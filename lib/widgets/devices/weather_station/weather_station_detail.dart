@@ -129,13 +129,32 @@ class WeatherStationDetail extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                // Feels like temperature
-                Text(
-                  '${l10n.feelsLike} ${status!.feelsLikeDisplay}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                // Feels like and dew point temperatures
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${l10n.feelsLike} ${status!.feelsLikeDisplay}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Text(
+                      '  •  ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.outline,
+                      ),
+                    ),
+                    Text(
+                      '${l10n.dewPoint} ${status!.dewpointDisplay}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 // Trend badge

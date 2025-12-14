@@ -107,7 +107,7 @@ class RelayDetail extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -129,7 +129,7 @@ class RelayDetail extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             if (entries.isEmpty)
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
@@ -182,7 +182,7 @@ class RelayDetail extends StatelessWidget {
                       else if (i < entries.take(10).length - 1)
                         Divider(
                           height: 1,
-                          indent: 48,
+                          indent: 44,
                           color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                         ),
                     ],
@@ -200,7 +200,7 @@ class RelayDetail extends StatelessWidget {
     final duration = end.difference(start);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       child: Row(
         children: [
           // Vertical line connector
@@ -295,7 +295,7 @@ class RelayDetail extends StatelessWidget {
         : colorScheme.outline.withValues(alpha: 0.15);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           // Activity icon

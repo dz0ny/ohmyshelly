@@ -16,6 +16,9 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException: $message (code: $statusCode)';
 
+  /// Whether this error is a session expiration that could be fixed by reauthentication
+  bool get isSessionExpired => statusCode == 401;
+
   String get friendlyMessage {
     if (statusCode == 401) {
       return 'Your session has expired. Please sign in again.';
@@ -37,11 +40,18 @@ class ApiException implements Exception {
   }
 }
 
+/// Callback type for token refresh.
+/// Returns the new token if refresh succeeds, null if it fails.
+typedef TokenRefreshCallback = Future<String?> Function();
+
 class ApiService {
   final http.Client _client;
 
   /// Enable/disable verbose API response logging
   static bool enableResponseLogging = false;
+
+  /// Callback for refreshing the auth token when 401 is encountered
+  TokenRefreshCallback? onTokenRefresh;
 
   ApiService({http.Client? client}) : _client = client ?? http.Client();
 

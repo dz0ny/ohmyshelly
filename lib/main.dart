@@ -20,6 +20,7 @@ import 'providers/statistics_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/schedule_provider.dart';
 import 'providers/scene_provider.dart';
+import 'providers/webhook_provider.dart';
 import 'data/services/scene_service.dart';
 import 'router/app_router.dart';
 
@@ -145,6 +146,13 @@ class OhMyShellyApp extends StatelessWidget {
           ),
         ),
 
+        // Webhook provider with WebSocket support
+        ChangeNotifierProvider<WebhookProvider>(
+          create: (context) => WebhookProvider(
+            webSocketService: webSocketService,
+          ),
+        ),
+
         // Scene provider
         ChangeNotifierProvider<SceneProvider>(
           create: (context) => SceneProvider(
@@ -174,6 +182,36 @@ class _AppWithRouterState extends State<_AppWithRouter> {
   void initState() {
     super.initState();
     _appRouter = AppRouter(context.read<AuthProvider>());
+
+    // Wire up auto-reauthentication callbacks for providers
+    _setupReauthCallbacks();
+  }
+
+  /// Set up reauthentication callbacks for providers that make API calls.
+  /// When a 401 error occurs, these callbacks will attempt to reauthenticate
+  /// and return new credentials for retry.
+  void _setupReauthCallbacks() {
+    final authProvider = context.read<AuthProvider>();
+    final deviceProvider = context.read<DeviceProvider>();
+    final statisticsProvider = context.read<StatisticsProvider>();
+    final sceneProvider = context.read<SceneProvider>();
+
+    // Create a reauth callback that uses AuthProvider
+    Future<({String apiUrl, String token})?> reauthCallback() async {
+      final success = await authProvider.reauthenticate();
+      if (success && authProvider.user != null) {
+        return (
+          apiUrl: authProvider.user!.userApiUrl,
+          token: authProvider.user!.token,
+        );
+      }
+      return null;
+    }
+
+    // Wire up the callbacks
+    deviceProvider.reauthCallback = reauthCallback;
+    statisticsProvider.reauthCallback = reauthCallback;
+    sceneProvider.reauthCallback = reauthCallback;
   }
 
   @override
