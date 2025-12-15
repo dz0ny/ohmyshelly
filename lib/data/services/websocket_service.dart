@@ -46,13 +46,9 @@ class WebSocketService {
   // Reconnection
   final _reconnectionStrategy = _ReconnectionStrategy();
   Timer? _reconnectTimer;
-  Timer? _pingTimer;
   String? _apiUrl;
   String? _token;
   bool _intentionalDisconnect = false;
-
-  // Ping interval to keep connection alive
-  static const _pingInterval = Duration(seconds: 30);
 
   /// Current connection state.
   WebSocketState get state => _state;
@@ -131,11 +127,8 @@ class WebSocketService {
       _reconnectionStrategy.reset();
 
       if (kDebugMode) {
-        debugPrint('[WebSocket] Connected successfully, starting ping timer');
+        debugPrint('[WebSocket] Connected successfully');
       }
-
-      // Start ping timer to keep connection alive
-      _startPingTimer();
 
       // Listen for messages
       _subscription = _channel!.stream.listen(
@@ -255,8 +248,8 @@ class WebSocketService {
       final event = json['event'] as String?;
 
       if (kDebugMode && event != null) {
-        // Don't log full status changes (too verbose)
-        if (event != 'Shelly:StatusOnChange') {
+        // Don't log status changes (too verbose) or Error events (from keepalive)
+        if (event != 'Shelly:StatusOnChange' && event != 'Error') {
           debugPrint('[WebSocket] Received event: $event');
         }
       }
@@ -436,41 +429,10 @@ class WebSocketService {
   }
 
   void _cleanup() {
-    _stopPingTimer();
     _subscription?.cancel();
     _subscription = null;
     _channel?.sink.close();
     _channel = null;
-  }
-
-  /// Start periodic ping to keep connection alive
-  void _startPingTimer() {
-    _stopPingTimer();
-    _pingTimer = Timer.periodic(_pingInterval, (_) => _sendPing());
-  }
-
-  /// Stop ping timer
-  void _stopPingTimer() {
-    _pingTimer?.cancel();
-    _pingTimer = null;
-  }
-
-  /// Send ping message to keep connection alive
-  void _sendPing() {
-    if (_state != WebSocketState.connected || _channel == null) return;
-
-    try {
-      // Shelly Cloud WebSocket accepts a simple ping event
-      final ping = {'event': 'ping'};
-      _channel?.sink.add(jsonEncode(ping));
-      if (kDebugMode) {
-        debugPrint('[WebSocket] Sent ping');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[WebSocket] Ping failed: $e');
-      }
-    }
   }
 
   void _scheduleReconnect() {
