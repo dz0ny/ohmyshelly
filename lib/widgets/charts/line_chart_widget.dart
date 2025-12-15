@@ -455,13 +455,18 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 50,
+              reservedSize: 45,
               interval: horizontalInterval,
               getTitlesWidget: (value, meta) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                // Skip labels at the axis bounds to avoid overlap
+                if (value == meta.min || value == meta.max) {
+                  return const SizedBox.shrink();
+                }
+                return SizedBox(
+                  width: 42,
                   child: Text(
                     '${value.toStringAsFixed(value.abs() < 10 ? 1 : 0)}${widget.unit}',
+                    textAlign: TextAlign.right,
                     style: TextStyle(
                       fontSize: 10,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -641,11 +646,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   double _calculateInterval(double min, double max) {
     final range = max - min;
     if (range <= 0) return 1;
-    if (range <= 10) return 2;
-    if (range <= 50) return 10;
-    if (range <= 100) return 20;
+    // Aim for 3-5 labels on the y-axis
+    if (range <= 5) return 1;
+    if (range <= 15) return 5;
+    if (range <= 30) return 10;
+    if (range <= 60) return 15;
+    if (range <= 100) return 25;
     if (range <= 500) return 100;
-    return (range / 5).ceilToDouble();
+    return (range / 4).ceilToDouble();
   }
 
   double _calculateLabelInterval(int count) {
