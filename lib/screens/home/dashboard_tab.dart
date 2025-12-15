@@ -10,6 +10,7 @@ import '../../widgets/devices/weather_station/weather_station_dashboard_card.dar
 import '../../widgets/common/loading_indicator.dart';
 import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_card.dart';
+import '../../widgets/common/connectivity_banner.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
 
@@ -97,18 +98,52 @@ class _DashboardTabState extends State<DashboardTab> {
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: () => deviceProvider.refresh(),
-            child: _buildDeviceGrid(
-              context,
-              displayDevices,
-              deviceProvider,
-              l10n,
-            ),
+          // Determine connectivity banner type
+          final bannerType = _getConnectivityBannerType(deviceProvider);
+          final deviceNetworks = deviceProvider.devicesDiscoveredOnNetworks;
+
+          return Column(
+            children: [
+              // Connectivity banner (if needed)
+              if (bannerType != null)
+                ConnectivityBanner(
+                  type: bannerType,
+                  deviceNetworkName:
+                      deviceNetworks.isNotEmpty ? deviceNetworks.first : null,
+                ),
+
+              // Device grid
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => deviceProvider.refresh(),
+                  child: _buildDeviceGrid(
+                    context,
+                    displayDevices,
+                    deviceProvider,
+                    l10n,
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),
     );
+  }
+
+  /// Determine which connectivity banner to show (if any)
+  /// Only shows banner for error states, not informational ones
+  ConnectivityBannerType? _getConnectivityBannerType(
+      DeviceProvider deviceProvider) {
+    // Only show banner for actual problems
+    if (deviceProvider.isPhoneOffline) {
+      return ConnectivityBannerType.offline;
+    }
+    if (deviceProvider.isOnDifferentWifiNetwork) {
+      return ConnectivityBannerType.differentWifi;
+    }
+    // Don't show banner for cellular - it's not an error, just slower
+    return null;
   }
 
   /// Build the device grid respecting the saved order.

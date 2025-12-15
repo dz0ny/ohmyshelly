@@ -6,6 +6,7 @@ import 'local_device_service.dart';
 import 'mdns_discovery_service.dart';
 import 'storage_service.dart';
 import 'device_service.dart';
+import 'network_monitor_service.dart';
 
 /// Result of a device status fetch, including connection source
 class DeviceStatusResult {
@@ -25,28 +26,50 @@ class DeviceStatusResult {
 /// 2. Extracts IPs from cloud API responses
 /// 3. Tries local connections first, falls back to cloud
 /// 4. Persists discovered IPs for faster reconnection
+/// 5. Monitors network changes and re-evaluates connections
 class ConnectionManager {
   final LocalDeviceService _localService;
   final DeviceService _cloudService;
   final MdnsDiscoveryService _mdnsService;
   final StorageService _storageService;
+  final NetworkMonitorService _networkMonitor;
 
   final Map<String, LocalDeviceInfo> _localInfoCache = {};
   StreamSubscription<DiscoveredDevice>? _mdnsSubscription;
+  StreamSubscription<NetworkChangeEvent>? _networkSubscription;
 
   String? _apiUrl;
   String? _token;
   bool _initialized = false;
+
+  /// Current WiFi network name (if known)
+  String? _currentWifiName;
+  String? get currentWifiName => _currentWifiName;
+
+  /// Whether we're currently on WiFi (local access may be available)
+  bool get isOnWifi => _networkMonitor.currentState.isWifi;
+
+  /// Whether local access is disabled due to being off WiFi
+  bool _localAccessDisabled = false;
+  bool get isLocalAccessDisabled => _localAccessDisabled;
+
+  /// Stream controller for notifying listeners about network changes
+  final _networkChangeController = StreamController<NetworkChangeEvent>.broadcast();
+
+  /// Stream of network change events for providers to listen to
+  Stream<NetworkChangeEvent> get networkChanges => _networkChangeController.stream;
 
   ConnectionManager({
     required LocalDeviceService localService,
     required DeviceService cloudService,
     required MdnsDiscoveryService mdnsService,
     required StorageService storageService,
+    required NetworkMonitorService networkMonitor,
   })  : _localService = localService,
         _cloudService = cloudService,
         _mdnsService = mdnsService,
-        _storageService = storageService;
+        _storageService = storageService,
+        _networkMonitor = networkMonitor;
 
   /// Whether the manager has been initialized
   bool get isInitialized => _initialized;
@@ -65,6 +88,9 @@ class ConnectionManager {
 
     // Load persisted local IPs from storage
     await _loadPersistedLocalInfo();
+
+    // Start network monitoring
+    await _startNetworkMonitoring();
 
     // Subscribe to mDNS discoveries
     _mdnsSubscription?.cancel();
@@ -88,6 +114,142 @@ class ConnectionManager {
     _initialized = true;
     if (kDebugMode) {
       debugPrint('[ConnMgr] Initialization complete, ${_localInfoCache.length} cached devices');
+    }
+  }
+
+  /// Start network monitoring and handle initial state
+  Future<void> _startNetworkMonitoring() async {
+    // Start network monitor
+    await _networkMonitor.startMonitoring();
+
+    // Get initial network state
+    _currentWifiName = _networkMonitor.currentState.wifiName;
+    _localAccessDisabled = !_networkMonitor.currentState.isWifi;
+
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Network state: wifi=${_networkMonitor.currentState.isWifi}, '
+          'name=$_currentWifiName, localDisabled=$_localAccessDisabled');
+    }
+
+    // Subscribe to network change events
+    _networkSubscription?.cancel();
+    _networkSubscription = _networkMonitor.events.listen(_onNetworkChange);
+  }
+
+  /// Handle network change events
+  void _onNetworkChange(NetworkChangeEvent event) {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Network change event: $event');
+    }
+
+    switch (event) {
+      case NetworkChangeEvent.wifiConnected:
+        _handleWifiConnected();
+      case NetworkChangeEvent.wifiChanged:
+        _handleWifiChanged();
+      case NetworkChangeEvent.wifiDisconnected:
+        _handleWifiDisconnected();
+      case NetworkChangeEvent.connectivityLost:
+        _handleConnectivityLost();
+      case NetworkChangeEvent.connectivityRestored:
+        _handleConnectivityRestored();
+    }
+
+    // Forward event to listeners (e.g., DeviceProvider)
+    _networkChangeController.add(event);
+  }
+
+  /// Handle connecting to WiFi
+  void _handleWifiConnected() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] WiFi connected, enabling local access');
+    }
+
+    _localAccessDisabled = false;
+    _currentWifiName = _networkMonitor.currentState.wifiName;
+
+    // Reset all local connection states to allow fresh probing
+    _resetLocalConnectionStates();
+  }
+
+  /// Handle switching to a different WiFi network
+  void _handleWifiChanged() {
+    final newWifiName = _networkMonitor.currentState.wifiName;
+
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] WiFi changed: $_currentWifiName -> $newWifiName');
+    }
+
+    _currentWifiName = newWifiName;
+
+    // Reset all local connection states since we're on a new network
+    // Devices from the old network likely have different IPs
+    _resetLocalConnectionStates();
+  }
+
+  /// Handle disconnecting from WiFi (switched to cellular or other)
+  void _handleWifiDisconnected() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] WiFi disconnected, disabling local access');
+    }
+
+    _localAccessDisabled = true;
+    _currentWifiName = null;
+
+    // Mark all devices as unreachable locally (force cloud fallback)
+    _markAllDevicesUnreachable();
+  }
+
+  /// Handle losing all connectivity
+  void _handleConnectivityLost() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Connectivity lost');
+    }
+
+    _localAccessDisabled = true;
+    _currentWifiName = null;
+  }
+
+  /// Handle connectivity restored (to non-WiFi)
+  void _handleConnectivityRestored() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Connectivity restored (non-WiFi)');
+    }
+
+    // Still disable local access if not on WiFi
+    _localAccessDisabled = !_networkMonitor.currentState.isWifi;
+  }
+
+  /// Reset all local connection states to allow fresh probing
+  void _resetLocalConnectionStates() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Resetting ${_localInfoCache.length} local connection states');
+    }
+
+    for (final key in _localInfoCache.keys.toList()) {
+      final info = _localInfoCache[key];
+      if (info != null) {
+        _localInfoCache[key] = info.copyWith(
+          state: LocalConnectionState.unknown,
+          lastLocalFailure: null, // Clear backoff
+        );
+      }
+    }
+  }
+
+  /// Mark all devices as unreachable locally (force cloud usage)
+  void _markAllDevicesUnreachable() {
+    if (kDebugMode) {
+      debugPrint('[ConnMgr] Marking all ${_localInfoCache.length} devices as unreachable');
+    }
+
+    for (final key in _localInfoCache.keys.toList()) {
+      final info = _localInfoCache[key];
+      if (info != null) {
+        _localInfoCache[key] = info.copyWith(
+          state: LocalConnectionState.unreachable,
+        );
+      }
     }
   }
 
@@ -125,13 +287,15 @@ class ConnectionManager {
       state: existing?.state ?? LocalConnectionState.unknown,
       lastLocalSuccess: existing?.lastLocalSuccess,
       lastLocalFailure: existing?.lastLocalFailure,
+      // Store current WiFi name when device is discovered
+      discoveredOnWifi: _currentWifiName ?? existing?.discoveredOnWifi,
     );
 
     // Persist for future use
     _persistLocalInfo(normalizedId);
 
     if (kDebugMode) {
-      debugPrint('[ConnectionManager] Updated local info for $normalizedId: $ip:$port');
+      debugPrint('[ConnectionManager] Updated local info for $normalizedId: $ip:$port (wifi: $_currentWifiName)');
     }
   }
 
@@ -154,7 +318,19 @@ class ConnectionManager {
       final hasIp = localInfo?.localIp != null;
       final canTry = localInfo?.canTryLocal ?? false;
       final shouldRetry = localInfo?.shouldRetryLocal ?? false;
-      debugPrint('[ConnMgr] getStatus $deviceId: hasIp=$hasIp, canTry=$canTry, shouldRetry=$shouldRetry, state=${localInfo?.state}');
+      debugPrint('[ConnMgr] getStatus $deviceId: hasIp=$hasIp, canTry=$canTry, shouldRetry=$shouldRetry, '
+          'state=${localInfo?.state}, localDisabled=$_localAccessDisabled');
+    }
+
+    // Skip local if local access is disabled (not on WiFi)
+    if (_localAccessDisabled) {
+      if (kDebugMode) {
+        debugPrint('[ConnMgr] → Local access disabled, using cloud for $deviceId');
+      }
+      return DeviceStatusResult(
+        status: null,
+        source: ConnectionSource.cloud,
+      );
     }
 
     // Try local first if we have an IP and should retry
@@ -227,13 +403,18 @@ class ConnectionManager {
     if (kDebugMode) {
       final canTry = localInfo?.canTryLocal ?? false;
       final shouldRetry = localInfo?.shouldRetryLocal ?? false;
-      debugPrint('[ConnMgr] Toggle $deviceId -> $action (ip=${localInfo?.localIp}, state=${localInfo?.state}, canTry=$canTry, shouldRetry=$shouldRetry)');
+      debugPrint('[ConnMgr] Toggle $deviceId -> $action (ip=${localInfo?.localIp}, state=${localInfo?.state}, '
+          'canTry=$canTry, shouldRetry=$shouldRetry, localDisabled=$_localAccessDisabled)');
     }
 
-    // Try local first if we have an IP and should retry (respects backoff after failures)
-    if (localInfo != null &&
+    // Skip local if local access is disabled (not on WiFi)
+    final shouldTryLocal = !_localAccessDisabled &&
+        localInfo != null &&
         localInfo.canTryLocal &&
-        localInfo.shouldRetryLocal) {
+        localInfo.shouldRetryLocal;
+
+    // Try local first if we have an IP and should retry (respects backoff after failures)
+    if (shouldTryLocal) {
       try {
         if (kDebugMode) {
           debugPrint('[ConnMgr] Trying local toggle for $deviceId @ ${localInfo.localIp}:${localInfo.localPort}');
@@ -470,12 +651,17 @@ class ConnectionManager {
     _apiUrl = null;
     _token = null;
     _initialized = false;
+    _currentWifiName = null;
+    _localAccessDisabled = false;
   }
 
   /// Dispose resources
   void dispose() {
     _mdnsSubscription?.cancel();
+    _networkSubscription?.cancel();
+    _networkChangeController.close();
     _mdnsService.dispose();
     _localService.dispose();
+    _networkMonitor.dispose();
   }
 }

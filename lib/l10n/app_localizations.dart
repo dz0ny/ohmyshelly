@@ -2345,6 +2345,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Auto-revert is not available for toggle action'**
   String get webhookToggleAfterNotAvailable;
+
+  /// No description provided for @phoneOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline'**
+  String get phoneOffline;
+
+  /// No description provided for @phoneOfflineDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection. Your devices are still working.'**
+  String get phoneOfflineDesc;
+
+  /// No description provided for @phoneOnCellular.
+  ///
+  /// In en, this message translates to:
+  /// **'Using mobile data'**
+  String get phoneOnCellular;
+
+  /// No description provided for @phoneOnCellularDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to WiFi for direct device control'**
+  String get phoneOnCellularDesc;
+
+  /// No description provided for @phoneDifferentWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Different WiFi network'**
+  String get phoneDifferentWifi;
+
+  /// No description provided for @phoneDifferentWifiDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your devices are on {network}. Using cloud connection.'**
+  String phoneDifferentWifiDesc(Object network);
 }
 
 class _AppLocalizationsDelegate

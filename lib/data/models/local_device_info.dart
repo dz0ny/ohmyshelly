@@ -39,6 +39,9 @@ class LocalDeviceInfo {
   final bool requiresAuth;
   final String? authRealm;
 
+  /// WiFi network name where this device was discovered/connected
+  final String? discoveredOnWifi;
+
   /// Retry local connection after this duration of failure
   static const Duration retryBackoff = Duration(minutes: 5);
 
@@ -51,6 +54,7 @@ class LocalDeviceInfo {
     this.lastLocalFailure,
     this.requiresAuth = false,
     this.authRealm,
+    this.discoveredOnWifi,
   });
 
   /// Whether we can attempt a local connection
@@ -75,6 +79,7 @@ class LocalDeviceInfo {
     DateTime? lastLocalFailure,
     bool? requiresAuth,
     String? authRealm,
+    String? discoveredOnWifi,
   }) {
     return LocalDeviceInfo(
       deviceId: deviceId ?? this.deviceId,
@@ -85,6 +90,7 @@ class LocalDeviceInfo {
       lastLocalFailure: lastLocalFailure ?? this.lastLocalFailure,
       requiresAuth: requiresAuth ?? this.requiresAuth,
       authRealm: authRealm ?? this.authRealm,
+      discoveredOnWifi: discoveredOnWifi ?? this.discoveredOnWifi,
     );
   }
 
@@ -98,6 +104,7 @@ class LocalDeviceInfo {
       'lastLocalFailure': lastLocalFailure?.toIso8601String(),
       'requiresAuth': requiresAuth,
       'authRealm': authRealm,
+      'discoveredOnWifi': discoveredOnWifi,
     };
   }
 
@@ -118,6 +125,7 @@ class LocalDeviceInfo {
           : null,
       requiresAuth: json['requiresAuth'] as bool? ?? false,
       authRealm: json['authRealm'] as String?,
+      discoveredOnWifi: json['discoveredOnWifi'] as String?,
     );
   }
 

@@ -46,9 +46,13 @@ class WebSocketService {
   // Reconnection
   final _reconnectionStrategy = _ReconnectionStrategy();
   Timer? _reconnectTimer;
+  Timer? _pingTimer;
   String? _apiUrl;
   String? _token;
   bool _intentionalDisconnect = false;
+
+  // Ping interval to keep connection alive
+  static const _pingInterval = Duration(seconds: 30);
 
   /// Current connection state.
   WebSocketState get state => _state;
@@ -80,14 +84,42 @@ class WebSocketService {
   }
 
   Future<void> _connect() async {
-    if (_apiUrl == null || _token == null) return;
+    if (_apiUrl == null || _token == null) {
+      if (kDebugMode) {
+        debugPrint('[WebSocket] Cannot connect: apiUrl=$_apiUrl, token=${_token != null ? "present" : "null"}');
+      }
+      return;
+    }
 
     _setState(WebSocketState.connecting);
 
     try {
       final wsUrl = _buildWebSocketUrl(_apiUrl!, _token!);
       if (kDebugMode) {
-        print('[WebSocket] Connecting to: ${wsUrl.replaceAll(_token!, '***')}');
+        debugPrint('[WebSocket] Connecting to: ${wsUrl.replaceAll(_token!, '***')}');
+        // Show last 10 chars of token for identification
+        final tokenSuffix = _token!.length > 10 ? _token!.substring(_token!.length - 10) : _token!;
+        debugPrint('[WebSocket] Token suffix: ...$tokenSuffix');
+        // Check token expiration
+        final payload = _decodeJwtPayload(_token!);
+        if (payload != null) {
+          final exp = payload['exp'] as int?;
+          final iat = payload['iat'] as int?;
+          if (exp != null) {
+            final expTime = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+            final remaining = expTime.difference(DateTime.now());
+            debugPrint('[WebSocket] Token expires in: ${remaining.inMinutes}m (at $expTime)');
+            if (iat != null) {
+              final issuedTime = DateTime.fromMillisecondsSinceEpoch(iat * 1000);
+              debugPrint('[WebSocket] Token issued at: $issuedTime');
+            }
+            if (remaining.isNegative) {
+              debugPrint('[WebSocket] WARNING: Token is EXPIRED!');
+            }
+          }
+        } else {
+          debugPrint('[WebSocket] WARNING: Could not decode token payload');
+        }
       }
 
       _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
@@ -99,8 +131,11 @@ class WebSocketService {
       _reconnectionStrategy.reset();
 
       if (kDebugMode) {
-        print('[WebSocket] Connected successfully');
+        debugPrint('[WebSocket] Connected successfully, starting ping timer');
       }
+
+      // Start ping timer to keep connection alive
+      _startPingTimer();
 
       // Listen for messages
       _subscription = _channel!.stream.listen(
@@ -109,12 +144,27 @@ class WebSocketService {
         onDone: _handleDone,
         cancelOnError: false,
       );
-    } catch (e) {
+    } catch (e, stack) {
       if (kDebugMode) {
-        print('[WebSocket] Connection failed: $e');
+        debugPrint('[WebSocket] Connection failed: $e');
+        debugPrint('[WebSocket] Stack: $stack');
       }
       _setState(WebSocketState.disconnected);
       _scheduleReconnect();
+    }
+  }
+
+  /// Decode JWT payload for debugging
+  Map<String, dynamic>? _decodeJwtPayload(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return null;
+      final payload = parts[1];
+      final normalized = base64Url.normalize(payload);
+      final decoded = utf8.decode(base64Url.decode(normalized));
+      return jsonDecode(decoded) as Map<String, dynamic>;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -311,7 +361,8 @@ class WebSocketService {
 
   void _handleError(dynamic error) {
     if (kDebugMode) {
-      print('[WebSocket] Error: $error');
+      debugPrint('[WebSocket] Stream error: $error');
+      debugPrint('[WebSocket] Error type: ${error.runtimeType}');
     }
     _cleanup();
     _setState(WebSocketState.disconnected);
@@ -323,7 +374,12 @@ class WebSocketService {
 
   void _handleDone() {
     if (kDebugMode) {
-      print('[WebSocket] Connection closed');
+      final closeCode = _channel?.closeCode;
+      final closeReason = _channel?.closeReason;
+      debugPrint('[WebSocket] Connection closed - code: $closeCode, reason: $closeReason');
+      if (closeCode != null) {
+        debugPrint('[WebSocket] Close code meaning: ${_getCloseCodeMeaning(closeCode)}');
+      }
     }
     _cleanup();
     _setState(WebSocketState.disconnected);
@@ -333,11 +389,88 @@ class WebSocketService {
     }
   }
 
+  /// Get human-readable meaning for WebSocket close codes
+  String _getCloseCodeMeaning(int code) {
+    switch (code) {
+      case 1000:
+        return 'Normal closure';
+      case 1001:
+        return 'Going away (server shutdown or browser navigating away)';
+      case 1002:
+        return 'Protocol error';
+      case 1003:
+        return 'Unsupported data';
+      case 1005:
+        return 'No status received';
+      case 1006:
+        return 'Abnormal closure (connection lost without close frame)';
+      case 1007:
+        return 'Invalid frame payload data';
+      case 1008:
+        return 'Policy violation';
+      case 1009:
+        return 'Message too big';
+      case 1010:
+        return 'Mandatory extension missing';
+      case 1011:
+        return 'Internal server error';
+      case 1012:
+        return 'Service restart';
+      case 1013:
+        return 'Try again later';
+      case 1014:
+        return 'Bad gateway';
+      case 1015:
+        return 'TLS handshake failure';
+      case 4000:
+        return 'Shelly: Unknown error';
+      case 4001:
+        return 'Shelly: Invalid token / Authentication failed';
+      case 4002:
+        return 'Shelly: Token expired';
+      case 4003:
+        return 'Shelly: Rate limited';
+      default:
+        return 'Unknown code';
+    }
+  }
+
   void _cleanup() {
+    _stopPingTimer();
     _subscription?.cancel();
     _subscription = null;
     _channel?.sink.close();
     _channel = null;
+  }
+
+  /// Start periodic ping to keep connection alive
+  void _startPingTimer() {
+    _stopPingTimer();
+    _pingTimer = Timer.periodic(_pingInterval, (_) => _sendPing());
+  }
+
+  /// Stop ping timer
+  void _stopPingTimer() {
+    _pingTimer?.cancel();
+    _pingTimer = null;
+  }
+
+  /// Send ping message to keep connection alive
+  void _sendPing() {
+    if (_state != WebSocketState.connected || _channel == null) return;
+
+    try {
+      // Shelly Cloud WebSocket accepts a simple ping event
+      final ping = {'event': 'ping'};
+      _channel?.sink.add(jsonEncode(ping));
+      if (kDebugMode) {
+        debugPrint('[WebSocket] Sent ping');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[WebSocket] Ping failed: $e');
+      }
+    }
   }
 
   void _scheduleReconnect() {

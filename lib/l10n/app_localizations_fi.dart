@@ -1147,4 +1147,25 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get webhookToggleAfterNotAvailable =>
       'Automaattinen palautus ei ole saatavilla vaihtotoiminnolle';
+
+  @override
+  String get phoneOffline => 'You\'re offline';
+
+  @override
+  String get phoneOfflineDesc =>
+      'Check your internet connection. Your devices are still working.';
+
+  @override
+  String get phoneOnCellular => 'Using mobile data';
+
+  @override
+  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+
+  @override
+  String get phoneDifferentWifi => 'Different WiFi network';
+
+  @override
+  String phoneDifferentWifiDesc(Object network) {
+    return 'Your devices are on $network. Using cloud connection.';
+  }
 }

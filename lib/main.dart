@@ -13,6 +13,7 @@ import 'data/services/local_device_service.dart';
 import 'data/services/mdns_discovery_service.dart';
 import 'data/services/connection_manager.dart';
 import 'data/services/device_service.dart';
+import 'data/services/network_monitor_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/device_provider.dart';
 import 'providers/dashboard_provider.dart';
@@ -56,11 +57,13 @@ void main() async {
   // Create local connection services
   final localDeviceService = LocalDeviceService();
   final mdnsService = MdnsDiscoveryService();
+  final networkMonitor = NetworkMonitorService();
   final connectionManager = ConnectionManager(
     localService: localDeviceService,
     cloudService: DeviceService(apiService),
     mdnsService: mdnsService,
     storageService: storageService,
+    networkMonitor: networkMonitor,
   );
 
   // Create settings provider and initialize

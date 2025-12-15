@@ -446,5 +446,12 @@
   "webhookToggleAfter10min": "10 minutes",
   "webhookToggleAfter30min": "30 minutes",
   "webhookToggleAfter1hour": "1 hour",
-  "webhookToggleAfterNotAvailable": "Auto-revert is not available for toggle action"
+  "webhookToggleAfterNotAvailable": "Auto-revert is not available for toggle action",
+
+  "phoneOffline": "You're offline",
+  "phoneOfflineDesc": "Check your internet connection. Your devices are still working.",
+  "phoneOnCellular": "Using mobile data",
+  "phoneOnCellularDesc": "Connect to WiFi for direct device control",
+  "phoneDifferentWifi": "Different WiFi network",
+  "phoneDifferentWifiDesc": "Your devices are on {network}. Using cloud connection."
 }

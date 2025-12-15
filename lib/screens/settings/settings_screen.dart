@@ -34,57 +34,53 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildThemeSection(BuildContext context, AppLocalizations l10n) {
     return Consumer<SettingsProvider>(
       builder: (context, settings, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 l10n.theme,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
               ),
-            ),
-            _buildThemeOption(
-              context: context,
-              title: l10n.themeSystem,
-              isSelected: settings.themeMode == ThemeMode.system,
-              onTap: () => settings.setThemeMode(ThemeMode.system),
-            ),
-            _buildThemeOption(
-              context: context,
-              title: l10n.themeLight,
-              isSelected: settings.themeMode == ThemeMode.light,
-              onTap: () => settings.setThemeMode(ThemeMode.light),
-            ),
-            _buildThemeOption(
-              context: context,
-              title: l10n.themeDark,
-              isSelected: settings.themeMode == ThemeMode.dark,
-              onTap: () => settings.setThemeMode(ThemeMode.dark),
-            ),
-          ],
+              const SizedBox(height: 12),
+              DropdownButtonFormField<ThemeMode>(
+                value: settings.themeMode,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text(l10n.themeSystem),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text(l10n.themeLight),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text(l10n.themeDark),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    settings.setThemeMode(value);
+                  }
+                },
+              ),
+            ],
+          ),
         );
       },
-    );
-  }
-
-  Widget _buildThemeOption({
-    required BuildContext context,
-    required String title,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      title: Text(title),
-      trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: Theme.of(context).colorScheme.primary,
-            )
-          : null,
-      onTap: onTap,
     );
   }
 
@@ -167,232 +163,92 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildLanguageSection(BuildContext context, AppLocalizations l10n) {
     return Consumer<SettingsProvider>(
       builder: (context, settings, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
+        final languageOptions = _getLanguageOptions(context, l10n);
+
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 l10n.language,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
               ),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSystem,
-              subtitle: _getSystemLanguageName(context),
-              isSelected: settings.currentLanguageCode == null,
-              onTap: () => settings.setLocale(null),
-            ),
-            // English variants
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageEnglish,
-              subtitle: 'English',
-              isSelected: settings.currentLanguageCode == 'en',
-              onTap: () => settings.setLocale(const Locale('en')),
-            ),
-            // Western Europe
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageGerman,
-              subtitle: 'Deutsch',
-              isSelected: settings.currentLanguageCode == 'de',
-              onTap: () => settings.setLocale(const Locale('de')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageFrench,
-              subtitle: 'Français',
-              isSelected: settings.currentLanguageCode == 'fr',
-              onTap: () => settings.setLocale(const Locale('fr')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSpanish,
-              subtitle: 'Español',
-              isSelected: settings.currentLanguageCode == 'es',
-              onTap: () => settings.setLocale(const Locale('es')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languagePortuguese,
-              subtitle: 'Português',
-              isSelected: settings.currentLanguageCode == 'pt',
-              onTap: () => settings.setLocale(const Locale('pt')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageItalian,
-              subtitle: 'Italiano',
-              isSelected: settings.currentLanguageCode == 'it',
-              onTap: () => settings.setLocale(const Locale('it')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageDutch,
-              subtitle: 'Nederlands',
-              isSelected: settings.currentLanguageCode == 'nl',
-              onTap: () => settings.setLocale(const Locale('nl')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageCatalan,
-              subtitle: 'Català',
-              isSelected: settings.currentLanguageCode == 'ca',
-              onTap: () => settings.setLocale(const Locale('ca')),
-            ),
-            // Nordic
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSwedish,
-              subtitle: 'Svenska',
-              isSelected: settings.currentLanguageCode == 'sv',
-              onTap: () => settings.setLocale(const Locale('sv')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageNorwegian,
-              subtitle: 'Norsk',
-              isSelected: settings.currentLanguageCode == 'no',
-              onTap: () => settings.setLocale(const Locale('no')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageDanish,
-              subtitle: 'Dansk',
-              isSelected: settings.currentLanguageCode == 'da',
-              onTap: () => settings.setLocale(const Locale('da')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageFinnish,
-              subtitle: 'Suomi',
-              isSelected: settings.currentLanguageCode == 'fi',
-              onTap: () => settings.setLocale(const Locale('fi')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageIcelandic,
-              subtitle: 'Íslenska',
-              isSelected: settings.currentLanguageCode == 'is',
-              onTap: () => settings.setLocale(const Locale('is')),
-            ),
-            // Central Europe
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languagePolish,
-              subtitle: 'Polski',
-              isSelected: settings.currentLanguageCode == 'pl',
-              onTap: () => settings.setLocale(const Locale('pl')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageCzech,
-              subtitle: 'Čeština',
-              isSelected: settings.currentLanguageCode == 'cs',
-              onTap: () => settings.setLocale(const Locale('cs')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSlovak,
-              subtitle: 'Slovenčina',
-              isSelected: settings.currentLanguageCode == 'sk',
-              onTap: () => settings.setLocale(const Locale('sk')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageHungarian,
-              subtitle: 'Magyar',
-              isSelected: settings.currentLanguageCode == 'hu',
-              onTap: () => settings.setLocale(const Locale('hu')),
-            ),
-            // Eastern Europe
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageRomanian,
-              subtitle: 'Română',
-              isSelected: settings.currentLanguageCode == 'ro',
-              onTap: () => settings.setLocale(const Locale('ro')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageBulgarian,
-              subtitle: 'Български',
-              isSelected: settings.currentLanguageCode == 'bg',
-              onTap: () => settings.setLocale(const Locale('bg')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageUkrainian,
-              subtitle: 'Українська',
-              isSelected: settings.currentLanguageCode == 'uk',
-              onTap: () => settings.setLocale(const Locale('uk')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageRussian,
-              subtitle: 'Русский',
-              isSelected: settings.currentLanguageCode == 'ru',
-              onTap: () => settings.setLocale(const Locale('ru')),
-            ),
-            // Baltic
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageLithuanian,
-              subtitle: 'Lietuvių',
-              isSelected: settings.currentLanguageCode == 'lt',
-              onTap: () => settings.setLocale(const Locale('lt')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageLatvian,
-              subtitle: 'Latviešu',
-              isSelected: settings.currentLanguageCode == 'lv',
-              onTap: () => settings.setLocale(const Locale('lv')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageEstonian,
-              subtitle: 'Eesti',
-              isSelected: settings.currentLanguageCode == 'et',
-              onTap: () => settings.setLocale(const Locale('et')),
-            ),
-            // Balkan
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSlovenian,
-              subtitle: 'Slovenščina',
-              isSelected: settings.currentLanguageCode == 'sl',
-              onTap: () => settings.setLocale(const Locale('sl')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageCroatian,
-              subtitle: 'Hrvatski',
-              isSelected: settings.currentLanguageCode == 'hr',
-              onTap: () => settings.setLocale(const Locale('hr')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageSerbian,
-              subtitle: 'Српски',
-              isSelected: settings.currentLanguageCode == 'sr',
-              onTap: () => settings.setLocale(const Locale('sr')),
-            ),
-            _buildLanguageOption(
-              context: context,
-              title: l10n.languageGreek,
-              subtitle: 'Ελληνικά',
-              isSelected: settings.currentLanguageCode == 'el',
-              onTap: () => settings.setLocale(const Locale('el')),
-            ),
-          ],
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String?>(
+                value: settings.currentLanguageCode,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+                isExpanded: true,
+                items: languageOptions.map((option) {
+                  return DropdownMenuItem<String?>(
+                    value: option.code,
+                    child: Text(
+                      option.code == null
+                          ? '${option.title} (${option.nativeName})'
+                          : '${option.title} - ${option.nativeName}',
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value == null) {
+                    settings.setLocale(null);
+                  } else {
+                    settings.setLocale(Locale(value));
+                  }
+                },
+              ),
+            ],
+          ),
         );
       },
     );
+  }
+
+  List<_LanguageOption> _getLanguageOptions(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    return [
+      _LanguageOption(null, l10n.languageSystem, _getSystemLanguageName(context)),
+      _LanguageOption('en', l10n.languageEnglish, 'English'),
+      _LanguageOption('de', l10n.languageGerman, 'Deutsch'),
+      _LanguageOption('fr', l10n.languageFrench, 'Français'),
+      _LanguageOption('es', l10n.languageSpanish, 'Español'),
+      _LanguageOption('pt', l10n.languagePortuguese, 'Português'),
+      _LanguageOption('it', l10n.languageItalian, 'Italiano'),
+      _LanguageOption('nl', l10n.languageDutch, 'Nederlands'),
+      _LanguageOption('ca', l10n.languageCatalan, 'Català'),
+      _LanguageOption('sv', l10n.languageSwedish, 'Svenska'),
+      _LanguageOption('no', l10n.languageNorwegian, 'Norsk'),
+      _LanguageOption('da', l10n.languageDanish, 'Dansk'),
+      _LanguageOption('fi', l10n.languageFinnish, 'Suomi'),
+      _LanguageOption('is', l10n.languageIcelandic, 'Íslenska'),
+      _LanguageOption('pl', l10n.languagePolish, 'Polski'),
+      _LanguageOption('cs', l10n.languageCzech, 'Čeština'),
+      _LanguageOption('sk', l10n.languageSlovak, 'Slovenčina'),
+      _LanguageOption('hu', l10n.languageHungarian, 'Magyar'),
+      _LanguageOption('ro', l10n.languageRomanian, 'Română'),
+      _LanguageOption('bg', l10n.languageBulgarian, 'Български'),
+      _LanguageOption('uk', l10n.languageUkrainian, 'Українська'),
+      _LanguageOption('ru', l10n.languageRussian, 'Русский'),
+      _LanguageOption('lt', l10n.languageLithuanian, 'Lietuvių'),
+      _LanguageOption('lv', l10n.languageLatvian, 'Latviešu'),
+      _LanguageOption('et', l10n.languageEstonian, 'Eesti'),
+      _LanguageOption('sl', l10n.languageSlovenian, 'Slovenščina'),
+      _LanguageOption('hr', l10n.languageCroatian, 'Hrvatski'),
+      _LanguageOption('sr', l10n.languageSerbian, 'Српски'),
+      _LanguageOption('el', l10n.languageGreek, 'Ελληνικά'),
+    ];
   }
 
   String _getSystemLanguageName(BuildContext context) {
@@ -400,7 +256,6 @@ class SettingsScreen extends StatelessWidget {
     final code = systemLocale.languageCode;
     final country = systemLocale.countryCode;
 
-    // Handle regional variants first
     if (code == 'en' && country == 'US') return 'English (US)';
     if (code == 'es' && country == 'MX') return 'Español (México)';
     if (code == 'fr' && country == 'CA') return 'Français (Canada)';
@@ -437,29 +292,12 @@ class SettingsScreen extends StatelessWidget {
       default: return 'English';
     }
   }
+}
 
-  Widget _buildLanguageOption({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(
-        subtitle,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-      ),
-      trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: Theme.of(context).colorScheme.primary,
-            )
-          : null,
-      onTap: onTap,
-    );
-  }
+class _LanguageOption {
+  final String? code;
+  final String title;
+  final String nativeName;
+
+  _LanguageOption(this.code, this.title, this.nativeName);
 }

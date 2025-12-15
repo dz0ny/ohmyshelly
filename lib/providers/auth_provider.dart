@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../data/models/user.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/storage_service.dart';
 import '../data/services/api_service.dart';
+import '../core/utils/jwt_utils.dart';
 
 enum AuthState {
   initial,
@@ -21,6 +23,11 @@ class AuthProvider extends ChangeNotifier {
   String? _error;
   bool _isFirstLaunch = true;
 
+  // Token refresh timer
+  Timer? _tokenRefreshTimer;
+  static const Duration _tokenRefreshMargin = Duration(minutes: 5);
+  bool _isRefreshing = false;
+
   AuthProvider({
     required StorageService storageService,
     required ApiService apiService,
@@ -37,6 +44,21 @@ class AuthProvider extends ChangeNotifier {
   String? get token => _user?.token;
   String? get apiUrl => _user?.userApiUrl;
 
+  /// Check if the current token is expired
+  bool get isTokenExpired => _user?.token != null && JwtUtils.isExpired(_user!.token);
+
+  /// Check if the current token will expire soon
+  bool get isTokenExpiringSoon =>
+      _user?.token != null && JwtUtils.willExpireSoon(_user!.token, margin: _tokenRefreshMargin);
+
+  /// Get remaining time until token expiration
+  Duration? get tokenTimeRemaining =>
+      _user?.token != null ? JwtUtils.getTimeUntilExpiration(_user!.token) : null;
+
+  /// Get human-readable token expiration
+  String? get tokenExpirationString =>
+      _user?.token != null ? JwtUtils.getExpirationString(_user!.token) : null;
+
   // Initialize - check for stored credentials
   Future<void> initialize() async {
     _state = AuthState.loading;
@@ -50,7 +72,24 @@ class AuthProvider extends ChangeNotifier {
       final storedUser = await _storageService.getUser();
       if (storedUser != null) {
         _user = storedUser;
+
+        // Check if token is expired or about to expire
+        if (isTokenExpired || isTokenExpiringSoon) {
+          if (kDebugMode) {
+            debugPrint('[Auth] Stored token expired/expiring, refreshing...');
+          }
+          final refreshed = await reauthenticate();
+          if (!refreshed) {
+            // Reauthentication failed, but we still have stored credentials
+            // The UI will work with cloud API auto-reauth
+            if (kDebugMode) {
+              debugPrint('[Auth] Token refresh failed, will retry on next API call');
+            }
+          }
+        }
+
         _state = AuthState.authenticated;
+        _scheduleTokenRefresh();
       } else {
         _state = AuthState.unauthenticated;
       }
@@ -76,6 +115,7 @@ class AuthProvider extends ChangeNotifier {
       await _storageService.saveCredentials(email, hashedPassword);
       _user = user;
       _state = AuthState.authenticated;
+      _scheduleTokenRefresh();
       notifyListeners();
       return true;
     } on AuthException catch (e) {
@@ -95,10 +135,18 @@ class AuthProvider extends ChangeNotifier {
   /// Returns true if successful, false otherwise.
   /// Does not change UI state on failure - caller handles that.
   Future<bool> reauthenticate() async {
+    if (_isRefreshing) {
+      if (kDebugMode) {
+        debugPrint('[Auth] Already refreshing token, skipping');
+      }
+      return false;
+    }
+
+    _isRefreshing = true;
     try {
       final credentials = await _storageService.getCredentials();
       if (credentials == null) {
-        debugPrint('Reauthentication failed: no stored credentials');
+        debugPrint('[Auth] Reauthentication failed: no stored credentials');
         return false;
       }
 
@@ -109,19 +157,68 @@ class AuthProvider extends ChangeNotifier {
       await _storageService.saveUser(user);
       _user = user;
       _state = AuthState.authenticated;
+      _scheduleTokenRefresh();
       notifyListeners();
-      debugPrint('Reauthentication successful');
+
+      if (kDebugMode) {
+        debugPrint('[Auth] Reauthentication successful, token valid for $tokenExpirationString');
+      }
       return true;
     } catch (e) {
-      debugPrint('Reauthentication failed: $e');
+      debugPrint('[Auth] Reauthentication failed: $e');
       return false;
+    } finally {
+      _isRefreshing = false;
     }
+  }
+
+  /// Schedule automatic token refresh before expiration
+  void _scheduleTokenRefresh() {
+    _tokenRefreshTimer?.cancel();
+
+    if (_user?.token == null) return;
+
+    final remaining = tokenTimeRemaining;
+    if (remaining == null) return;
+
+    // Schedule refresh with margin before expiration
+    final refreshIn = remaining - _tokenRefreshMargin;
+    if (refreshIn.isNegative) {
+      // Token already needs refresh
+      if (kDebugMode) {
+        debugPrint('[Auth] Token needs immediate refresh');
+      }
+      _refreshToken();
+      return;
+    }
+
+    if (kDebugMode) {
+      debugPrint('[Auth] Scheduling token refresh in ${refreshIn.inMinutes}m (token expires in ${remaining.inMinutes}m)');
+    }
+
+    _tokenRefreshTimer = Timer(refreshIn, _refreshToken);
+  }
+
+  /// Perform automatic token refresh
+  Future<void> _refreshToken() async {
+    if (kDebugMode) {
+      debugPrint('[Auth] Auto-refreshing token...');
+    }
+    await reauthenticate();
+  }
+
+  /// Cancel token refresh timer
+  void _cancelTokenRefresh() {
+    _tokenRefreshTimer?.cancel();
+    _tokenRefreshTimer = null;
   }
 
   // Logout
   Future<void> logout() async {
     _state = AuthState.loading;
     notifyListeners();
+
+    _cancelTokenRefresh();
 
     try {
       await _storageService.deleteUser();

@@ -11,6 +11,7 @@ import '../data/services/api_service.dart';
 import '../data/services/websocket_service.dart';
 import '../data/services/connection_manager.dart';
 import '../data/services/storage_service.dart';
+import '../data/services/network_monitor_service.dart';
 import '../core/utils/device_type_helper.dart';
 import '../core/utils/api_retry_mixin.dart';
 
@@ -38,8 +39,19 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   @override
   void onCredentialsUpdated(String apiUrl, String token) {
+    final credentialsChanged = _apiUrl != apiUrl || _token != token;
     _apiUrl = apiUrl;
     _token = token;
+
+    // Reconnect WebSocket with new token if credentials changed
+    final ws = _webSocketService;
+    if (credentialsChanged && ws != null) {
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Credentials updated, reconnecting WebSocket');
+      }
+      ws.disconnect();
+      ws.connect(apiUrl, token);
+    }
   }
 
   List<Device> _devices = [];
@@ -49,6 +61,10 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   Timer? _refreshTimer;
   bool _isRefreshing = false;
   bool _isOffline = false;
+
+  /// Phone connectivity state (separate from device offline state)
+  bool _phoneHasConnectivity = true;
+  bool _phoneOnWifi = false;
 
   // History for sparkline charts (from statistics API)
   final Map<String, List<double>> _temperatureHistory = {};
@@ -64,6 +80,9 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   // WebSocket subscriptions
   StreamSubscription<WebSocketEvent>? _wsEventSubscription;
   StreamSubscription<WebSocketState>? _wsStateSubscription;
+
+  // Network change subscription
+  StreamSubscription<NetworkChangeEvent>? _networkChangeSubscription;
 
   // Action log stream for ScheduleProvider
   final _actionLogController = StreamController<({String deviceId, ActionLogEntry entry})>.broadcast();
@@ -99,6 +118,48 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   bool get isLoading => _state == DeviceLoadState.loading;
   bool get isRefreshing => _isRefreshing;
   bool get isOffline => _isOffline;
+
+  /// Whether the phone has any internet connectivity
+  bool get phoneHasConnectivity => _phoneHasConnectivity;
+
+  /// Whether the phone is connected to WiFi (enables local device access)
+  bool get phoneOnWifi => _phoneOnWifi;
+
+  /// Whether the phone is offline (no connectivity at all)
+  bool get isPhoneOffline => !_phoneHasConnectivity;
+
+  /// Current WiFi network name (if known and on WiFi)
+  String? get currentWifiName => _connectionManager?.currentWifiName;
+
+  /// Check if we're on a different WiFi network than where devices were discovered
+  bool get isOnDifferentWifiNetwork {
+    if (!_phoneOnWifi) return false;
+    final currentWifi = _connectionManager?.currentWifiName;
+    if (currentWifi == null) return false;
+
+    // Check if any device was discovered on a different network
+    for (final device in _devices) {
+      final localInfo = _connectionManager?.getLocalInfo(device.id);
+      final discoveredOn = localInfo?.discoveredOnWifi;
+      if (discoveredOn != null && discoveredOn != currentWifi) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Get the WiFi network(s) where devices were discovered
+  Set<String> get devicesDiscoveredOnNetworks {
+    final networks = <String>{};
+    for (final device in _devices) {
+      final localInfo = _connectionManager?.getLocalInfo(device.id);
+      final discoveredOn = localInfo?.discoveredOnWifi;
+      if (discoveredOn != null) {
+        networks.add(discoveredOn);
+      }
+    }
+    return networks;
+  }
 
   // Filtered device lists
   List<Device> get powerDevices =>
@@ -277,6 +338,8 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
     if (apiUrl != null && token != null) {
       // Initialize ConnectionManager for local connections
       _connectionManager?.initialize(apiUrl, token);
+      // Subscribe to network change events
+      _subscribeToNetworkChanges();
       // Connect WebSocket and subscribe to events
       _connectWebSocket(apiUrl, token);
       // Start auto-refresh as fallback when credentials are set
@@ -285,6 +348,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
       // Stop auto-refresh and disconnect WebSocket when logged out
       _stopAutoRefresh();
       _disconnectWebSocket();
+      _unsubscribeFromNetworkChanges();
       // Clear local connection data
       _connectionManager?.clear();
       _devices = [];
@@ -292,6 +356,100 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
       _state = DeviceLoadState.initial;
       notifyListeners();
     }
+  }
+
+  // Network change subscription management
+  void _subscribeToNetworkChanges() {
+    _networkChangeSubscription?.cancel();
+    _networkChangeSubscription = _connectionManager?.networkChanges.listen(
+      _onNetworkChange,
+    );
+  }
+
+  void _unsubscribeFromNetworkChanges() {
+    _networkChangeSubscription?.cancel();
+    _networkChangeSubscription = null;
+  }
+
+  /// Handle network change events
+  void _onNetworkChange(NetworkChangeEvent event) {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Network change: $event');
+    }
+
+    switch (event) {
+      case NetworkChangeEvent.wifiConnected:
+      case NetworkChangeEvent.wifiChanged:
+        // WiFi connected or changed - re-probe local devices
+        _handleWifiAvailable();
+      case NetworkChangeEvent.wifiDisconnected:
+        // Lost WiFi - update connection sources to cloud
+        _handleWifiLost();
+      case NetworkChangeEvent.connectivityLost:
+        // All connectivity lost - may need offline mode
+        _handleConnectivityLost();
+      case NetworkChangeEvent.connectivityRestored:
+        // Connectivity restored - refresh data
+        _handleConnectivityRestored();
+    }
+  }
+
+  /// Handle WiFi becoming available (connected or changed networks)
+  void _handleWifiAvailable() {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] WiFi available, probing local devices...');
+    }
+
+    _phoneHasConnectivity = true;
+    _phoneOnWifi = true;
+
+    // Re-probe local devices in background
+    _probeLocalDevices();
+
+    // Notify listeners to update UI (connection source might change)
+    notifyListeners();
+  }
+
+  /// Handle WiFi being lost
+  void _handleWifiLost() {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] WiFi lost, switching to cloud-only mode');
+    }
+
+    _phoneOnWifi = false;
+    // Still have connectivity (just not WiFi)
+    _phoneHasConnectivity = true;
+
+    // Just notify - ConnectionManager has already marked devices as unreachable
+    notifyListeners();
+  }
+
+  /// Handle all connectivity being lost
+  void _handleConnectivityLost() {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Connectivity lost');
+    }
+
+    _phoneHasConnectivity = false;
+    _phoneOnWifi = false;
+
+    // Notify to show offline indicator
+    notifyListeners();
+  }
+
+  /// Handle connectivity being restored
+  void _handleConnectivityRestored() {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Connectivity restored, refreshing data...');
+    }
+
+    _phoneHasConnectivity = true;
+    // WiFi state will be updated by wifiConnected event if applicable
+
+    // Refresh device data
+    fetchAllStatuses();
+
+    notifyListeners();
   }
 
   // WebSocket connection management
@@ -811,6 +969,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   void dispose() {
     _stopAutoRefresh();
     _disconnectWebSocket();
+    _unsubscribeFromNetworkChanges();
     _connectionManager?.dispose();
     _actionLogController.close();
     super.dispose();
