@@ -4,6 +4,7 @@ import '../data/services/device_service.dart';
 import '../data/services/api_service.dart';
 import '../widgets/common/date_range_picker.dart';
 import '../core/utils/api_retry_mixin.dart';
+import 'auth_provider.dart';
 
 enum StatisticsLoadState {
   initial,
@@ -13,21 +14,19 @@ enum StatisticsLoadState {
 }
 
 class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
+  final AuthProvider _authProvider;
   final DeviceService _deviceService;
-  String? _apiUrl;
-  String? _token;
 
-  // ApiRetryMixin implementation
+  // ApiRetryMixin implementation - read directly from AuthProvider
   @override
-  String? get currentApiUrl => _apiUrl;
+  String? get currentApiUrl => _authProvider.apiUrl;
 
   @override
-  String? get currentToken => _token;
+  String? get currentToken => _authProvider.token;
 
   @override
   void onCredentialsUpdated(String apiUrl, String token) {
-    _apiUrl = apiUrl;
-    _token = token;
+    // No-op: we read credentials directly from AuthProvider
   }
 
   PowerStatistics? _powerStatistics;
@@ -41,8 +40,23 @@ class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
   String? _currentDeviceId;
   String? _currentStatsType; // 'power' or 'weather'
 
-  StatisticsProvider({required ApiService apiService})
-      : _deviceService = DeviceService(apiService);
+  StatisticsProvider({
+    required AuthProvider authProvider,
+    required ApiService apiService,
+  })  : _authProvider = authProvider,
+        _deviceService = DeviceService(apiService) {
+    // Set up reauth callback to use AuthProvider
+    reauthCallback = () async {
+      final success = await _authProvider.reauthenticate();
+      if (success && _authProvider.user != null) {
+        return (
+          apiUrl: _authProvider.user!.userApiUrl,
+          token: _authProvider.user!.token,
+        );
+      }
+      return null;
+    };
+  }
 
   // Getters
   PowerStatistics? get powerStatistics => _powerStatistics;
@@ -51,19 +65,6 @@ class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
   String? get error => _error;
   DateRangeSelection get selection => _selection;
   bool get isLoading => _state == StatisticsLoadState.loading;
-
-  // Set credentials
-  void setCredentials(String? apiUrl, String? token) {
-    _apiUrl = apiUrl;
-    _token = token;
-
-    if (apiUrl == null || token == null) {
-      _powerStatistics = null;
-      _weatherStatistics = null;
-      _state = StatisticsLoadState.initial;
-      notifyListeners();
-    }
-  }
 
   // Set selected date range
   void setSelection(DateRangeSelection selection) {
@@ -84,7 +85,7 @@ class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
 
   // Fetch power statistics
   Future<void> fetchPowerStatistics(String deviceId) async {
-    if (_apiUrl == null || _token == null) {
+    if (currentApiUrl == null || currentToken == null) {
       _error = 'Not authenticated';
       _state = StatisticsLoadState.error;
       notifyListeners();
@@ -126,7 +127,7 @@ class StatisticsProvider extends ChangeNotifier with ApiRetryMixin {
 
   // Fetch weather statistics
   Future<void> fetchWeatherStatistics(String deviceId) async {
-    if (_apiUrl == null || _token == null) {
+    if (currentApiUrl == null || currentToken == null) {
       _error = 'Not authenticated';
       _state = StatisticsLoadState.error;
       notifyListeners();

@@ -7,7 +7,6 @@ import '../../core/constants/app_icons.dart';
 import '../../core/utils/formatters.dart';
 import '../../data/models/statistics.dart';
 import '../../providers/statistics_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../widgets/common/loading_indicator.dart';
 import '../../widgets/common/error_card.dart';
 import '../../widgets/common/date_range_picker.dart';
@@ -114,11 +113,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   void _initializeAndFetch() {
     if (!mounted) return;
 
-    final auth = context.read<AuthProvider>();
     final statsProvider = context.read<StatisticsProvider>();
 
-    statsProvider.setCredentials(auth.apiUrl, auth.token);
-
+    // StatisticsProvider reads credentials directly from AuthProvider
     if (widget.deviceType == 'power') {
       statsProvider.fetchPowerStatistics(widget.deviceId);
     } else {

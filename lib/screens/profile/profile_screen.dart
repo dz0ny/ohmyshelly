@@ -4,10 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_icons.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/device_provider.dart';
 import '../../providers/scene_provider.dart';
-import '../../providers/schedule_provider.dart';
-import '../../providers/statistics_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -134,12 +131,10 @@ class ProfileScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // Clear all provider credentials before logout
-              context.read<DeviceProvider>().setCredentials(null, null);
-              context.read<SceneProvider>().setCredentials(null, null);
-              context.read<ScheduleProvider>().setCredentials(null, null);
-              context.read<StatisticsProvider>().setCredentials(null, null);
-              // Then logout
+              // Clear provider state before logout
+              // DeviceProvider clears automatically via auth listener
+              context.read<SceneProvider>().clear();
+              // Then logout - AuthProvider notifies listeners which clears other states
               context.read<AuthProvider>().logout();
               context.go('/login');
             },

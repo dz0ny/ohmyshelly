@@ -14,6 +14,7 @@ import '../data/services/storage_service.dart';
 import '../data/services/network_monitor_service.dart';
 import '../core/utils/device_type_helper.dart';
 import '../core/utils/api_retry_mixin.dart';
+import 'auth_provider.dart';
 
 enum DeviceLoadState {
   initial,
@@ -23,35 +24,28 @@ enum DeviceLoadState {
 }
 
 class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
+  final AuthProvider _authProvider;
   final DeviceService _deviceService;
   final WebSocketService? _webSocketService;
   final ConnectionManager? _connectionManager;
   final StorageService? _storageService;
-  String? _apiUrl;
-  String? _token;
 
-  // ApiRetryMixin implementation
+  // Track last known token for change detection
+  String? _lastKnownToken;
+  bool _initialized = false;
+
+  // ApiRetryMixin implementation - read directly from AuthProvider
   @override
-  String? get currentApiUrl => _apiUrl;
+  String? get currentApiUrl => _authProvider.apiUrl;
 
   @override
-  String? get currentToken => _token;
+  String? get currentToken => _authProvider.token;
 
   @override
   void onCredentialsUpdated(String apiUrl, String token) {
-    final credentialsChanged = _apiUrl != apiUrl || _token != token;
-    _apiUrl = apiUrl;
-    _token = token;
-
-    // Reconnect WebSocket with new token if credentials changed
-    final ws = _webSocketService;
-    if (credentialsChanged && ws != null) {
-      if (kDebugMode) {
-        debugPrint('[DeviceProvider] Credentials updated, reconnecting WebSocket');
-      }
-      ws.disconnect();
-      ws.connect(apiUrl, token);
-    }
+    // Called by ApiRetryMixin after successful reauth
+    // Reconnect WebSocket with new credentials
+    _reconnectWithCredentials(apiUrl, token);
   }
 
   List<Device> _devices = [];
@@ -101,14 +95,126 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   static const Duration _refreshInterval = Duration(minutes: 1);
 
   DeviceProvider({
+    required AuthProvider authProvider,
     required ApiService apiService,
     WebSocketService? webSocketService,
     ConnectionManager? connectionManager,
     StorageService? storageService,
-  })  : _deviceService = DeviceService(apiService),
+  })  : _authProvider = authProvider,
+        _deviceService = DeviceService(apiService),
         _webSocketService = webSocketService,
         _connectionManager = connectionManager,
-        _storageService = storageService;
+        _storageService = storageService {
+    // Set up reauth callback to use AuthProvider
+    reauthCallback = _createReauthCallback();
+
+    // Listen for auth changes (token refresh, logout)
+    _authProvider.addListener(_onAuthChanged);
+
+    // Initialize if already authenticated
+    if (_authProvider.isAuthenticated) {
+      _initializeServices();
+    }
+  }
+
+  /// Create reauth callback that uses AuthProvider
+  Future<({String apiUrl, String token})?> Function() _createReauthCallback() {
+    return () async {
+      final success = await _authProvider.reauthenticate();
+      if (success && _authProvider.user != null) {
+        return (
+          apiUrl: _authProvider.user!.userApiUrl,
+          token: _authProvider.user!.token,
+        );
+      }
+      return null;
+    };
+  }
+
+  /// Handle auth state changes (token refresh, logout)
+  void _onAuthChanged() {
+    final newToken = _authProvider.token;
+    final apiUrl = _authProvider.apiUrl;
+
+    if (_authProvider.isAuthenticated && apiUrl != null && newToken != null) {
+      if (!_initialized) {
+        // First time authentication
+        _initializeServices();
+      } else if (newToken != _lastKnownToken) {
+        // Token changed (refreshed)
+        if (kDebugMode) {
+          debugPrint('[DeviceProvider] Token changed, reconnecting services');
+        }
+        _reconnectWithCredentials(apiUrl, newToken);
+      }
+      _lastKnownToken = newToken;
+    } else if (!_authProvider.isAuthenticated && _initialized) {
+      // Logged out
+      _clearState();
+    }
+  }
+
+  /// Initialize services with current credentials
+  void _initializeServices() {
+    final apiUrl = _authProvider.apiUrl;
+    final token = _authProvider.token;
+
+    if (apiUrl == null || token == null) return;
+
+    _lastKnownToken = token;
+    _initialized = true;
+
+    // Initialize ConnectionManager for local connections
+    _connectionManager?.initialize(apiUrl, token);
+
+    // Subscribe to network change events
+    _subscribeToNetworkChanges();
+
+    // Connect WebSocket and subscribe to events
+    _connectWebSocket(apiUrl, token);
+
+    // Start auto-refresh as fallback
+    _startAutoRefresh();
+
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Services initialized');
+    }
+  }
+
+  /// Reconnect services with new credentials
+  void _reconnectWithCredentials(String apiUrl, String token) {
+    final ws = _webSocketService;
+    if (ws != null) {
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Reconnecting WebSocket with new credentials');
+      }
+      ws.disconnect();
+      ws.connect(apiUrl, token);
+    }
+
+    // Update ConnectionManager credentials
+    _connectionManager?.initialize(apiUrl, token);
+  }
+
+  /// Clear state on logout
+  void _clearState() {
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Clearing state (logout)');
+    }
+
+    _stopAutoRefresh();
+    _disconnectWebSocket();
+    _unsubscribeFromNetworkChanges();
+    _connectionManager?.clear();
+
+    _devices = [];
+    _deviceStatuses = {};
+    _state = DeviceLoadState.initial;
+    _initialized = false;
+    _lastKnownToken = null;
+
+    notifyListeners();
+  }
 
   // Getters
   List<Device> get devices => _devices;
@@ -219,7 +325,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   /// Fetch weather history from statistics API for weather stations
   Future<void> fetchWeatherHistory(String deviceId) async {
-    if (_apiUrl == null || _token == null) return;
+    if (currentApiUrl == null || currentToken == null) return;
     if (_isLoadingHistory) return;
 
     _isLoadingHistory = true;
@@ -271,7 +377,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   /// Fetch power history from statistics API for power devices
   Future<void> fetchPowerHistory(String deviceId) async {
-    if (_apiUrl == null || _token == null) return;
+    if (currentApiUrl == null || currentToken == null) return;
 
     try {
       // Use withAutoReauth to handle session expiration
@@ -329,34 +435,6 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   /// Stream of action log events (for ScheduleProvider to subscribe)
   Stream<({String deviceId, ActionLogEntry entry})> get actionLogEvents =>
       _actionLogController.stream;
-
-  // Set credentials (called when auth changes)
-  void setCredentials(String? apiUrl, String? token) {
-    _apiUrl = apiUrl;
-    _token = token;
-
-    if (apiUrl != null && token != null) {
-      // Initialize ConnectionManager for local connections
-      _connectionManager?.initialize(apiUrl, token);
-      // Subscribe to network change events
-      _subscribeToNetworkChanges();
-      // Connect WebSocket and subscribe to events
-      _connectWebSocket(apiUrl, token);
-      // Start auto-refresh as fallback when credentials are set
-      _startAutoRefresh();
-    } else {
-      // Stop auto-refresh and disconnect WebSocket when logged out
-      _stopAutoRefresh();
-      _disconnectWebSocket();
-      _unsubscribeFromNetworkChanges();
-      // Clear local connection data
-      _connectionManager?.clear();
-      _devices = [];
-      _deviceStatuses = {};
-      _state = DeviceLoadState.initial;
-      notifyListeners();
-    }
-  }
 
   // Network change subscription management
   void _subscribeToNetworkChanges() {
@@ -617,7 +695,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   // Fetch devices and statuses in a single API call
   Future<void> fetchDevices() async {
-    if (_apiUrl == null || _token == null) {
+    if (currentApiUrl == null || currentToken == null) {
       _error = 'Not authenticated';
       _state = DeviceLoadState.error;
       notifyListeners();
@@ -757,7 +835,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   // Refresh statuses (now uses same v2 API)
   // Merges API data with existing WebSocket data, keeping newer timestamps
   Future<void> fetchAllStatuses() async {
-    if (_apiUrl == null || _token == null) return;
+    if (currentApiUrl == null || currentToken == null) return;
 
     try {
       // Use withAutoReauth to handle session expiration
@@ -843,7 +921,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   // Toggle device (uses local-first strategy via ConnectionManager)
   Future<bool> toggleDevice(String deviceId, bool turnOn) async {
-    if (_apiUrl == null || _token == null) return false;
+    if (currentApiUrl == null || currentToken == null) return false;
 
     // Check if device is a pushbutton (momentary switch)
     final device = _devices.where((d) => d.id == deviceId).firstOrNull;
@@ -950,7 +1028,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   }
 
   void resumeAutoRefresh() {
-    if (_apiUrl != null && _token != null) {
+    if (currentApiUrl != null && currentToken != null) {
       _startAutoRefresh();
       fetchAllStatuses(); // Immediate refresh on resume
     }
@@ -967,6 +1045,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
   @override
   void dispose() {
+    _authProvider.removeListener(_onAuthChanged);
     _stopAutoRefresh();
     _disconnectWebSocket();
     _unsubscribeFromNetworkChanges();

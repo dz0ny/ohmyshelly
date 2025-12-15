@@ -3,6 +3,7 @@ import '../data/models/scene.dart';
 import '../data/services/scene_service.dart';
 import '../data/services/api_service.dart';
 import '../core/utils/api_retry_mixin.dart';
+import 'auth_provider.dart';
 
 enum SceneLoadState {
   initial,
@@ -12,21 +13,19 @@ enum SceneLoadState {
 }
 
 class SceneProvider extends ChangeNotifier with ApiRetryMixin {
+  final AuthProvider _authProvider;
   final SceneService _sceneService;
-  String? _apiUrl;
-  String? _token;
 
-  // ApiRetryMixin implementation
+  // ApiRetryMixin implementation - read directly from AuthProvider
   @override
-  String? get currentApiUrl => _apiUrl;
+  String? get currentApiUrl => _authProvider.apiUrl;
 
   @override
-  String? get currentToken => _token;
+  String? get currentToken => _authProvider.token;
 
   @override
   void onCredentialsUpdated(String apiUrl, String token) {
-    _apiUrl = apiUrl;
-    _token = token;
+    // No-op: we read credentials directly from AuthProvider
   }
 
   List<Scene> _scenes = [];
@@ -34,8 +33,23 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
   String? _error;
   bool _isRefreshing = false;
 
-  SceneProvider({required SceneService sceneService})
-      : _sceneService = sceneService;
+  SceneProvider({
+    required AuthProvider authProvider,
+    required SceneService sceneService,
+  })  : _authProvider = authProvider,
+        _sceneService = sceneService {
+    // Set up reauth callback to use AuthProvider
+    reauthCallback = () async {
+      final success = await _authProvider.reauthenticate();
+      if (success && _authProvider.user != null) {
+        return (
+          apiUrl: _authProvider.user!.userApiUrl,
+          token: _authProvider.user!.token,
+        );
+      }
+      return null;
+    };
+  }
 
   // Getters
   List<Scene> get scenes => _scenes;
@@ -61,15 +75,9 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
     return grouped;
   }
 
-  /// Set API credentials
-  void setCredentials(String? apiUrl, String? token) {
-    _apiUrl = apiUrl;
-    _token = token;
-  }
-
   /// Fetch all scenes
   Future<void> fetchScenes() async {
-    if (_apiUrl == null || _token == null) {
+    if (currentApiUrl == null || currentToken == null) {
       _state = SceneLoadState.error;
       _error = 'Not authenticated';
       notifyListeners();
@@ -102,7 +110,7 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
 
   /// Refresh scenes (pull-to-refresh)
   Future<void> refresh() async {
-    if (_apiUrl == null || _token == null) return;
+    if (currentApiUrl == null || currentToken == null) return;
     if (_isRefreshing) return;
 
     _isRefreshing = true;
@@ -126,7 +134,7 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
 
   /// Toggle scene enabled state with optimistic update
   Future<bool> toggleScene(int sceneId, bool enabled) async {
-    if (_apiUrl == null || _token == null) return false;
+    if (currentApiUrl == null || currentToken == null) return false;
 
     try {
       // Optimistic update
@@ -157,7 +165,7 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
 
   /// Run scene manually
   Future<bool> runScene(int sceneId) async {
-    if (_apiUrl == null || _token == null) return false;
+    if (currentApiUrl == null || currentToken == null) return false;
 
     try {
       // API call with auto-reauth
@@ -182,8 +190,7 @@ class SceneProvider extends ChangeNotifier with ApiRetryMixin {
     _scenes = [];
     _state = SceneLoadState.initial;
     _error = null;
-    _apiUrl = null;
-    _token = null;
+    // Credentials are managed by AuthProvider
     notifyListeners();
   }
 }

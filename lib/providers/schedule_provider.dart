@@ -5,15 +5,26 @@ import '../data/models/schedule.dart';
 import '../data/models/action_log.dart';
 import '../data/services/api_service.dart';
 import '../data/services/websocket_service.dart';
+import '../core/utils/api_retry_mixin.dart';
+import 'auth_provider.dart';
 
 /// Provider for managing device schedules and action logs.
-class ScheduleProvider extends ChangeNotifier {
+class ScheduleProvider extends ChangeNotifier with ApiRetryMixin {
+  final AuthProvider _authProvider;
   final WebSocketService _webSocketService;
   final ApiService _apiService;
 
-  // API credentials (set from AuthProvider)
-  String? _apiUrl;
-  String? _token;
+  // ApiRetryMixin implementation - read directly from AuthProvider
+  @override
+  String? get currentApiUrl => _authProvider.apiUrl;
+
+  @override
+  String? get currentToken => _authProvider.token;
+
+  @override
+  void onCredentialsUpdated(String apiUrl, String token) {
+    // No-op: we read credentials directly from AuthProvider
+  }
 
   // State: schedules per device
   final Map<String, List<Schedule>> _schedules = {};
@@ -28,10 +39,24 @@ class ScheduleProvider extends ChangeNotifier {
   StreamSubscription<({String deviceId, ActionLogEntry entry})>? _actionLogSubscription;
 
   ScheduleProvider({
+    required AuthProvider authProvider,
     required WebSocketService webSocketService,
     required ApiService apiService,
-  })  : _webSocketService = webSocketService,
-        _apiService = apiService;
+  })  : _authProvider = authProvider,
+        _webSocketService = webSocketService,
+        _apiService = apiService {
+    // Set up reauth callback to use AuthProvider
+    reauthCallback = () async {
+      final success = await _authProvider.reauthenticate();
+      if (success && _authProvider.user != null) {
+        return (
+          apiUrl: _authProvider.user!.userApiUrl,
+          token: _authProvider.user!.token,
+        );
+      }
+      return null;
+    };
+  }
 
   /// Subscribe to action log events from DeviceProvider.
   /// Call this after both providers are created.
@@ -42,12 +67,6 @@ class ScheduleProvider extends ChangeNotifier {
     _actionLogSubscription = eventStream.listen((event) {
       addActionLogEntry(event.deviceId, event.entry);
     });
-  }
-
-  /// Set API credentials for event log fetching.
-  void setCredentials(String? apiUrl, String? token) {
-    _apiUrl = apiUrl;
-    _token = token;
   }
 
   // --- Getters ---
@@ -340,8 +359,9 @@ class ScheduleProvider extends ChangeNotifier {
   /// Fetch historical event log from API.
   ///
   /// This loads recent on/off events from the Shelly Cloud API.
+  /// Uses withAutoReauth to handle token expiration.
   Future<void> fetchEventLog(String deviceId, {int limit = 10}) async {
-    if (_apiUrl == null || _token == null) {
+    if (currentApiUrl == null || currentToken == null) {
       if (kDebugMode) {
         debugPrint('[ScheduleProvider] Cannot fetch event log: no credentials');
       }
@@ -349,14 +369,16 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     try {
-      final response = await _apiService.postJson(
-        '$_apiUrl/statistics/event-log',
-        {
-          'tags': [deviceId],
-          'limit': limit,
-        },
-        token: _token,
-      );
+      final response = await withAutoReauth((apiUrl, token) async {
+        return await _apiService.postJson(
+          '$apiUrl/statistics/event-log',
+          {
+            'tags': [deviceId],
+            'limit': limit,
+          },
+          token: token,
+        );
+      });
 
       final result = response['result'] as Map<String, dynamic>?;
       if (result == null) return;

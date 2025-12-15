@@ -70,6 +70,12 @@ void main() async {
   final settingsProvider = SettingsProvider(storageService: storageService);
   await settingsProvider.init();
 
+  // Create auth provider (single source of truth for credentials)
+  final authProvider = AuthProvider(
+    storageService: storageService,
+    apiService: apiService,
+  );
+
   // Initialize update service (Android only)
   if (Platform.isAndroid) {
     await UpdateService().init();
@@ -82,6 +88,7 @@ void main() async {
       webSocketService: webSocketService,
       connectionManager: connectionManager,
       settingsProvider: settingsProvider,
+      authProvider: authProvider,
     ),
   );
 }
@@ -92,6 +99,7 @@ class OhMyShellyApp extends StatelessWidget {
   final WebSocketService webSocketService;
   final ConnectionManager connectionManager;
   final SettingsProvider settingsProvider;
+  final AuthProvider authProvider;
 
   const OhMyShellyApp({
     super.key,
@@ -100,6 +108,7 @@ class OhMyShellyApp extends StatelessWidget {
     required this.webSocketService,
     required this.connectionManager,
     required this.settingsProvider,
+    required this.authProvider,
   });
 
   @override
@@ -113,17 +122,13 @@ class OhMyShellyApp extends StatelessWidget {
         // Settings provider
         ChangeNotifierProvider<SettingsProvider>.value(value: settingsProvider),
 
-        // Auth provider
-        ChangeNotifierProvider<AuthProvider>(
-          create: (context) => AuthProvider(
-            storageService: storageService,
-            apiService: apiService,
-          ),
-        ),
+        // Auth provider (single source of truth for credentials)
+        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
 
         // Device provider with WebSocket and local connection support
         ChangeNotifierProvider<DeviceProvider>(
           create: (context) => DeviceProvider(
+            authProvider: authProvider,
             apiService: apiService,
             webSocketService: webSocketService,
             connectionManager: connectionManager,
@@ -138,12 +143,16 @@ class OhMyShellyApp extends StatelessWidget {
 
         // Statistics provider
         ChangeNotifierProvider<StatisticsProvider>(
-          create: (context) => StatisticsProvider(apiService: apiService),
+          create: (context) => StatisticsProvider(
+            authProvider: authProvider,
+            apiService: apiService,
+          ),
         ),
 
         // Schedule provider with WebSocket and API support
         ChangeNotifierProvider<ScheduleProvider>(
           create: (context) => ScheduleProvider(
+            authProvider: authProvider,
             webSocketService: webSocketService,
             apiService: apiService,
           ),
@@ -159,6 +168,7 @@ class OhMyShellyApp extends StatelessWidget {
         // Scene provider
         ChangeNotifierProvider<SceneProvider>(
           create: (context) => SceneProvider(
+            authProvider: authProvider,
             sceneService: SceneService(apiService),
           ),
         ),
@@ -185,36 +195,6 @@ class _AppWithRouterState extends State<_AppWithRouter> {
   void initState() {
     super.initState();
     _appRouter = AppRouter(context.read<AuthProvider>());
-
-    // Wire up auto-reauthentication callbacks for providers
-    _setupReauthCallbacks();
-  }
-
-  /// Set up reauthentication callbacks for providers that make API calls.
-  /// When a 401 error occurs, these callbacks will attempt to reauthenticate
-  /// and return new credentials for retry.
-  void _setupReauthCallbacks() {
-    final authProvider = context.read<AuthProvider>();
-    final deviceProvider = context.read<DeviceProvider>();
-    final statisticsProvider = context.read<StatisticsProvider>();
-    final sceneProvider = context.read<SceneProvider>();
-
-    // Create a reauth callback that uses AuthProvider
-    Future<({String apiUrl, String token})?> reauthCallback() async {
-      final success = await authProvider.reauthenticate();
-      if (success && authProvider.user != null) {
-        return (
-          apiUrl: authProvider.user!.userApiUrl,
-          token: authProvider.user!.token,
-        );
-      }
-      return null;
-    }
-
-    // Wire up the callbacks
-    deviceProvider.reauthCallback = reauthCallback;
-    statisticsProvider.reauthCallback = reauthCallback;
-    sceneProvider.reauthCallback = reauthCallback;
   }
 
   @override

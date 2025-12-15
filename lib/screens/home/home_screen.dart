@@ -9,7 +9,6 @@ import '../../data/services/update_service.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/dashboard_provider.dart';
-import '../../providers/schedule_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/scene_provider.dart';
 import '../../widgets/common/update_banner.dart';
@@ -102,18 +101,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void _initializeData() {
     if (!mounted) return;
 
-    final authProvider = context.read<AuthProvider>();
     final deviceProvider = context.read<DeviceProvider>();
     final dashboardProvider = context.read<DashboardProvider>();
-    final scheduleProvider = context.read<ScheduleProvider>();
     final sceneProvider = context.read<SceneProvider>();
     final settingsProvider = context.read<SettingsProvider>();
 
-    // Set credentials for providers
-    deviceProvider.setCredentials(authProvider.apiUrl, authProvider.token);
-    scheduleProvider.setCredentials(authProvider.apiUrl, authProvider.token);
-    sceneProvider.setCredentials(authProvider.apiUrl, authProvider.token);
-
+    // Providers now read credentials directly from AuthProvider
     // Connect dashboard to device provider
     dashboardProvider.setDeviceProvider(deviceProvider);
 
@@ -176,8 +169,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       final sceneProvider = context.read<SceneProvider>();
       if (sceneProvider.state == SceneLoadState.initial) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final authProvider = context.read<AuthProvider>();
-          sceneProvider.setCredentials(authProvider.apiUrl, authProvider.token);
           sceneProvider.fetchScenes();
         });
       }

@@ -25,7 +25,7 @@ class AuthProvider extends ChangeNotifier {
 
   // Token refresh timer
   Timer? _tokenRefreshTimer;
-  static const Duration _tokenRefreshMargin = Duration(minutes: 5);
+  static const Duration _tokenRefreshMargin = Duration(hours: 1);
   bool _isRefreshing = false;
 
   AuthProvider({
