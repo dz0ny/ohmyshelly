@@ -47,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<ThemeMode>(
-                value: settings.themeMode,
+                initialValue: settings.themeMode,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -178,7 +178,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String?>(
-                value: settings.currentLanguageCode,
+                initialValue: settings.currentLanguageCode,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

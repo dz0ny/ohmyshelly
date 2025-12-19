@@ -203,7 +203,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     final colorScheme = Theme.of(context).colorScheme;
     return BarChart(
       mainBarData(colorScheme),
-      swapAnimationDuration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
     );
   }
 
@@ -391,7 +391,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     // Week view (7 days): show all
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 8,
       child: Text(
         _labels[index],
@@ -406,7 +406,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
 
   Widget _getLeftTitles(double value, TitleMeta meta, ColorScheme colorScheme) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 4,
       child: Text(
         _formatYAxisLabel(value),

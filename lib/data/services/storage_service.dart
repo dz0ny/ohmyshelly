@@ -23,9 +23,6 @@ class StorageService {
 
   Future<void> init() async {
     _storage = const FlutterSecureStorage(
-      aOptions: AndroidOptions(
-        encryptedSharedPreferences: true,
-      ),
       iOptions: IOSOptions(
         accessibility: KeychainAccessibility.first_unlock,
       ),
