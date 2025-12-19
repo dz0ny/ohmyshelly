@@ -5,6 +5,16 @@ import '../models/statistics.dart';
 import '../../core/utils/device_type_helper.dart';
 import 'api_service.dart';
 
+/// Cache entry with expiration
+class _CacheEntry<T> {
+  final T data;
+  final DateTime expiresAt;
+
+  _CacheEntry(this.data, this.expiresAt);
+
+  bool get isExpired => DateTime.now().isAfter(expiresAt);
+}
+
 /// Result from fetching devices with their statuses
 class DevicesWithStatuses {
   final List<Device> devices;
@@ -40,7 +50,45 @@ class DeviceMetadata {
 class DeviceService {
   final ApiService _apiService;
 
+  // Statistics cache: key -> cached data with expiration
+  final Map<String, _CacheEntry<WeatherStatistics>> _weatherStatsCache = {};
+  final Map<String, _CacheEntry<PowerStatistics>> _powerStatsCache = {};
+
+  // Cache TTLs
+  static const Duration _currentDayTtl = Duration(minutes: 5);
+  static const Duration _historicalTtl = Duration(hours: 1);
+
   DeviceService(this._apiService);
+
+  /// Generate cache key for statistics
+  String _statsCacheKey(String deviceId, DateTime from, DateTime to) {
+    return '$deviceId:${from.toIso8601String()}:${to.toIso8601String()}';
+  }
+
+  /// Determine TTL based on whether date range includes today
+  Duration _getTtlForRange(DateTime from, DateTime to) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+
+    // If range includes today, use shorter TTL
+    if (to.isAfter(today) && from.isBefore(tomorrow)) {
+      return _currentDayTtl;
+    }
+    return _historicalTtl;
+  }
+
+  /// Clear expired cache entries
+  void _cleanExpiredCache() {
+    _weatherStatsCache.removeWhere((_, entry) => entry.isExpired);
+    _powerStatsCache.removeWhere((_, entry) => entry.isExpired);
+  }
+
+  /// Clear all statistics cache (call on logout or when needed)
+  void clearStatisticsCache() {
+    _weatherStatsCache.clear();
+    _powerStatsCache.clear();
+  }
 
   /// Fetch device metadata (names, rooms) from get_all_lists API
   Future<Map<String, DeviceMetadata>> fetchDeviceMetadata(
@@ -280,6 +328,17 @@ class DeviceService {
     DateTime from,
     DateTime to,
   ) async {
+    // Check cache first
+    _cleanExpiredCache();
+    final cacheKey = _statsCacheKey(deviceId, from, to);
+    final cached = _weatherStatsCache[cacheKey];
+    if (cached != null && !cached.isExpired) {
+      if (kDebugMode) {
+        debugPrint('[Cache] Weather stats HIT for $deviceId');
+      }
+      return cached.data;
+    }
+
     final dateFromStr = _formatDateTime(from);
     final dateToStr = _formatDateTime(to);
 
@@ -296,7 +355,7 @@ class DeviceService {
     );
 
     if (kDebugMode) {
-      debugPrint('Weather stats response keys: ${response.keys.toList()}');
+      debugPrint('[Cache] Weather stats MISS for $deviceId');
     }
 
     // Statistics API returns data directly (not wrapped in isok/data)
@@ -308,7 +367,13 @@ class DeviceService {
 
     // Response might have data nested or be the data itself
     final data = response['data'] as Map<String, dynamic>? ?? response;
-    return WeatherStatistics.fromJson(data);
+    final stats = WeatherStatistics.fromJson(data);
+
+    // Cache the result
+    final ttl = _getTtlForRange(from, to);
+    _weatherStatsCache[cacheKey] = _CacheEntry(stats, DateTime.now().add(ttl));
+
+    return stats;
   }
 
   Future<PowerStatistics> fetchPowerStatistics(
@@ -328,6 +393,17 @@ class DeviceService {
     DateTime from,
     DateTime to,
   ) async {
+    // Check cache first
+    _cleanExpiredCache();
+    final cacheKey = _statsCacheKey(deviceId, from, to);
+    final cached = _powerStatsCache[cacheKey];
+    if (cached != null && !cached.isExpired) {
+      if (kDebugMode) {
+        debugPrint('[Cache] Power stats HIT for $deviceId');
+      }
+      return cached.data;
+    }
+
     final dateFromStr = _formatDateTime(from);
     final dateToStr = _formatDateTime(to);
 
@@ -344,7 +420,7 @@ class DeviceService {
     );
 
     if (kDebugMode) {
-      debugPrint('Power stats response keys: ${response.keys.toList()}');
+      debugPrint('[Cache] Power stats MISS for $deviceId');
     }
 
     // Statistics API returns data directly (not wrapped in isok/data)
@@ -356,7 +432,13 @@ class DeviceService {
 
     // Response might have data nested or be the data itself
     final data = response['data'] as Map<String, dynamic>? ?? response;
-    return PowerStatistics.fromJson(data);
+    final stats = PowerStatistics.fromJson(data);
+
+    // Cache the result
+    final ttl = _getTtlForRange(from, to);
+    _powerStatsCache[cacheKey] = _CacheEntry(stats, DateTime.now().add(ttl));
+
+    return stats;
   }
 
   /// Format DateTime for API - converts local time to UTC

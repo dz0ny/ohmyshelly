@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
@@ -208,7 +209,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
 
   BarChartData mainBarData(ColorScheme colorScheme) {
     final maxY = _filledDataPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b);
-    final effectiveMaxY = maxY == 0 ? 10.0 : maxY * 1.2;
+    // Calculate nice round maxY and interval to avoid label overlap
+    final (effectiveMaxY, interval) = _calculateNiceScale(maxY);
 
     return BarChartData(
       barTouchData: BarTouchData(
@@ -270,6 +272,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
+            interval: interval,
             getTitlesWidget: (value, meta) => _getLeftTitles(value, meta, colorScheme),
           ),
         ),
@@ -279,7 +282,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
-        horizontalInterval: effectiveMaxY / 4,
+        horizontalInterval: interval,
         getDrawingHorizontalLine: (value) => FlLine(
           color: AppColors.border,
           strokeWidth: 1,
@@ -300,6 +303,38 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     });
   }
 
+  /// Calculate nice round scale for y-axis to avoid label overlap
+  (double maxY, double interval) _calculateNiceScale(double dataMax) {
+    if (dataMax == 0) return (10.0, 2.0);
+
+    // Find a nice interval (1, 2, 5, 10, 20, 50, etc.)
+    final rough = dataMax / 4; // We want ~4 intervals
+    final magnitude = _magnitude(rough);
+    final residual = rough / magnitude;
+
+    double niceInterval;
+    if (residual <= 1.5) {
+      niceInterval = magnitude;
+    } else if (residual <= 3) {
+      niceInterval = 2 * magnitude;
+    } else if (residual <= 7) {
+      niceInterval = 5 * magnitude;
+    } else {
+      niceInterval = 10 * magnitude;
+    }
+
+    // Round maxY up to the next nice interval
+    final niceMax = (dataMax / niceInterval).ceil() * niceInterval;
+
+    return (niceMax.toDouble(), niceInterval);
+  }
+
+  double _magnitude(double value) {
+    if (value == 0) return 1;
+    final exp = (math.log(value.abs()) / math.ln10).floor();
+    return math.pow(10, exp).toDouble();
+  }
+
   BarChartGroupData _makeGroupData(
     int x,
     double y, {
@@ -308,7 +343,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     final touchedColor = widget.barColor.withValues(alpha: 1.0);
     final normalColor = widget.barColor.withValues(alpha: 0.8);
     final maxY = _filledDataPoints.map((p) => p.y).reduce((a, b) => a > b ? a : b);
-    final effectiveMaxY = maxY == 0 ? 10.0 : maxY * 1.2;
+    final (effectiveMaxY, _) = _calculateNiceScale(maxY);
 
     return BarChartGroupData(
       x: x,
@@ -345,10 +380,15 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       return const SizedBox.shrink();
     }
 
-    // Show fewer labels for readability
+    // Show fewer labels to prevent overlapping
     final count = _labels.length;
-    if (count > 24 && index % 4 != 0) return const SizedBox.shrink();
-    if (count > 12 && count <= 24 && index % 2 != 0) return const SizedBox.shrink();
+    // Month view (28-31 days): show every 5th day
+    if (count > 24 && index % 5 != 0) return const SizedBox.shrink();
+    // Day view (24 hours): show every 4th hour (0h, 4h, 8h, 12h, 16h, 20h)
+    if (count == 24 && index % 4 != 0) return const SizedBox.shrink();
+    // Year view (12 months): show every 2nd month
+    if (count == 12 && index % 2 != 0) return const SizedBox.shrink();
+    // Week view (7 days): show all
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -382,6 +422,16 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     if (value >= 1000) {
       return '${(value / 1000).toStringAsFixed(1)}k';
     }
-    return value.toStringAsFixed(0);
+    if (value >= 10) {
+      return value.toStringAsFixed(0);
+    }
+    if (value >= 1) {
+      return value.toStringAsFixed(1);
+    }
+    if (value > 0) {
+      // For very small values (e.g., rain in mm), show 2 decimal places
+      return value.toStringAsFixed(2);
+    }
+    return '0';
   }
 }

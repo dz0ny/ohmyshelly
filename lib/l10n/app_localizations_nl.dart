@@ -1152,23 +1152,24 @@ class AppLocalizationsNl extends AppLocalizations {
       'Automatisch terugzetten is niet beschikbaar voor schakelactie';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Je bent offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Controleer je internetverbinding. Je apparaten werken nog steeds.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Mobiele data actief';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Verbind met WiFi voor directe apparaatbediening';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Ander WiFi-netwerk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Je apparaten zijn op netwerk $network. Cloudverbinding wordt gebruikt.';
   }
 }

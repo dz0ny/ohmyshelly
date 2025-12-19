@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Sicherung für dieses Gerät löschen?",
   "backupInfo": "Letzte Sicherung: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Keine Sicherung"
+  "backupNoBackup": "Keine Sicherung",
+
+  "phoneOffline": "Du bist offline",
+  "phoneOfflineDesc": "Überprüfe deine Internetverbindung. Deine Geräte funktionieren weiterhin.",
+  "phoneOnCellular": "Mobile Daten aktiv",
+  "phoneOnCellularDesc": "Verbinde dich mit WLAN für direkte Gerätesteuerung",
+  "phoneDifferentWifi": "Anderes WLAN-Netzwerk",
+  "phoneDifferentWifiDesc": "Deine Geräte sind im Netzwerk {network}. Cloud-Verbindung wird verwendet."
 }

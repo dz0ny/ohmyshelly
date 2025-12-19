@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Smazat zálohu pro toto zařízení?",
   "backupInfo": "Poslední záloha: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Žádná záloha"
+  "backupNoBackup": "Žádná záloha",
+
+  "phoneOffline": "Jste offline",
+  "phoneOfflineDesc": "Zkontrolujte připojení k internetu. Vaše zařízení stále fungují.",
+  "phoneOnCellular": "Používáte mobilní data",
+  "phoneOnCellularDesc": "Připojte se k WiFi pro přímé ovládání zařízení",
+  "phoneDifferentWifi": "Jiná WiFi síť",
+  "phoneDifferentWifiDesc": "Vaše zařízení jsou v síti {network}. Používá se cloudové připojení."
 }

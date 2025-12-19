@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Ștergeți copia de rezervă pentru acest dispozitiv?",
   "backupInfo": "Ultima copie: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Fără copie de rezervă"
+  "backupNoBackup": "Fără copie de rezervă",
+
+  "phoneOffline": "Ești offline",
+  "phoneOfflineDesc": "Verifică conexiunea la internet. Dispozitivele tale funcționează în continuare.",
+  "phoneOnCellular": "Folosești date mobile",
+  "phoneOnCellularDesc": "Conectează-te la WiFi pentru control direct al dispozitivelor",
+  "phoneDifferentWifi": "Rețea WiFi diferită",
+  "phoneDifferentWifiDesc": "Dispozitivele tale sunt în rețeaua {network}. Se folosește conexiunea cloud."
 }

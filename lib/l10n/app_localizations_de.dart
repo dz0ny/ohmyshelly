@@ -1153,23 +1153,24 @@ class AppLocalizationsDe extends AppLocalizations {
       'Automatisches Zurücksetzen ist für Umschalt-Aktion nicht verfügbar';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Du bist offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Überprüfe deine Internetverbindung. Deine Geräte funktionieren weiterhin.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Mobile Daten aktiv';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Verbinde dich mit WLAN für direkte Gerätesteuerung';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Anderes WLAN-Netzwerk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Deine Geräte sind im Netzwerk $network. Cloud-Verbindung wird verwendet.';
   }
 }

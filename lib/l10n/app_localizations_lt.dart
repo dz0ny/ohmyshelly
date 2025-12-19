@@ -1157,23 +1157,24 @@ class AppLocalizationsLt extends AppLocalizations {
       'Automatinis grąžinimas neprieinamas perjungimo veiksmui';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Esate neprisijungę';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Patikrinkite interneto ryšį. Jūsų įrenginiai vis dar veikia.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Naudojate mobiliuosius duomenis';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Prisijunkite prie WiFi tiesioginiam įrenginių valdymui';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Kitas WiFi tinklas';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Jūsų įrenginiai yra tinkle $network. Naudojamas debesies ryšys.';
   }
 }

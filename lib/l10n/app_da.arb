@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Slet sikkerhedskopien for denne enhed?",
   "backupInfo": "Seneste sikkerhedskopi: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Ingen sikkerhedskopi"
+  "backupNoBackup": "Ingen sikkerhedskopi",
+
+  "phoneOffline": "Du er offline",
+  "phoneOfflineDesc": "Tjek din internetforbindelse. Dine enheder fungerer stadig.",
+  "phoneOnCellular": "Bruger mobildata",
+  "phoneOnCellularDesc": "Opret forbindelse til WiFi for direkte enhedsstyring",
+  "phoneDifferentWifi": "Andet WiFi-netværk",
+  "phoneDifferentWifiDesc": "Dine enheder er på netværket {network}. Bruger skyforbindelse."
 }

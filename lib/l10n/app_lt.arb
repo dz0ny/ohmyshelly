@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Ištrinti šio įrenginio atsarginę kopiją?",
   "backupInfo": "Paskutinė atsarginė kopija: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Nėra atsarginės kopijos"
+  "backupNoBackup": "Nėra atsarginės kopijos",
+
+  "phoneOffline": "Esate neprisijungę",
+  "phoneOfflineDesc": "Patikrinkite interneto ryšį. Jūsų įrenginiai vis dar veikia.",
+  "phoneOnCellular": "Naudojate mobiliuosius duomenis",
+  "phoneOnCellularDesc": "Prisijunkite prie WiFi tiesioginiam įrenginių valdymui",
+  "phoneDifferentWifi": "Kitas WiFi tinklas",
+  "phoneDifferentWifiDesc": "Jūsų įrenginiai yra tinkle {network}. Naudojamas debesies ryšys."
 }

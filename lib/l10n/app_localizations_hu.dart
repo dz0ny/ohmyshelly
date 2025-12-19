@@ -1155,23 +1155,24 @@ class AppLocalizationsHu extends AppLocalizations {
       'Az automatikus visszaállítás nem érhető el a váltási művelethez';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Offline vagy';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Ellenőrizd az internetkapcsolatot. Az eszközeid továbbra is működnek.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Mobiladatot használsz';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Csatlakozz WiFi-hez a közvetlen eszközvezérléshez';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Másik WiFi hálózat';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Eszközeid a(z) $network hálózaton vannak. Felhőkapcsolat használatban.';
   }
 }

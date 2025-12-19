@@ -214,12 +214,7 @@ class WeatherStationDashboardCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildWeatherStat(
-                        context,
-                        AppIcons.wind,
-                        l10n.windSpeed,
-                        '${status!.windSpeedDisplay} ${status!.windDirectionLocalized(l10n)}',
-                      ),
+                      child: _buildWindStat(context, l10n),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -246,8 +241,11 @@ class WeatherStationDashboardCard extends StatelessWidget {
     );
   }
 
-  Widget _buildWeatherStat(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildWindStat(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
+    final direction = status!.windDirection;
+    final rotationAngle = direction * (3.14159 / 180);
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -256,10 +254,49 @@ class WeatherStationDashboardCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 18,
-            color: AppColors.weatherStation,
+          // Compass circle with cardinal points
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colorScheme.outlineVariant,
+                width: 1,
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Cardinal points
+                Positioned(
+                  top: 2,
+                  child: Text(l10n.directionN, style: TextStyle(fontSize: 6, color: colorScheme.outline, fontWeight: FontWeight.w500)),
+                ),
+                Positioned(
+                  bottom: 2,
+                  child: Text(l10n.directionS, style: TextStyle(fontSize: 6, color: colorScheme.outline)),
+                ),
+                Positioned(
+                  left: 2,
+                  child: Text(l10n.directionW, style: TextStyle(fontSize: 6, color: colorScheme.outline)),
+                ),
+                Positioned(
+                  right: 2,
+                  child: Text(l10n.directionE, style: TextStyle(fontSize: 6, color: colorScheme.outline)),
+                ),
+                // Direction arrow
+                Transform.rotate(
+                  angle: rotationAngle,
+                  child: Icon(
+                    Icons.navigation_rounded,
+                    size: 14,
+                    color: AppColors.info,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -267,14 +304,14 @@ class WeatherStationDashboardCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  label,
+                  l10n.windSpeed,
                   style: TextStyle(
                     fontSize: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 Text(
-                  value,
+                  '${status!.windSpeedDisplay} ${status!.windDirectionLocalized(l10n)}',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

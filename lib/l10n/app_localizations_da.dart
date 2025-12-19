@@ -1147,23 +1147,24 @@ class AppLocalizationsDa extends AppLocalizations {
       'Auto-nulstilling er ikke tilgængelig for skiftehandling';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Du er offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Tjek din internetforbindelse. Dine enheder fungerer stadig.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Bruger mobildata';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Opret forbindelse til WiFi for direkte enhedsstyring';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Andet WiFi-netværk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Dine enheder er på netværket $network. Bruger skyforbindelse.';
   }
 }

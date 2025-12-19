@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/utils/responsive_utils.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
 import '../../providers/device_provider.dart';
@@ -57,91 +58,138 @@ class DevicesTab extends StatelessWidget {
 
           return RefreshIndicator(
             onRefresh: () => deviceProvider.refresh(),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: roomNames.length,
-              itemBuilder: (context, roomIndex) {
-                final roomName = roomNames[roomIndex];
-                final roomDevices = devicesByRoom[roomName]!;
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final columns = constraints.deviceListColumns;
 
-                final isOtherRoom = roomName == '___OTHER___';
-                final displayRoomName = isOtherRoom ? l10n.otherDevices : roomName;
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: roomNames.length,
+                  itemBuilder: (context, roomIndex) {
+                    final roomName = roomNames[roomIndex];
+                    final roomDevices = devicesByRoom[roomName]!;
 
-                final colorScheme = Theme.of(context).colorScheme;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Room header
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: roomIndex == 0 ? 0 : 16,
-                        bottom: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            isOtherRoom
-                                ? AppIcons.unknownDevice
-                                : Icons.room,
-                            size: 20,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              displayRoomName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: colorScheme.onSurface,
-                                  ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${roomDevices.length}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Devices in this room
-                    ...roomDevices.map((device) {
-                      final status = deviceProvider.getStatus(device.id);
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildDeviceCard(
-                          context,
-                          device,
-                          status,
-                          deviceProvider,
-                        ),
-                      );
-                    }),
-                  ],
+                    return _buildRoomSection(
+                      context,
+                      roomName,
+                      roomDevices,
+                      deviceProvider,
+                      roomIndex,
+                      columns,
+                      l10n,
+                    );
+                  },
                 );
               },
             ),
           );
         },
       ),
+    );
+  }
+
+  /// Build a room section with header and responsive device grid
+  Widget _buildRoomSection(
+    BuildContext context,
+    String roomName,
+    List<Device> roomDevices,
+    DeviceProvider deviceProvider,
+    int roomIndex,
+    int columns,
+    AppLocalizations l10n,
+  ) {
+    final isOtherRoom = roomName == '___OTHER___';
+    final displayRoomName = isOtherRoom ? l10n.otherDevices : roomName;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Room header
+        Padding(
+          padding: EdgeInsets.only(
+            top: roomIndex == 0 ? 0 : 16,
+            bottom: 12,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                isOtherRoom ? AppIcons.unknownDevice : Icons.room,
+                size: 20,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  displayRoomName,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                      ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${roomDevices.length}',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Devices grid
+        _buildDevicesGrid(context, roomDevices, deviceProvider, columns),
+      ],
+    );
+  }
+
+  /// Build responsive grid for devices in a room
+  Widget _buildDevicesGrid(
+    BuildContext context,
+    List<Device> devices,
+    DeviceProvider deviceProvider,
+    int columns,
+  ) {
+    if (columns == 1) {
+      // Single column - use Column for phone layout
+      return Column(
+        children: devices.map((device) {
+          final status = deviceProvider.getStatus(device.id);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: _buildDeviceCard(context, device, status, deviceProvider),
+          );
+        }).toList(),
+      );
+    }
+
+    // Multi-column grid for tablets
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        childAspectRatio: 2.0,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: devices.length,
+      itemBuilder: (context, index) {
+        final device = devices[index];
+        final status = deviceProvider.getStatus(device.id);
+        return _buildDeviceCard(context, device, status, deviceProvider);
+      },
     );
   }
 

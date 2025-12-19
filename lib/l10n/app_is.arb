@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Eyða öryggisafriti fyrir þetta tæki?",
   "backupInfo": "Síðasta öryggisafrit: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Ekkert öryggisafrit"
+  "backupNoBackup": "Ekkert öryggisafrit",
+
+  "phoneOffline": "Þú ert ótengdur",
+  "phoneOfflineDesc": "Athugaðu nettenginguna. Tækin þín virka enn.",
+  "phoneOnCellular": "Notar farsímagögn",
+  "phoneOnCellularDesc": "Tengdu við WiFi fyrir beina tækjastýringu",
+  "phoneDifferentWifi": "Annað WiFi-net",
+  "phoneDifferentWifiDesc": "Tækin þín eru á netinu {network}. Skýjatenging notuð."
 }

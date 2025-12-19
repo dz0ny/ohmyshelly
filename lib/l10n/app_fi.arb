@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Poista tämän laitteen varmuuskopio?",
   "backupInfo": "Viimeisin varmuuskopio: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Ei varmuuskopiota"
+  "backupNoBackup": "Ei varmuuskopiota",
+
+  "phoneOffline": "Olet offline-tilassa",
+  "phoneOfflineDesc": "Tarkista internetyhteys. Laitteesi toimivat edelleen.",
+  "phoneOnCellular": "Käytät mobiilidataa",
+  "phoneOnCellularDesc": "Yhdistä WiFiin laitteiden suoraa ohjausta varten",
+  "phoneDifferentWifi": "Eri WiFi-verkko",
+  "phoneDifferentWifiDesc": "Laitteesi ovat verkossa {network}. Käytetään pilviyhteyttä."
 }

@@ -1148,23 +1148,23 @@ class AppLocalizationsNo extends AppLocalizations {
       'Auto-tilbakestilling er ikke tilgjengelig for vekslingshandling';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Du er frakoblet';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Sjekk internettforbindelsen. Enhetene dine fungerer fortsatt.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Bruker mobildata';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc => 'Koble til WiFi for direkte enhetskontroll';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Annet WiFi-nettverk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Enhetene dine er på nettverket $network. Bruker skytilkobling.';
   }
 }

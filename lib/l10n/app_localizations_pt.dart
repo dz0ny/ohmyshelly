@@ -1154,23 +1154,24 @@ class AppLocalizationsPt extends AppLocalizations {
       'A reversão automática não está disponível para a ação alternar';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Estás offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Verifica a tua ligação à internet. Os teus dispositivos continuam a funcionar.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'A usar dados móveis';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Liga-te ao WiFi para controlo direto dos dispositivos';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Rede WiFi diferente';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Os teus dispositivos estão na rede $network. A usar ligação na nuvem.';
   }
 }

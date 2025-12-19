@@ -9,7 +9,6 @@ class SparklineWidget extends StatelessWidget {
   final bool showGradient;
   final bool showDots;
   final bool showHourLabels;
-
   const SparklineWidget({
     super.key,
     required this.data,

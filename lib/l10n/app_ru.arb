@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Удалить резервную копию для этого устройства?",
   "backupInfo": "Последняя копия: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Нет резервной копии"
+  "backupNoBackup": "Нет резервной копии",
+
+  "phoneOffline": "Вы офлайн",
+  "phoneOfflineDesc": "Проверьте подключение к интернету. Ваши устройства продолжают работать.",
+  "phoneOnCellular": "Используется мобильная сеть",
+  "phoneOnCellularDesc": "Подключитесь к WiFi для прямого управления устройствами",
+  "phoneDifferentWifi": "Другая сеть WiFi",
+  "phoneDifferentWifiDesc": "Ваши устройства в сети {network}. Используется облачное подключение."
 }

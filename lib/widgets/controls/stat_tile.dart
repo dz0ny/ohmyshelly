@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/responsive_utils.dart';
 
 class StatTile extends StatelessWidget {
   final IconData icon;
@@ -80,33 +81,41 @@ class StatTile extends StatelessWidget {
 
 class StatTileGrid extends StatelessWidget {
   final List<StatTileData> stats;
-  final int crossAxisCount;
+
+  /// Optional fixed column count. If null, uses responsive calculation.
+  final int? crossAxisCount;
 
   const StatTileGrid({
     super.key,
     required this.stats,
-    this.crossAxisCount = 2,
+    this.crossAxisCount,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        childAspectRatio: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: stats.length,
-      itemBuilder: (context, index) {
-        final stat = stats[index];
-        return StatTile(
-          icon: stat.icon,
-          label: stat.label,
-          value: stat.value,
-          iconColor: stat.iconColor,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = crossAxisCount ?? constraints.statTileColumns;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns,
+            childAspectRatio: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: stats.length,
+          itemBuilder: (context, index) {
+            final stat = stats[index];
+            return StatTile(
+              icon: stat.icon,
+              label: stat.label,
+              value: stat.value,
+              iconColor: stat.iconColor,
+            );
+          },
         );
       },
     );

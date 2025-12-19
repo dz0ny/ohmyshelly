@@ -59,11 +59,8 @@ class AuthProvider extends ChangeNotifier {
   String? get tokenExpirationString =>
       _user?.token != null ? JwtUtils.getExpirationString(_user!.token) : null;
 
-  // Initialize - check for stored credentials
+  // Initialize - check for stored credentials (non-blocking)
   Future<void> initialize() async {
-    _state = AuthState.loading;
-    notifyListeners();
-
     try {
       // Check onboarding status
       _isFirstLaunch = !(await _storageService.isOnboardingComplete());
@@ -72,33 +69,43 @@ class AuthProvider extends ChangeNotifier {
       final storedUser = await _storageService.getUser();
       if (storedUser != null) {
         _user = storedUser;
-
-        // Check if token is expired or about to expire
-        if (isTokenExpired || isTokenExpiringSoon) {
-          if (kDebugMode) {
-            debugPrint('[Auth] Stored token expired/expiring, refreshing...');
-          }
-          final refreshed = await reauthenticate();
-          if (!refreshed) {
-            // Reauthentication failed, but we still have stored credentials
-            // The UI will work with cloud API auto-reauth
-            if (kDebugMode) {
-              debugPrint('[Auth] Token refresh failed, will retry on next API call');
-            }
-          }
-        }
-
         _state = AuthState.authenticated;
-        _scheduleTokenRefresh();
+        notifyListeners();
+
+        // Defer token refresh to background (don't block startup)
+        _refreshTokenInBackground();
       } else {
         _state = AuthState.unauthenticated;
+        notifyListeners();
       }
     } catch (e) {
       _state = AuthState.unauthenticated;
       _error = e.toString();
+      notifyListeners();
     }
+  }
 
-    notifyListeners();
+  /// Background token refresh - doesn't block app startup
+  Future<void> _refreshTokenInBackground() async {
+    if (isTokenExpired || isTokenExpiringSoon) {
+      if (kDebugMode) {
+        debugPrint('[Auth] Token expired/expiring, refreshing in background...');
+      }
+      final refreshed = await reauthenticate();
+      if (!refreshed && isTokenExpired) {
+        // Token fully expired and refresh failed - force logout
+        if (kDebugMode) {
+          debugPrint('[Auth] Token refresh failed and token expired, logging out');
+        }
+        await logout();
+      } else if (!refreshed) {
+        if (kDebugMode) {
+          debugPrint('[Auth] Token refresh failed, will retry on next API call');
+        }
+      }
+    }
+    // Schedule future token refreshes
+    _scheduleTokenRefresh();
   }
 
   // Login

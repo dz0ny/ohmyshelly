@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ohmyshelly/l10n/app_localizations.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/utils/responsive_utils.dart';
 import '../../providers/device_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../widgets/devices/power_device/power_device_dashboard_card.dart';
@@ -147,87 +148,128 @@ class _DashboardTabState extends State<DashboardTab> {
   }
 
   /// Build the device grid respecting the saved order.
-  /// Power devices are displayed 2-per-row, weather stations full-width.
-  /// Consecutive power devices are grouped into rows.
+  /// Uses responsive grid layout based on screen width.
   Widget _buildDeviceGrid(
     BuildContext context,
     List<Device> devices,
     DeviceProvider deviceProvider,
     AppLocalizations l10n,
   ) {
-    final List<Widget> children = [];
-    int i = 0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Separate power devices and weather stations
+        final powerDevices =
+            devices.where((d) => !d.isWeatherStation).toList();
+        final weatherStations =
+            devices.where((d) => d.isWeatherStation).toList();
 
-    while (i < devices.length) {
-      final device = devices[i];
+        final powerColumns = constraints.powerDeviceColumns;
+        final weatherColumns = constraints.weatherStationColumns;
 
-      if (device.isWeatherStation) {
-        // Weather station: full-width
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Power devices grid
+            if (powerDevices.isNotEmpty) ...[
+              _buildPowerDevicesGrid(
+                context,
+                powerDevices,
+                deviceProvider,
+                powerColumns,
+              ),
+              const SizedBox(height: 12),
+            ],
+            // Weather stations grid
+            if (weatherStations.isNotEmpty)
+              _buildWeatherStationsGrid(
+                context,
+                weatherStations,
+                deviceProvider,
+                weatherColumns,
+              ),
+            // Reorder button
+            _buildReorderButton(context, l10n),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Build responsive grid for power devices
+  Widget _buildPowerDevicesGrid(
+    BuildContext context,
+    List<Device> devices,
+    DeviceProvider deviceProvider,
+    int columns,
+  ) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        childAspectRatio: 1.2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: devices.length,
+      itemBuilder: (context, index) {
+        final device = devices[index];
         final status = deviceProvider.getStatus(device.id);
-        children.add(
-          Padding(
+        return PowerDeviceDashboardCard(
+          device: device,
+          status: status?.powerStatus,
+        );
+      },
+    );
+  }
+
+  /// Build responsive grid/column for weather stations
+  Widget _buildWeatherStationsGrid(
+    BuildContext context,
+    List<Device> weatherStations,
+    DeviceProvider deviceProvider,
+    int columns,
+  ) {
+    if (columns == 1) {
+      // Single column - use Column for consistent behavior
+      return Column(
+        children: weatherStations.map((device) {
+          final status = deviceProvider.getStatus(device.id);
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: WeatherStationDashboardCard(
               device: device,
               status: status?.weatherStatus,
-              temperatureHistory: deviceProvider.getTemperatureHistory(device.id),
+              temperatureHistory:
+                  deviceProvider.getTemperatureHistory(device.id),
               humidityHistory: deviceProvider.getHumidityHistory(device.id),
             ),
-          ),
-        );
-        i++;
-      } else {
-        // Power device: check if next device is also a power device for pairing
-        final device1 = device;
-        final status1 = deviceProvider.getStatus(device1.id);
-
-        // Look ahead for another power device to pair
-        Device? device2;
-        DeviceStatus? status2;
-        if (i + 1 < devices.length && !devices[i + 1].isWeatherStation) {
-          device2 = devices[i + 1];
-          status2 = deviceProvider.getStatus(device2.id);
-        }
-
-        children.add(
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: PowerDeviceDashboardCard(
-                      device: device1,
-                      status: status1?.powerStatus,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: device2 != null
-                        ? PowerDeviceDashboardCard(
-                            device: device2,
-                            status: status2?.powerStatus,
-                          )
-                        : const SizedBox(), // Empty placeholder for odd count
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-
-        // Move index: +2 if paired, +1 if single
-        i += device2 != null ? 2 : 1;
-      }
+          );
+        }).toList(),
+      );
     }
 
-    // Add reorder button at the end
-    children.add(_buildReorderButton(context, l10n));
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: children,
+    // Multi-column grid for tablets
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        childAspectRatio: 1.4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: weatherStations.length,
+      itemBuilder: (context, index) {
+        final device = weatherStations[index];
+        final status = deviceProvider.getStatus(device.id);
+        return WeatherStationDashboardCard(
+          device: device,
+          status: status?.weatherStatus,
+          temperatureHistory: deviceProvider.getTemperatureHistory(device.id),
+          humidityHistory: deviceProvider.getHumidityHistory(device.id),
+        );
+      },
     );
   }
 

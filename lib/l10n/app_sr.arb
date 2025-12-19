@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Обрисати резервну копију за овај уређај?",
   "backupInfo": "Последња резервна копија: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Нема резервне копије"
+  "backupNoBackup": "Нема резервне копије",
+
+  "phoneOffline": "Нисте повезани",
+  "phoneOfflineDesc": "Проверите интернет везу. Ваши уређаји и даље раде.",
+  "phoneOnCellular": "Користите мобилне податке",
+  "phoneOnCellularDesc": "Повежите се на WiFi за директну контролу уређаја",
+  "phoneDifferentWifi": "Друга WiFi мрежа",
+  "phoneDifferentWifiDesc": "Ваши уређаји су на мрежи {network}. Користи се облак веза."
 }

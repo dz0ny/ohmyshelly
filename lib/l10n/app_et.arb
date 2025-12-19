@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Kustutada selle seadme varukoopia?",
   "backupInfo": "Viimane varukoopia: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Varukoopia puudub"
+  "backupNoBackup": "Varukoopia puudub",
+
+  "phoneOffline": "Oled võrguühenduseta",
+  "phoneOfflineDesc": "Kontrolli internetiühendust. Sinu seadmed töötavad edasi.",
+  "phoneOnCellular": "Kasutad mobiilset andmesidet",
+  "phoneOnCellularDesc": "Ühenda WiFi-ga seadmete otsejuhtimiseks",
+  "phoneDifferentWifi": "Erinev WiFi-võrk",
+  "phoneDifferentWifiDesc": "Sinu seadmed on võrgus {network}. Kasutatakse pilveühendust."
 }

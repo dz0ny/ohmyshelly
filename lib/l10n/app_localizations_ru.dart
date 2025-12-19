@@ -1160,23 +1160,24 @@ class AppLocalizationsRu extends AppLocalizations {
       'Автоматический возврат недоступен для действия переключения';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Вы офлайн';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Проверьте подключение к интернету. Ваши устройства продолжают работать.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Используется мобильная сеть';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Подключитесь к WiFi для прямого управления устройствами';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Другая сеть WiFi';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Ваши устройства в сети $network. Используется облачное подключение.';
   }
 }

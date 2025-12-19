@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Törli a biztonsági mentést ehhez az eszközhöz?",
   "backupInfo": "Utolsó mentés: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Nincs biztonsági mentés"
+  "backupNoBackup": "Nincs biztonsági mentés",
+
+  "phoneOffline": "Offline vagy",
+  "phoneOfflineDesc": "Ellenőrizd az internetkapcsolatot. Az eszközeid továbbra is működnek.",
+  "phoneOnCellular": "Mobiladatot használsz",
+  "phoneOnCellularDesc": "Csatlakozz WiFi-hez a közvetlen eszközvezérléshez",
+  "phoneDifferentWifi": "Másik WiFi hálózat",
+  "phoneDifferentWifiDesc": "Eszközeid a(z) {network} hálózaton vannak. Felhőkapcsolat használatban."
 }

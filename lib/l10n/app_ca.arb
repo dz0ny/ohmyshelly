@@ -375,5 +375,12 @@
   "backupDeleteConfirm": "Eliminar la còpia de seguretat d'aquest dispositiu?",
   "backupInfo": "Última còpia: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Sense còpia de seguretat"
+  "backupNoBackup": "Sense còpia de seguretat",
+
+  "phoneOffline": "Estàs desconnectat",
+  "phoneOfflineDesc": "Comprova la connexió a internet. Els teus dispositius segueixen funcionant.",
+  "phoneOnCellular": "Usant dades mòbils",
+  "phoneOnCellularDesc": "Connecta't a WiFi per a control directe dels dispositius",
+  "phoneDifferentWifi": "Xarxa WiFi diferent",
+  "phoneDifferentWifiDesc": "Els teus dispositius són a la xarxa {network}. S'utilitza connexió al núvol."
 }

@@ -1159,23 +1159,24 @@ class AppLocalizationsUk extends AppLocalizations {
       'Автоматичне повернення недоступне для дії перемикання';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Ви офлайн';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Перевірте підключення до інтернету. Ваші пристрої продовжують працювати.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Використовується мобільна мережа';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Підключіться до WiFi для прямого керування пристроями';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Інша мережа WiFi';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Ваші пристрої в мережі $network. Використовується хмарне підключення.';
   }
 }

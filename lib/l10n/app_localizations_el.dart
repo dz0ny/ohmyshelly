@@ -1159,23 +1159,24 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η αυτόματη επαναφορά δεν είναι διαθέσιμη για ενέργεια εναλλαγής';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Είστε εκτός σύνδεσης';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Ελέγξτε τη σύνδεσή σας στο διαδίκτυο. Οι συσκευές σας εξακολουθούν να λειτουργούν.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Χρήση δεδομένων κινητού';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Συνδεθείτε σε WiFi για άμεσο έλεγχο συσκευών';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Διαφορετικό δίκτυο WiFi';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Οι συσκευές σας βρίσκονται στο δίκτυο $network. Χρησιμοποιείται σύνδεση cloud.';
   }
 }

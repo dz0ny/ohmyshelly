@@ -1156,23 +1156,24 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il ripristino automatico non è disponibile per l\'azione interruttore';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Sei offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Controlla la connessione internet. I tuoi dispositivi funzionano ancora.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Stai usando i dati mobili';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Connettiti al WiFi per il controllo diretto dei dispositivi';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Rete WiFi diversa';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'I tuoi dispositivi sono sulla rete $network. Connessione cloud in uso.';
   }
 }

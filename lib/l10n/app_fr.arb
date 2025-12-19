@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Supprimer la sauvegarde de cet appareil?",
   "backupInfo": "Dernière sauvegarde: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Pas de sauvegarde"
+  "backupNoBackup": "Pas de sauvegarde",
+
+  "phoneOffline": "Vous êtes hors ligne",
+  "phoneOfflineDesc": "Vérifiez votre connexion internet. Vos appareils fonctionnent toujours.",
+  "phoneOnCellular": "Données mobiles actives",
+  "phoneOnCellularDesc": "Connectez-vous au WiFi pour un contrôle direct des appareils",
+  "phoneDifferentWifi": "Réseau WiFi différent",
+  "phoneDifferentWifiDesc": "Vos appareils sont sur le réseau {network}. Connexion cloud utilisée."
 }

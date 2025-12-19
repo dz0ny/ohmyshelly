@@ -375,5 +375,12 @@
   "backupDeleteConfirm": "Eliminare il backup per questo dispositivo?",
   "backupInfo": "Ultimo backup: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Nessun backup"
+  "backupNoBackup": "Nessun backup",
+
+  "phoneOffline": "Sei offline",
+  "phoneOfflineDesc": "Controlla la connessione internet. I tuoi dispositivi funzionano ancora.",
+  "phoneOnCellular": "Stai usando i dati mobili",
+  "phoneOnCellularDesc": "Connettiti al WiFi per il controllo diretto dei dispositivi",
+  "phoneDifferentWifi": "Rete WiFi diversa",
+  "phoneDifferentWifiDesc": "I tuoi dispositivi sono sulla rete {network}. Connessione cloud in uso."
 }

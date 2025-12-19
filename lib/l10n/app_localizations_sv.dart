@@ -1148,23 +1148,24 @@ class AppLocalizationsSv extends AppLocalizations {
       'Auto-återställning är inte tillgänglig för växlingsåtgärd';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Du är offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Kontrollera din internetanslutning. Dina enheter fungerar fortfarande.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Använder mobildata';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Anslut till WiFi för direkt enhetskontroll';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Annat WiFi-nätverk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Dina enheter är på nätverket $network. Använder molnanslutning.';
   }
 }

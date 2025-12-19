@@ -1156,23 +1156,24 @@ class AppLocalizationsPl extends AppLocalizations {
       'Auto-przywracanie nie jest dostępne dla akcji przełączania';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Jesteś offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Sprawdź połączenie internetowe. Twoje urządzenia nadal działają.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Używasz danych mobilnych';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Połącz się z WiFi dla bezpośredniej kontroli urządzeń';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Inna sieć WiFi';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Twoje urządzenia są w sieci $network. Używane jest połączenie chmurowe.';
   }
 }

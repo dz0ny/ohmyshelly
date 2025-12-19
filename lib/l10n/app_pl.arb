@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Usunąć kopię zapasową dla tego urządzenia?",
   "backupInfo": "Ostatnia kopia: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Brak kopii zapasowej"
+  "backupNoBackup": "Brak kopii zapasowej",
+
+  "phoneOffline": "Jesteś offline",
+  "phoneOfflineDesc": "Sprawdź połączenie internetowe. Twoje urządzenia nadal działają.",
+  "phoneOnCellular": "Używasz danych mobilnych",
+  "phoneOnCellularDesc": "Połącz się z WiFi dla bezpośredniej kontroli urządzeń",
+  "phoneDifferentWifi": "Inna sieć WiFi",
+  "phoneDifferentWifiDesc": "Twoje urządzenia są w sieci {network}. Używane jest połączenie chmurowe."
 }

@@ -21,7 +21,12 @@
       "Bash(flutter pub upgrade:*)",
       "Bash(python3:*)",
       "Bash(flutter pub run:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Add robust network change detection and auto token refresh\n\n- Add NetworkMonitorService to detect WiFi connectivity changes\n- ConnectionManager now re-evaluates local connections on network change\n- Auto-disable local access when not on WiFi, use cloud fallback\n- Show offline/different network banners in dashboard UI\n- Add JWT token expiration detection and auto-refresh before expiry\n- WebSocket reconnects with fresh token when credentials are updated\n- Add detailed WebSocket debug logging with close code meanings\n- Clear all providers on logout to reset state properly\n- Fix login screen dark mode background color\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(git commit:*)",
+      "Bash(flutter pub outdated:*)"
     ]
   }
 }

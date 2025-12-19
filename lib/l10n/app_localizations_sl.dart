@@ -1159,23 +1159,24 @@ class AppLocalizationsSl extends AppLocalizations {
       'Samodejno povrnitev ni na voljo za dejanje preklopa';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Brez povezave';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Preverite internetno povezavo. Vaše naprave še vedno delujejo.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Uporabljate mobilne podatke';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Povežite se z WiFi za neposredno upravljanje naprav';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Drugo omrežje WiFi';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Vaše naprave so v omrežju $network. Uporablja se oblačna povezava.';
   }
 }

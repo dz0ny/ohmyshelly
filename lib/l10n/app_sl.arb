@@ -432,5 +432,12 @@
   "backupDeleteConfirm": "Izbriši varnostno kopijo za to napravo?",
   "backupInfo": "Zadnja varnostna kopija: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Ni varnostne kopije"
+  "backupNoBackup": "Ni varnostne kopije",
+
+  "phoneOffline": "Brez povezave",
+  "phoneOfflineDesc": "Preverite internetno povezavo. Vaše naprave še vedno delujejo.",
+  "phoneOnCellular": "Uporabljate mobilne podatke",
+  "phoneOnCellularDesc": "Povežite se z WiFi za neposredno upravljanje naprav",
+  "phoneDifferentWifi": "Drugo omrežje WiFi",
+  "phoneDifferentWifiDesc": "Vaše naprave so v omrežju {network}. Uporablja se oblačna povezava."
 }

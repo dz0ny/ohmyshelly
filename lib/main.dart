@@ -66,9 +66,8 @@ void main() async {
     networkMonitor: networkMonitor,
   );
 
-  // Create settings provider and initialize
+  // Create settings provider (initialize in background)
   final settingsProvider = SettingsProvider(storageService: storageService);
-  await settingsProvider.init();
 
   // Create auth provider (single source of truth for credentials)
   final authProvider = AuthProvider(
@@ -76,9 +75,13 @@ void main() async {
     apiService: apiService,
   );
 
-  // Initialize update service (Android only)
+  // Initialize auth (loads stored user, token refresh happens in background)
+  await authProvider.initialize();
+
+  // Start background initialization tasks (don't block startup)
+  settingsProvider.init(); // Load settings in background
   if (Platform.isAndroid) {
-    await UpdateService().init();
+    UpdateService().init(); // Check updates in background
   }
 
   runApp(

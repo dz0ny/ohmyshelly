@@ -1149,23 +1149,24 @@ class AppLocalizationsFi extends AppLocalizations {
       'Automaattinen palautus ei ole saatavilla vaihtotoiminnolle';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Olet offline-tilassa';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Tarkista internetyhteys. Laitteesi toimivat edelleen.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Käytät mobiilidataa';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Yhdistä WiFiin laitteiden suoraa ohjausta varten';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Eri WiFi-verkko';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Laitteesi ovat verkossa $network. Käytetään pilviyhteyttä.';
   }
 }

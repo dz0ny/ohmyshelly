@@ -375,5 +375,12 @@
   "backupDeleteConfirm": "Eliminar a cópia de segurança deste dispositivo?",
   "backupInfo": "Última cópia: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Sem cópia de segurança"
+  "backupNoBackup": "Sem cópia de segurança",
+
+  "phoneOffline": "Estás offline",
+  "phoneOfflineDesc": "Verifica a tua ligação à internet. Os teus dispositivos continuam a funcionar.",
+  "phoneOnCellular": "A usar dados móveis",
+  "phoneOnCellularDesc": "Liga-te ao WiFi para controlo direto dos dispositivos",
+  "phoneDifferentWifi": "Rede WiFi diferente",
+  "phoneDifferentWifiDesc": "Os teus dispositivos estão na rede {network}. A usar ligação na nuvem."
 }

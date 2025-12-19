@@ -1154,23 +1154,24 @@ class AppLocalizationsSk extends AppLocalizations {
       'Auto-vrátenie nie je k dispozícii pre akciu prepnutia';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Ste offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Skontrolujte pripojenie na internet. Vaše zariadenia stále fungujú.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Používate mobilné dáta';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Pripojte sa k WiFi pre priame ovládanie zariadení';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Iná WiFi sieť';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Vaše zariadenia sú v sieti $network. Používa sa cloudové pripojenie.';
   }
 }

@@ -1158,23 +1158,24 @@ class AppLocalizationsHr extends AppLocalizations {
       'Automatsko vraćanje nije dostupno za akciju prebacivanja';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Niste povezani';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Provjerite internetsku vezu. Vaši uređaji i dalje rade.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Koristite mobilne podatke';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Povežite se na WiFi za izravnu kontrolu uređaja';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Druga WiFi mreža';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Vaši uređaji su na mreži $network. Koristi se oblak veza.';
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../screens/splash/splash_screen.dart';
 import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -21,27 +20,28 @@ class AppRouter {
   late final GoRouter router;
 
   AppRouter(AuthProvider authProvider) {
+    // Determine initial location based on auth state
+    String initialLocation;
+    if (authProvider.isFirstLaunch) {
+      initialLocation = '/onboarding';
+    } else if (authProvider.isAuthenticated) {
+      initialLocation = '/home';
+    } else {
+      initialLocation = '/login';
+    }
+
     router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: '/splash',
+      initialLocation: initialLocation,
       debugLogDiagnostics: true,
       refreshListenable: authProvider,
       redirect: (context, state) {
         final auth = context.read<AuthProvider>();
         final isAuthenticated = auth.isAuthenticated;
-        final isInitialized = auth.state != AuthState.initial &&
-            auth.state != AuthState.loading;
 
         final currentPath = state.matchedLocation;
-        final isOnSplash = currentPath == '/splash';
         final isOnOnboarding = currentPath == '/onboarding';
         final isOnLogin = currentPath == '/login';
-
-        // Let splash screen handle initial routing
-        if (isOnSplash) return null;
-
-        // If still initializing, stay on current page
-        if (!isInitialized) return null;
 
         // If first launch, show onboarding (even if authenticated - for restart feature)
         if (auth.isFirstLaunch) {
@@ -63,10 +63,6 @@ class AppRouter {
         return null;
       },
       routes: [
-        GoRoute(
-          path: '/splash',
-          builder: (context, state) => const SplashScreen(),
-        ),
         GoRoute(
           path: '/onboarding',
           builder: (context, state) => const OnboardingScreen(),

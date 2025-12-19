@@ -1153,23 +1153,24 @@ class AppLocalizationsBg extends AppLocalizations {
       'Автоматичното възстановяване не е налично за действие превключване';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Офлайн сте';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Проверете интернет връзката си. Вашите устройства продължават да работят.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Използвате мобилни данни';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Свържете се с WiFi за директен контрол на устройствата';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Различна WiFi мрежа';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Вашите устройства са в мрежа $network. Използва се облачна връзка.';
   }
 }

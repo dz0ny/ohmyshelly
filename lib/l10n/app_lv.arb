@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Dzēst šīs ierīces dublējumu?",
   "backupInfo": "Pēdējais dublējums: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Nav dublējuma"
+  "backupNoBackup": "Nav dublējuma",
+
+  "phoneOffline": "Jūs esat bezsaistē",
+  "phoneOfflineDesc": "Pārbaudiet interneta savienojumu. Jūsu ierīces joprojām darbojas.",
+  "phoneOnCellular": "Izmantojat mobilos datus",
+  "phoneOnCellularDesc": "Pievienojieties WiFi tiešai ierīču vadībai",
+  "phoneDifferentWifi": "Cits WiFi tīkls",
+  "phoneDifferentWifiDesc": "Jūsu ierīces ir tīklā {network}. Tiek izmantots mākoņa savienojums."
 }

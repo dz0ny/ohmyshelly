@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Ta bort säkerhetskopian för denna enhet?",
   "backupInfo": "Senaste säkerhetskopia: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Ingen säkerhetskopia"
+  "backupNoBackup": "Ingen säkerhetskopia",
+
+  "phoneOffline": "Du är offline",
+  "phoneOfflineDesc": "Kontrollera din internetanslutning. Dina enheter fungerar fortfarande.",
+  "phoneOnCellular": "Använder mobildata",
+  "phoneOnCellularDesc": "Anslut till WiFi för direkt enhetskontroll",
+  "phoneDifferentWifi": "Annat WiFi-nätverk",
+  "phoneDifferentWifiDesc": "Dina enheter är på nätverket {network}. Använder molnanslutning."
 }

@@ -1155,23 +1155,24 @@ class AppLocalizationsCs extends AppLocalizations {
       'Auto-vrácení není k dispozici pro akci přepnutí';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Jste offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Zkontrolujte připojení k internetu. Vaše zařízení stále fungují.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Používáte mobilní data';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Připojte se k WiFi pro přímé ovládání zařízení';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Jiná WiFi síť';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Vaše zařízení jsou v síti $network. Používá se cloudové připojení.';
   }
 }

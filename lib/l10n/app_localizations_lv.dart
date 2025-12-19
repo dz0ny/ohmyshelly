@@ -1149,23 +1149,24 @@ class AppLocalizationsLv extends AppLocalizations {
       'Automātiska atgriešana nav pieejama pārslēgšanas darbībai';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Jūs esat bezsaistē';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Pārbaudiet interneta savienojumu. Jūsu ierīces joprojām darbojas.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Izmantojat mobilos datus';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Pievienojieties WiFi tiešai ierīču vadībai';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Cits WiFi tīkls';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Jūsu ierīces ir tīklā $network. Tiek izmantots mākoņa savienojums.';
   }
 }

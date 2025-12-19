@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Back-up voor dit apparaat verwijderen?",
   "backupInfo": "Laatste back-up: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Geen back-up"
+  "backupNoBackup": "Geen back-up",
+
+  "phoneOffline": "Je bent offline",
+  "phoneOfflineDesc": "Controleer je internetverbinding. Je apparaten werken nog steeds.",
+  "phoneOnCellular": "Mobiele data actief",
+  "phoneOnCellularDesc": "Verbind met WiFi voor directe apparaatbediening",
+  "phoneDifferentWifi": "Ander WiFi-netwerk",
+  "phoneDifferentWifiDesc": "Je apparaten zijn op netwerk {network}. Cloudverbinding wordt gebruikt."
 }

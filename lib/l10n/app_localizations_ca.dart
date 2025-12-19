@@ -1157,23 +1157,24 @@ class AppLocalizationsCa extends AppLocalizations {
       'La reversió automàtica no està disponible per a l\'acció commutador';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Estàs desconnectat';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Comprova la connexió a internet. Els teus dispositius segueixen funcionant.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Usant dades mòbils';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Connecta\'t a WiFi per a control directe dels dispositius';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Xarxa WiFi diferent';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Els teus dispositius són a la xarxa $network. S\'utilitza connexió al núvol.';
   }
 }

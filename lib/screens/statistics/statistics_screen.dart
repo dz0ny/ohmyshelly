@@ -338,11 +338,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   }
 
   Widget _buildMetricChart(WeatherStatistics stats, WeatherMetric metric, DateRangeType rangeType, DateTime selectedDate, AppLocalizations l10n) {
-    List<ChartDataPoint> dataPoints;
+    List<ChartDataPoint>? dataPoints;
+    List<BarChartDataPoint>? barDataPoints;
     String unit;
-    Color lineColor;
+    Color chartColor;
     String chartTitle;
     Widget summaryCard;
+    bool useBarChart = false;
 
     switch (metric) {
       case WeatherMetric.temperature:
@@ -356,7 +358,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ))
             .toList();
         unit = '\u00B0C';
-        lineColor = AppColors.weatherStation;
+        chartColor = AppColors.weatherStation;
         chartTitle = l10n.temperature;
         summaryCard = _buildTemperatureSummary(context, stats, l10n);
         break;
@@ -370,7 +372,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ))
             .toList();
         unit = '%';
-        lineColor = AppColors.info;
+        chartColor = AppColors.info;
         chartTitle = l10n.humidity;
         summaryCard = _buildHumiditySummary(context, stats, l10n);
         break;
@@ -384,7 +386,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ))
             .toList();
         unit = 'hPa';
-        lineColor = const Color(0xFF7E57C2); // Purple
+        chartColor = const Color(0xFF7E57C2); // Purple
         chartTitle = l10n.pressure;
         summaryCard = _buildPressureSummary(context, stats, l10n);
         break;
@@ -398,23 +400,23 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ))
             .toList();
         unit = '';
-        lineColor = AppColors.warning;
+        chartColor = AppColors.warning;
         chartTitle = l10n.uvIndex;
         summaryCard = _buildUvSummary(context, stats, l10n);
         break;
 
       case WeatherMetric.rain:
-        dataPoints = stats.dataPoints
-            .map((p) => ChartDataPoint(
-                  x: p.timestamp.millisecondsSinceEpoch.toDouble(),
+        barDataPoints = stats.dataPoints
+            .map((p) => BarChartDataPoint(
                   y: p.precipitation,
                   timestamp: p.timestamp,
                 ))
             .toList();
         unit = 'mm';
-        lineColor = AppColors.info;
+        chartColor = AppColors.info;
         chartTitle = l10n.rain;
         summaryCard = _buildRainSummary(context, stats, l10n);
+        useBarChart = true;
         break;
 
       case WeatherMetric.solar:
@@ -427,7 +429,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ))
             .toList();
         unit = 'W/m²';
-        lineColor = const Color(0xFFFF9800); // Orange
+        chartColor = const Color(0xFFFF9800); // Orange
         chartTitle = l10n.solar;
         summaryCard = _buildSolarSummary(context, stats, l10n);
         break;
@@ -465,13 +467,20 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 200,
-                    child: LineChartWidget(
-                      dataPoints: dataPoints,
-                      lineColor: lineColor,
-                      unit: unit,
-                      rangeType: rangeType,
-                      selectedDate: selectedDate,
-                    ),
+                    child: useBarChart
+                        ? BarChartWidget(
+                            dataPoints: barDataPoints!,
+                            barColor: chartColor,
+                            unit: unit,
+                            rangeType: rangeType,
+                          )
+                        : LineChartWidget(
+                            dataPoints: dataPoints!,
+                            lineColor: chartColor,
+                            unit: unit,
+                            rangeType: rangeType,
+                            selectedDate: selectedDate,
+                          ),
                   ),
                 ],
               ),

@@ -1157,23 +1157,24 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le retour automatique n\'est pas disponible pour l\'action basculer';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Vous êtes hors ligne';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Vérifiez votre connexion internet. Vos appareils fonctionnent toujours.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Données mobiles actives';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Connectez-vous au WiFi pour un contrôle direct des appareils';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Réseau WiFi différent';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Vos appareils sont sur le réseau $network. Connexion cloud utilisée.';
   }
 }

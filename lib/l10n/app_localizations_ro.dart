@@ -1154,23 +1154,24 @@ class AppLocalizationsRo extends AppLocalizations {
       'Revenirea automată nu este disponibilă pentru acțiunea de comutare';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Ești offline';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Verifică conexiunea la internet. Dispozitivele tale funcționează în continuare.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Folosești date mobile';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc =>
+      'Conectează-te la WiFi pentru control direct al dispozitivelor';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Rețea WiFi diferită';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Dispozitivele tale sunt în rețeaua $network. Se folosește conexiunea cloud.';
   }
 }

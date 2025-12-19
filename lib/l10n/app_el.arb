@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Διαγραφή του αντιγράφου για αυτή τη συσκευή;",
   "backupInfo": "Τελευταίο αντίγραφο: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Χωρίς αντίγραφο"
+  "backupNoBackup": "Χωρίς αντίγραφο",
+
+  "phoneOffline": "Είστε εκτός σύνδεσης",
+  "phoneOfflineDesc": "Ελέγξτε τη σύνδεσή σας στο διαδίκτυο. Οι συσκευές σας εξακολουθούν να λειτουργούν.",
+  "phoneOnCellular": "Χρήση δεδομένων κινητού",
+  "phoneOnCellularDesc": "Συνδεθείτε σε WiFi για άμεσο έλεγχο συσκευών",
+  "phoneDifferentWifi": "Διαφορετικό δίκτυο WiFi",
+  "phoneDifferentWifiDesc": "Οι συσκευές σας βρίσκονται στο δίκτυο {network}. Χρησιμοποιείται σύνδεση cloud."
 }

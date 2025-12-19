@@ -1147,23 +1147,22 @@ class AppLocalizationsIs extends AppLocalizations {
       'Sjálfvirk endurstilling er ekki tiltæk fyrir skiptaaðgerð';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Þú ert ótengdur';
 
   @override
-  String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+  String get phoneOfflineDesc => 'Athugaðu nettenginguna. Tækin þín virka enn.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Notar farsímagögn';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc => 'Tengdu við WiFi fyrir beina tækjastýringu';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Annað WiFi-net';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Tækin þín eru á netinu $network. Skýjatenging notuð.';
   }
 }

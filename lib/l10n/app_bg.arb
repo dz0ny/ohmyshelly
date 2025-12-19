@@ -374,5 +374,12 @@
   "backupDeleteConfirm": "Изтриване на резервното копие за това устройство?",
   "backupInfo": "Последно резервно копие: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Няма резервно копие"
+  "backupNoBackup": "Няма резервно копие",
+
+  "phoneOffline": "Офлайн сте",
+  "phoneOfflineDesc": "Проверете интернет връзката си. Вашите устройства продължават да работят.",
+  "phoneOnCellular": "Използвате мобилни данни",
+  "phoneOnCellularDesc": "Свържете се с WiFi за директен контрол на устройствата",
+  "phoneDifferentWifi": "Различна WiFi мрежа",
+  "phoneDifferentWifiDesc": "Вашите устройства са в мрежа {network}. Използва се облачна връзка."
 }

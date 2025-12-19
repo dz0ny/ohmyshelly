@@ -377,5 +377,12 @@
   "backupDeleteConfirm": "Видалити резервну копію для цього пристрою?",
   "backupInfo": "Остання копія: {date}",
   "@backupInfo": {"placeholders": {"date": {"type": "String"}}},
-  "backupNoBackup": "Немає резервної копії"
+  "backupNoBackup": "Немає резервної копії",
+
+  "phoneOffline": "Ви офлайн",
+  "phoneOfflineDesc": "Перевірте підключення до інтернету. Ваші пристрої продовжують працювати.",
+  "phoneOnCellular": "Використовується мобільна мережа",
+  "phoneOnCellularDesc": "Підключіться до WiFi для прямого керування пристроями",
+  "phoneDifferentWifi": "Інша мережа WiFi",
+  "phoneDifferentWifiDesc": "Ваші пристрої в мережі {network}. Використовується хмарне підключення."
 }

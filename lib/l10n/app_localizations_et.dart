@@ -1150,23 +1150,23 @@ class AppLocalizationsEt extends AppLocalizations {
       'Automaatne tagasipööramine pole lülitustegevuse jaoks saadaval';
 
   @override
-  String get phoneOffline => 'You\'re offline';
+  String get phoneOffline => 'Oled võrguühenduseta';
 
   @override
   String get phoneOfflineDesc =>
-      'Check your internet connection. Your devices are still working.';
+      'Kontrolli internetiühendust. Sinu seadmed töötavad edasi.';
 
   @override
-  String get phoneOnCellular => 'Using mobile data';
+  String get phoneOnCellular => 'Kasutad mobiilset andmesidet';
 
   @override
-  String get phoneOnCellularDesc => 'Connect to WiFi for direct device control';
+  String get phoneOnCellularDesc => 'Ühenda WiFi-ga seadmete otsejuhtimiseks';
 
   @override
-  String get phoneDifferentWifi => 'Different WiFi network';
+  String get phoneDifferentWifi => 'Erinev WiFi-võrk';
 
   @override
   String phoneDifferentWifiDesc(Object network) {
-    return 'Your devices are on $network. Using cloud connection.';
+    return 'Sinu seadmed on võrgus $network. Kasutatakse pilveühendust.';
   }
 }
