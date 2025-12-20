@@ -72,6 +72,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get connectionError => 'Nie można połączyć. Sprawdź internet.';
 
   @override
+  String get loginHint =>
+      'Sign in with your Shelly Cloud account (control.shelly.cloud)';
+
+  @override
   String get devices => 'Urządzenia';
 
   @override

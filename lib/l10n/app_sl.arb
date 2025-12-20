@@ -23,6 +23,7 @@
   "signOut": "Odjava",
   "invalidCredentials": "Napačna e-pošta ali geslo",
   "connectionError": "Ni povezave. Preverite internet.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
 
   "devices": "Naprave",
   "dashboard": "Pregled",

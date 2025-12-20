@@ -20,6 +20,7 @@
   "signOut": "Skrá Út",
   "invalidCredentials": "Rangt netfang eða lykilorð",
   "connectionError": "Get ekki tengst. Athugaðu nettenginguna þína.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Tæki",
   "dashboard": "Mælaborð",
   "myDevices": "Tækin Mín",

@@ -20,6 +20,7 @@
   "signOut": "Kirjaudu Ulos",
   "invalidCredentials": "Virheellinen sähköposti tai salasana",
   "connectionError": "Yhteyden muodostaminen epäonnistui. Tarkista internet-yhteytesi.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Laitteet",
   "dashboard": "Kojelauta",
   "myDevices": "Laitteeni",

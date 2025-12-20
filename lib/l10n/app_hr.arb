@@ -20,6 +20,7 @@
   "signOut": "Odjava",
   "invalidCredentials": "Netočan email ili lozinka",
   "connectionError": "Nije moguće povezati se. Provjerite internet vezu.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Uređaji",
   "dashboard": "Nadzorna ploča",
   "myDevices": "Moji uređaji",

@@ -20,6 +20,7 @@
   "signOut": "Se déconnecter",
   "invalidCredentials": "E-mail ou mot de passe incorrect",
   "connectionError": "Impossible de se connecter. Vérifiez votre internet.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Appareils",
   "dashboard": "Tableau de bord",
   "myDevices": "Mes appareils",

@@ -117,8 +117,9 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> setDashboardDeviceOrder(List<String> deviceIds) async {
     _dashboardDeviceOrder = deviceIds;
-    await _storageService.setDashboardDeviceOrder(deviceIds);
     notifyListeners();
+    // Persist in background - UI already updated
+    await _storageService.setDashboardDeviceOrder(deviceIds);
   }
 
   /// Check if a device is excluded from dashboard
@@ -135,7 +136,8 @@ class SettingsProvider extends ChangeNotifier {
     } else {
       _dashboardExcludedDevices = _dashboardExcludedDevices.where((id) => id != deviceId).toList();
     }
-    await _storageService.setDashboardExcludedDevices(_dashboardExcludedDevices);
     notifyListeners();
+    // Persist in background - UI already updated
+    await _storageService.setDashboardExcludedDevices(_dashboardExcludedDevices);
   }
 }

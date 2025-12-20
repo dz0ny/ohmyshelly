@@ -20,6 +20,7 @@
   "signOut": "Вийти",
   "invalidCredentials": "Неправильний email або пароль",
   "connectionError": "Не вдається підключитися. Перевірте інтернет.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Пристрої",
   "dashboard": "Панель",
   "myDevices": "Мої Пристрої",

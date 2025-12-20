@@ -72,6 +72,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get connectionError => 'Nelze se připojit. Zkontrolujte internet.';
 
   @override
+  String get loginHint =>
+      'Sign in with your Shelly Cloud account (control.shelly.cloud)';
+
+  @override
   String get devices => 'Zařízení';
 
   @override

@@ -270,6 +270,12 @@ abstract class AppLocalizations {
   /// **'Unable to connect. Check your internet.'**
   String get connectionError;
 
+  /// No description provided for @loginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Shelly Cloud account (control.shelly.cloud)'**
+  String get loginHint;
+
   /// No description provided for @devices.
   ///
   /// In en, this message translates to:

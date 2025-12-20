@@ -73,6 +73,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de se connecter. Vérifiez votre internet.';
 
   @override
+  String get loginHint =>
+      'Sign in with your Shelly Cloud account (control.shelly.cloud)';
+
+  @override
   String get devices => 'Appareils';
 
   @override

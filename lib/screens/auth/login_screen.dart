@@ -140,56 +140,68 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-                // Email field
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    labelText: l10n.email,
-                    hintText: l10n.emailHint,
-                    prefixIcon: const Icon(AppIcons.email),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return l10n.email;
-                    }
-                    if (!value.contains('@')) {
-                      return l10n.email;
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // Password field
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (_) => _submit(),
-                  decoration: InputDecoration(
-                    labelText: l10n.password,
-                    hintText: l10n.passwordHint,
-                    prefixIcon: const Icon(AppIcons.password),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? AppIcons.passwordHidden
-                            : AppIcons.passwordVisible,
+                // Autofill group for password manager support
+                AutofillGroup(
+                  child: Column(
+                    children: [
+                      // Email field
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        autofillHints: const [
+                          AutofillHints.email,
+                          AutofillHints.username,
+                        ],
+                        decoration: InputDecoration(
+                          labelText: l10n.email,
+                          hintText: l10n.emailHint,
+                          prefixIcon: const Icon(AppIcons.email),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.email;
+                          }
+                          if (!value.contains('@')) {
+                            return l10n.email;
+                          }
+                          return null;
+                        },
                       ),
-                      onPressed: () {
-                        setState(() => _obscurePassword = !_obscurePassword);
-                      },
-                    ),
+
+                      const SizedBox(height: 16),
+
+                      // Password field
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _submit(),
+                        autofillHints: const [AutofillHints.password],
+                        decoration: InputDecoration(
+                          labelText: l10n.password,
+                          hintText: l10n.passwordHint,
+                          prefixIcon: const Icon(AppIcons.password),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? AppIcons.passwordHidden
+                                  : AppIcons.passwordVisible,
+                            ),
+                            onPressed: () {
+                              setState(() => _obscurePassword = !_obscurePassword);
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.password;
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return l10n.password;
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 32),
@@ -215,13 +227,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Info text
+                // Login hint
                 Text(
-                  l10n.appTagline,
+                  l10n.loginHint,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    fontSize: 13,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

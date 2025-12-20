@@ -20,6 +20,7 @@
   "signOut": "Logi välja",
   "invalidCredentials": "Vale e-post või parool",
   "connectionError": "Ühendus ebaõnnestus. Kontrollige interneti ühendust.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Seadmed",
   "dashboard": "Juhtpaneel",
   "myDevices": "Minu Seadmed",

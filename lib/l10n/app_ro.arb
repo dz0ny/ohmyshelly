@@ -20,6 +20,7 @@
   "signOut": "Deconectare",
   "invalidCredentials": "Email sau parolă incorectă",
   "connectionError": "Nu se poate conecta. Verifică internetul.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Dispozitive",
   "dashboard": "Tablou de Bord",
   "myDevices": "Dispozitivele Mele",

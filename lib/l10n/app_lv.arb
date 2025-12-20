@@ -20,6 +20,7 @@
   "signOut": "Izrakstīties",
   "invalidCredentials": "Nepareizs e-pasts vai parole",
   "connectionError": "Nevar izveidot savienojumu. Pārbaudiet internetu.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Ierīces",
   "dashboard": "Panelis",
   "myDevices": "Manas Ierīces",

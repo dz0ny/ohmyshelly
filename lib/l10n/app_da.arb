@@ -20,6 +20,7 @@
   "signOut": "Log Ud",
   "invalidCredentials": "Forkert e-mail eller adgangskode",
   "connectionError": "Kan ikke oprette forbindelse. Tjek din internetforbindelse.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Enheder",
   "dashboard": "Dashboard",
   "myDevices": "Mine Enheder",

@@ -20,6 +20,7 @@
   "signOut": "Kijelentkezés",
   "invalidCredentials": "Helytelen email vagy jelszó",
   "connectionError": "Nem lehet csatlakozni. Ellenőrizze az internetet.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Eszközök",
   "dashboard": "Vezérlőpult",
   "myDevices": "Eszközeim",

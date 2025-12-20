@@ -20,6 +20,7 @@
   "signOut": "Odhlásit se",
   "invalidCredentials": "Nesprávný email nebo heslo",
   "connectionError": "Nelze se připojit. Zkontrolujte internet.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Zařízení",
   "dashboard": "Přehled",
   "myDevices": "Moje Zařízení",

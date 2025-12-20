@@ -20,6 +20,7 @@
   "signOut": "Tancar Sessió",
   "invalidCredentials": "Correu o contrasenya incorrectes",
   "connectionError": "No es pot connectar. Comprova la teva connexió a internet.",
+  "loginHint": "Sign in with your Shelly Cloud account (control.shelly.cloud)",
   "devices": "Dispositius",
   "dashboard": "Tauler",
   "myDevices": "Els Meus Dispositius",

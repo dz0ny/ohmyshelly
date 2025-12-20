@@ -73,6 +73,10 @@ class AppLocalizationsEt extends AppLocalizations {
       'Ühendus ebaõnnestus. Kontrollige interneti ühendust.';
 
   @override
+  String get loginHint =>
+      'Sign in with your Shelly Cloud account (control.shelly.cloud)';
+
+  @override
   String get devices => 'Seadmed';
 
   @override
