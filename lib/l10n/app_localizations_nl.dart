@@ -955,6 +955,37 @@ class AppLocalizationsNl extends AppLocalizations {
   String get showActionsButtonDesc => 'Acties-knop weergeven in apparaatscherm';
 
   @override
+  String get groupByRoom => 'Group by Room';
+
+  @override
+  String get groupByRoomDesc => 'Organize dashboard devices into room folders';
+
+  @override
+  String devicesInRoom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices',
+      one: '1 device',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String activeInRoom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active',
+      one: '1 active',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otherRoom => 'Other';
+
+  @override
   String get sceneEnabled => 'Ingeschakeld';
 
   @override

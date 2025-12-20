@@ -319,6 +319,25 @@
   "showScheduleButtonDesc": "Zobraziť tlačidlo plánu pre napájacie zariadenia",
   "showActionsButton": "Zobraziť Tlačidlo Akcií",
   "showActionsButtonDesc": "Zobraziť tlačidlo akcií na obrazovke zariadenia",
+  "groupByRoom": "Group by Room",
+  "groupByRoomDesc": "Organize dashboard devices into room folders",
+  "devicesInRoom": "{count, plural, =1{1 device} other{{count} devices}}",
+  "@devicesInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activeInRoom": "{count, plural, =1{1 active} other{{count} active}}",
+  "@activeInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "otherRoom": "Other",
   "addAutoUpdateSchedule": "Pridať Auto-Aktualizáciu",
   "editAutoUpdateSchedule": "Upraviť Auto-Aktualizáciu",
   "autoUpdateScheduleHint": "Naplánovať kedy zariadenie kontroluje aktualizácie firmvéru",

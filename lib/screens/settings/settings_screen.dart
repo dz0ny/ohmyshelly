@@ -154,6 +154,17 @@ class SettingsScreen extends StatelessWidget {
               value: settings.showActionsButton,
               onChanged: (value) => settings.setShowActionsButton(value),
             ),
+            SwitchListTile(
+              title: Text(l10n.groupByRoom),
+              subtitle: Text(
+                l10n.groupByRoomDesc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+              value: settings.groupByRoom,
+              onChanged: (value) => settings.setGroupByRoom(value),
+            ),
           ],
         );
       },

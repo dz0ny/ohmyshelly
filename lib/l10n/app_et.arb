@@ -319,6 +319,25 @@
   "showScheduleButtonDesc": "Kuva ajakava nupp võimsusseadmete jaoks",
   "showActionsButton": "Näita Toimingute Nuppu",
   "showActionsButtonDesc": "Kuva toimingute nupp seadme ekraanil",
+  "groupByRoom": "Group by Room",
+  "groupByRoomDesc": "Organize dashboard devices into room folders",
+  "devicesInRoom": "{count, plural, =1{1 device} other{{count} devices}}",
+  "@devicesInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activeInRoom": "{count, plural, =1{1 active} other{{count} active}}",
+  "@activeInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "otherRoom": "Other",
   "addAutoUpdateSchedule": "Lisa Automaatne Uuendus",
   "editAutoUpdateSchedule": "Muuda Automaatset Uuendust",
   "autoUpdateScheduleHint": "Ajasta, millal seade kontrollib püsivara uuendusi",

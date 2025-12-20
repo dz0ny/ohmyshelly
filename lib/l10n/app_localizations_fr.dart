@@ -959,6 +959,37 @@ class AppLocalizationsFr extends AppLocalizations {
       'Afficher le bouton d\'actions dans l\'écran de l\'appareil';
 
   @override
+  String get groupByRoom => 'Group by Room';
+
+  @override
+  String get groupByRoomDesc => 'Organize dashboard devices into room folders';
+
+  @override
+  String devicesInRoom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices',
+      one: '1 device',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String activeInRoom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count active',
+      one: '1 active',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otherRoom => 'Other';
+
+  @override
   String get sceneEnabled => 'Activé';
 
   @override

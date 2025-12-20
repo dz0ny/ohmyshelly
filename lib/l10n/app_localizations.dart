@@ -1968,6 +1968,36 @@ abstract class AppLocalizations {
   /// **'Display actions button in device screen'**
   String get showActionsButtonDesc;
 
+  /// No description provided for @groupByRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by Room'**
+  String get groupByRoom;
+
+  /// No description provided for @groupByRoomDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize dashboard devices into room folders'**
+  String get groupByRoomDesc;
+
+  /// No description provided for @devicesInRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 device} other{{count} devices}}'**
+  String devicesInRoom(int count);
+
+  /// No description provided for @activeInRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 active} other{{count} active}}'**
+  String activeInRoom(int count);
+
+  /// No description provided for @otherRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get otherRoom;
+
   /// No description provided for @sceneEnabled.
   ///
   /// In en, this message translates to:

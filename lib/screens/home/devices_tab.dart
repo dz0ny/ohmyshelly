@@ -175,12 +175,14 @@ class DevicesTab extends StatelessWidget {
     }
 
     // Multi-column grid for tablets
+    // Compact cards - higher ratio = shorter cards
+    final aspectRatio = columns == 2 ? 2.5 : 3.2;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: columns,
-        childAspectRatio: 2.0,
+        childAspectRatio: aspectRatio,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),

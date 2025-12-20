@@ -11,6 +11,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _showDeviceInfoButton = false;
   bool _showScheduleButton = true;
   bool _showActionsButton = false;
+  bool _groupByRoom = false;
   bool _isInitialized = false;
   List<String> _dashboardDeviceOrder = [];
   List<String> _dashboardExcludedDevices = [];
@@ -25,6 +26,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get showDeviceInfoButton => _showDeviceInfoButton;
   bool get showScheduleButton => _showScheduleButton;
   bool get showActionsButton => _showActionsButton;
+  bool get groupByRoom => _groupByRoom;
   bool get isInitialized => _isInitialized;
   List<String> get dashboardDeviceOrder => _dashboardDeviceOrder;
   List<String> get dashboardExcludedDevices => _dashboardExcludedDevices;
@@ -41,6 +43,7 @@ class SettingsProvider extends ChangeNotifier {
     _showDeviceInfoButton = await _storageService.getShowDeviceInfoButton();
     _showScheduleButton = await _storageService.getShowScheduleButton();
     _showActionsButton = await _storageService.getShowActionsButton();
+    _groupByRoom = await _storageService.getGroupByRoom();
     _dashboardDeviceOrder = await _storageService.getDashboardDeviceOrder();
     _dashboardExcludedDevices = await _storageService.getDashboardExcludedDevices();
     _isInitialized = true;
@@ -108,6 +111,12 @@ class SettingsProvider extends ChangeNotifier {
   Future<void> setShowActionsButton(bool show) async {
     _showActionsButton = show;
     await _storageService.setShowActionsButton(show);
+    notifyListeners();
+  }
+
+  Future<void> setGroupByRoom(bool enabled) async {
+    _groupByRoom = enabled;
+    await _storageService.setGroupByRoom(enabled);
     notifyListeners();
   }
 

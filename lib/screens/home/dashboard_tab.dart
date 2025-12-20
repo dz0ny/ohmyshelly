@@ -8,10 +8,12 @@ import '../../providers/device_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../widgets/devices/power_device/power_device_dashboard_card.dart';
 import '../../widgets/devices/weather_station/weather_station_dashboard_card.dart';
+import '../../widgets/dashboard/room_card.dart';
 import '../../widgets/common/loading_indicator.dart';
 import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_card.dart';
 import '../../widgets/common/connectivity_banner.dart';
+import '../../widgets/common/device_grid_view.dart';
 import '../../data/models/device.dart';
 import '../../data/models/device_status.dart';
 
@@ -113,16 +115,22 @@ class _DashboardTabState extends State<DashboardTab> {
                       deviceNetworks.isNotEmpty ? deviceNetworks.first : null,
                 ),
 
-              // Device grid
+              // Device grid or room grouped list
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () => deviceProvider.refresh(),
-                  child: _buildDeviceGrid(
-                    context,
-                    displayDevices,
-                    deviceProvider,
-                    l10n,
-                  ),
+                  child: settingsProvider.groupByRoom
+                      ? _buildRoomGroupedList(
+                          context,
+                          displayDevices,
+                          deviceProvider,
+                          l10n,
+                        )
+                      : DeviceGridView(
+                          devices: displayDevices,
+                          deviceProvider: deviceProvider,
+                          footer: _buildReorderButton(context, l10n),
+                        ),
                 ),
               ),
             ],
@@ -147,77 +155,77 @@ class _DashboardTabState extends State<DashboardTab> {
     return null;
   }
 
-  /// Build the device list respecting the saved order.
-  /// Uses responsive grid for power devices on tablets.
-  Widget _buildDeviceGrid(
+  /// Build the room-grouped grid view
+  Widget _buildRoomGroupedList(
     BuildContext context,
     List<Device> devices,
     DeviceProvider deviceProvider,
     AppLocalizations l10n,
   ) {
+    final roomGroups = _groupDevicesByRoom(devices, l10n);
+    final roomNames = roomGroups.keys.toList();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = !constraints.isCompact;
-        final powerColumns = constraints.powerDeviceColumns;
+        final columns = constraints.powerDeviceColumns;
+        // Balanced room cards - content is ~130px, allow some padding
+        final aspectRatio = columns == 2 ? 2.2 : 1.8;
 
-        // Group consecutive devices by type for efficient grid layout
-        final sections = _groupDevicesByType(devices);
+        if (isTablet) {
+          // Tablet: grid of room cards
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  childAspectRatio: aspectRatio,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: roomNames.length,
+                itemBuilder: (context, index) {
+                  final roomName = roomNames[index];
+                  final roomDevices = roomGroups[roomName]!;
+                  final stats = _calculateRoomStats(roomDevices, deviceProvider);
 
+                  return RoomCard(
+                    roomName: roomName,
+                    deviceCount: roomDevices.length,
+                    activeCount: stats.activeCount,
+                    totalPower: stats.totalPower,
+                  );
+                },
+              ),
+              _buildReorderButton(context, l10n),
+            ],
+          );
+        }
+
+        // Phone: list of room cards
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: sections.length + 1, // +1 for reorder button
-          itemBuilder: (context, sectionIndex) {
-            // Last item is the reorder button
-            if (sectionIndex == sections.length) {
+          itemCount: roomNames.length + 1,
+          itemBuilder: (context, index) {
+            if (index == roomNames.length) {
               return _buildReorderButton(context, l10n);
             }
 
-            final section = sections[sectionIndex];
+            final roomName = roomNames[index];
+            final roomDevices = roomGroups[roomName]!;
+            final stats = _calculateRoomStats(roomDevices, deviceProvider);
 
-            // Weather stations always full width
-            if (section.isWeatherSection) {
-              return Column(
-                children: section.devices.map((device) {
-                  final status = deviceProvider.getStatus(device.id);
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: WeatherStationDashboardCard(
-                      device: device,
-                      status: status?.weatherStatus,
-                      temperatureHistory:
-                          deviceProvider.getTemperatureHistory(device.id),
-                      humidityHistory:
-                          deviceProvider.getHumidityHistory(device.id),
-                    ),
-                  );
-                }).toList(),
-              );
-            }
-
-            // Power devices: grid on tablet, full width on phone
-            if (isTablet) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _buildPowerDeviceGrid(
-                  section.devices,
-                  deviceProvider,
-                  powerColumns,
-                ),
-              );
-            }
-
-            // Phone: full width cards
-            return Column(
-              children: section.devices.map((device) {
-                final status = deviceProvider.getStatus(device.id);
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: PowerDeviceDashboardCard(
-                    device: device,
-                    status: status?.powerStatus,
-                  ),
-                );
-              }).toList(),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: RoomCard(
+                roomName: roomName,
+                deviceCount: roomDevices.length,
+                activeCount: stats.activeCount,
+                totalPower: stats.totalPower,
+              ),
             );
           },
         );
@@ -225,65 +233,54 @@ class _DashboardTabState extends State<DashboardTab> {
     );
   }
 
-  /// Group consecutive devices by type (weather vs power)
-  List<_DeviceSection> _groupDevicesByType(List<Device> devices) {
-    if (devices.isEmpty) return [];
-
-    final sections = <_DeviceSection>[];
-    var currentDevices = <Device>[];
-    var currentIsWeather = devices.first.isWeatherStation;
+  /// Group devices by room name
+  Map<String, List<Device>> _groupDevicesByRoom(
+    List<Device> devices,
+    AppLocalizations l10n,
+  ) {
+    final groups = <String, List<Device>>{};
+    final otherKey = l10n.otherRoom;
 
     for (final device in devices) {
-      final isWeather = device.isWeatherStation;
-      if (isWeather != currentIsWeather) {
-        // Type changed, save current section
-        if (currentDevices.isNotEmpty) {
-          sections.add(_DeviceSection(currentDevices, currentIsWeather));
+      final roomName = device.roomName ?? otherKey;
+      groups.putIfAbsent(roomName, () => []).add(device);
+    }
+
+    // Sort rooms alphabetically, but keep "Other" at the end
+    final sortedKeys = groups.keys.toList()
+      ..sort((a, b) {
+        if (a == otherKey) return 1;
+        if (b == otherKey) return -1;
+        return a.compareTo(b);
+      });
+
+    return {for (final key in sortedKeys) key: groups[key]!};
+  }
+
+  /// Calculate stats for a room (active count, total power)
+  _RoomStats _calculateRoomStats(
+    List<Device> devices,
+    DeviceProvider deviceProvider,
+  ) {
+    var activeCount = 0;
+    var totalPower = 0.0;
+
+    for (final device in devices) {
+      final status = deviceProvider.getStatus(device.id);
+      if (status != null) {
+        // Check if device is active (on)
+        if (device.isPowerDevice && status.powerStatus?.isOn == true) {
+          activeCount++;
+          totalPower += status.powerStatus?.power ?? 0;
         }
-        currentDevices = [device];
-        currentIsWeather = isWeather;
-      } else {
-        currentDevices.add(device);
+        // Weather stations are always "active" if online
+        if (device.isWeatherStation && device.isOnline) {
+          activeCount++;
+        }
       }
     }
 
-    // Add final section
-    if (currentDevices.isNotEmpty) {
-      sections.add(_DeviceSection(currentDevices, currentIsWeather));
-    }
-
-    return sections;
-  }
-
-  /// Build a responsive grid for power devices
-  Widget _buildPowerDeviceGrid(
-    List<Device> devices,
-    DeviceProvider deviceProvider,
-    int columns,
-  ) {
-    // More compact cards: wider aspect ratio = shorter height
-    // 2 columns: 1.8 ratio, 3+ columns: 1.5 ratio
-    final aspectRatio = columns == 2 ? 1.8 : 1.5;
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columns,
-        childAspectRatio: aspectRatio,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
-      itemCount: devices.length,
-      itemBuilder: (context, index) {
-        final device = devices[index];
-        final status = deviceProvider.getStatus(device.id);
-        return PowerDeviceDashboardCard(
-          device: device,
-          status: status?.powerStatus,
-        );
-      },
-    );
+    return _RoomStats(activeCount: activeCount, totalPower: totalPower);
   }
 
   Widget _buildReorderButton(BuildContext context, AppLocalizations l10n) {
@@ -470,10 +467,10 @@ class _DashboardTabState extends State<DashboardTab> {
   }
 }
 
-/// Helper class to group consecutive devices of the same type
-class _DeviceSection {
-  final List<Device> devices;
-  final bool isWeatherSection;
+/// Helper class for room statistics
+class _RoomStats {
+  final int activeCount;
+  final double totalPower;
 
-  _DeviceSection(this.devices, this.isWeatherSection);
+  _RoomStats({required this.activeCount, required this.totalPower});
 }

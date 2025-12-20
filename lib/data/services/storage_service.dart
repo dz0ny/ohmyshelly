@@ -16,6 +16,7 @@ class StorageService {
   static const String _showDeviceInfoButtonKey = 'show_device_info_button';
   static const String _showScheduleButtonKey = 'show_schedule_button';
   static const String _showActionsButtonKey = 'show_actions_button';
+  static const String _groupByRoomKey = 'group_by_room';
   static const String _dashboardDeviceOrderKey = 'dashboard_device_order';
   static const String _dashboardExcludedDevicesKey = 'dashboard_excluded_devices';
   static const String _localDeviceInfoKey = 'local_device_info';
@@ -175,6 +176,16 @@ class StorageService {
 
   Future<void> setShowActionsButton(bool show) async {
     await _storage.write(key: _showActionsButtonKey, value: show.toString());
+  }
+
+  // Group by room setting (default: false - flat list by default)
+  Future<bool> getGroupByRoom() async {
+    final value = await _storage.read(key: _groupByRoomKey);
+    return value == 'true'; // Default to false
+  }
+
+  Future<void> setGroupByRoom(bool enabled) async {
+    await _storage.write(key: _groupByRoomKey, value: enabled.toString());
   }
 
   // Dashboard device order (list of device IDs)

@@ -12,6 +12,7 @@ import '../screens/webhooks/webhooks_screen.dart';
 import '../screens/statistics/statistics_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/room/room_screen.dart';
 
 class AppRouter {
   final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -114,6 +115,13 @@ class AppRouter {
               deviceType: deviceType,
               metric: metric,
             );
+          },
+        ),
+        GoRoute(
+          path: '/room/:name',
+          builder: (context, state) {
+            final roomName = Uri.decodeComponent(state.pathParameters['name']!);
+            return RoomScreen(roomName: roomName);
           },
         ),
         GoRoute(

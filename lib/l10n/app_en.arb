@@ -366,6 +366,25 @@
   "showScheduleButtonDesc": "Display schedule button for power devices",
   "showActionsButton": "Show Actions Button",
   "showActionsButtonDesc": "Display actions button in device screen",
+  "groupByRoom": "Group by Room",
+  "groupByRoomDesc": "Organize dashboard devices into room folders",
+  "devicesInRoom": "{count, plural, =1{1 device} other{{count} devices}}",
+  "@devicesInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activeInRoom": "{count, plural, =1{1 active} other{{count} active}}",
+  "@activeInRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "otherRoom": "Other",
   "sceneEnabled": "Enabled",
   "sceneDisabled": "Disabled",
   "loadingScenes": "Loading scenes...",
