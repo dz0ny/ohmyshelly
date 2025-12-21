@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../data/models/device.dart';
 import '../data/models/device_status.dart';
@@ -26,6 +27,7 @@ enum DeviceLoadState {
 class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   final AuthProvider _authProvider;
   final DeviceService _deviceService;
+  final ApiService _apiService;
   final WebSocketService? _webSocketService;
   final ConnectionManager? _connectionManager;
   final StorageService? _storageService;
@@ -53,6 +55,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   DeviceLoadState _state = DeviceLoadState.initial;
   String? _error;
   Timer? _refreshTimer;
+  Timer? _offlineRetryTimer;
   bool _isRefreshing = false;
   bool _isOffline = false;
 
@@ -84,6 +87,13 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   // Track previous output state to detect changes
   final Map<String, bool> _previousOutputState = {};
 
+  // Track previous precipitation (lifetime total) with timestamp to calculate rain intensity
+  final Map<String, ({double value, DateTime time})> _previousPrecipitation = {};
+
+  // Track recent wind speeds for trend calculation (last N readings)
+  final Map<String, List<({double speed, DateTime time})>> _recentWindReadings = {};
+  static const int _maxWindReadings = 10;
+
   // Track when devices were last updated via WebSocket (for API override protection)
   final Map<String, DateTime> _wsUpdateTimes = {};
   static const Duration _wsProtectionWindow = Duration(seconds: 10);
@@ -92,7 +102,12 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   final Map<String, ({bool targetState, DateTime time})> _pendingToggles = {};
   static const Duration _toggleProtectionWindow = Duration(seconds: 2);
 
+  // Action logs per device (for recent activity display)
+  final Map<String, List<ActionLogEntry>> _actionLogs = {};
+  static const int _maxActionLogEntries = 10;
+
   static const Duration _refreshInterval = Duration(minutes: 1);
+  static const Duration _offlineRetryInterval = Duration(seconds: 10);
 
   DeviceProvider({
     required AuthProvider authProvider,
@@ -102,6 +117,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
     StorageService? storageService,
   })  : _authProvider = authProvider,
         _deviceService = DeviceService(apiService),
+        _apiService = apiService,
         _webSocketService = webSocketService,
         _connectionManager = connectionManager,
         _storageService = storageService {
@@ -176,6 +192,9 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
     // Start auto-refresh as fallback
     _startAutoRefresh();
 
+    // Start offline device retry timer (10 second interval)
+    _startOfflineRetryTimer();
+
     if (kDebugMode) {
       debugPrint('[DeviceProvider] Services initialized');
     }
@@ -203,6 +222,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
     }
 
     _stopAutoRefresh();
+    _stopOfflineRetryTimer();
     _disconnectWebSocket();
     _unsubscribeFromNetworkChanges();
     _connectionManager?.clear();
@@ -224,6 +244,10 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   bool get isLoading => _state == DeviceLoadState.loading;
   bool get isRefreshing => _isRefreshing;
   bool get isOffline => _isOffline;
+
+  /// Get action log for a device (for recent activity display)
+  List<ActionLogEntry> getActionLog(String deviceId) =>
+      _actionLogs[deviceId] ?? [];
 
   /// Whether the phone has any internet connectivity
   bool get phoneHasConnectivity => _phoneHasConnectivity;
@@ -314,6 +338,90 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   /// Get rain/precipitation history for a device (for sparkline charts)
   List<double> getRainHistory(String deviceId) =>
       _rainHistory[deviceId] ?? [];
+
+  /// Get today's total rain (sum of hourly precipitation values)
+  double getTodayRainTotal(String deviceId) {
+    final history = _rainHistory[deviceId];
+    if (history == null || history.isEmpty) return 0.0;
+    return history.fold(0.0, (sum, value) => sum + value);
+  }
+
+  /// Get current rain intensity in mm/h based on precipitation changes
+  /// Returns null if no previous reading or not enough time has passed
+  double? getCurrentRainIntensity(String deviceId) {
+    final previous = _previousPrecipitation[deviceId];
+    if (previous == null) return null;
+
+    final status = _deviceStatuses[deviceId]?.weatherStatus;
+    if (status == null) return null;
+
+    final currentPrecip = status.precipitation;
+    final timeDiff = DateTime.now().difference(previous.time);
+
+    // Need at least 30 seconds between readings for meaningful rate
+    if (timeDiff.inSeconds < 30) return null;
+
+    final precipDiff = currentPrecip - previous.value;
+    if (precipDiff <= 0) return 0.0; // No rain or counter reset
+
+    // Convert to mm/h: (mm difference) / (hours elapsed)
+    final hoursElapsed = timeDiff.inSeconds / 3600.0;
+    return precipDiff / hoursElapsed;
+  }
+
+  /// Update precipitation tracking when status changes
+  void _trackPrecipitation(String deviceId, WeatherStationStatus? status) {
+    if (status == null) return;
+    _previousPrecipitation[deviceId] = (
+      value: status.precipitation,
+      time: DateTime.now(),
+    );
+  }
+
+  /// Track wind speed reading for trend calculation
+  void _trackWindSpeed(String deviceId, WeatherStationStatus? status) {
+    if (status == null) return;
+
+    final readings = _recentWindReadings[deviceId] ?? [];
+    readings.add((speed: status.windSpeed, time: DateTime.now()));
+
+    // Keep only last N readings
+    if (readings.length > _maxWindReadings) {
+      readings.removeAt(0);
+    }
+    _recentWindReadings[deviceId] = readings;
+  }
+
+  /// Get wind trend based on recent readings
+  /// Returns positive if wind is increasing, negative if decreasing, null if not enough data
+  double? getWindTrend(String deviceId) {
+    final readings = _recentWindReadings[deviceId];
+    if (readings == null || readings.length < 3) return null;
+
+    // Compare average of first half vs second half
+    final midpoint = readings.length ~/ 2;
+    final firstHalf = readings.sublist(0, midpoint);
+    final secondHalf = readings.sublist(midpoint);
+
+    final firstAvg = firstHalf.fold(0.0, (sum, r) => sum + r.speed) / firstHalf.length;
+    final secondAvg = secondHalf.fold(0.0, (sum, r) => sum + r.speed) / secondHalf.length;
+
+    return secondAvg - firstAvg;
+  }
+
+  /// Get max wind gust from recent readings
+  double? getRecentMaxWind(String deviceId) {
+    final readings = _recentWindReadings[deviceId];
+    if (readings == null || readings.isEmpty) return null;
+    return readings.map((r) => r.speed).reduce((a, b) => a > b ? a : b);
+  }
+
+  /// Get recent wind readings for sparkline (last 10 readings)
+  List<double> getRecentWindSpeeds(String deviceId) {
+    final readings = _recentWindReadings[deviceId];
+    if (readings == null) return [];
+    return readings.map((r) => r.speed).toList();
+  }
 
   /// Get power history for a device (for sparkline charts)
   List<double> getPowerHistory(String deviceId) =>
@@ -602,23 +710,25 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
     // Check for output state change and emit action log event
     _checkOutputChange(event.deviceId, event.status, status);
 
-    // Check if this is a confirmation of a recent toggle (to prevent flicker)
+    // Check if this is a confirmation of a recent toggle
     final pendingToggle = _pendingToggles[event.deviceId];
     final now = DateTime.now();
     if (pendingToggle != null &&
         now.difference(pendingToggle.time) < _toggleProtectionWindow) {
       final wsIsOn = status.powerStatus?.isOn;
       if (wsIsOn == pendingToggle.targetState) {
-        // WebSocket confirms our toggle - clear pending and skip UI update
+        // WebSocket confirms our toggle - clear pending
         _pendingToggles.remove(event.deviceId);
-        _deviceStatuses[event.deviceId] = status;
-        _wsUpdateTimes[event.deviceId] = now;
         if (kDebugMode) {
-          debugPrint('[DeviceProvider] Toggle confirmed for ${event.deviceId}, skipping UI update');
+          debugPrint('[DeviceProvider] Toggle confirmed for ${event.deviceId}');
         }
-        return; // Skip notifyListeners to prevent flicker
+        // Continue to update status and notify UI (don't skip)
       }
     }
+
+    // Track weather metrics for trend calculation
+    _trackPrecipitation(event.deviceId, status.weatherStatus);
+    _trackWindSpeed(event.deviceId, status.weatherStatus);
 
     // Update device status
     _deviceStatuses[event.deviceId] = status;
@@ -665,6 +775,10 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
         source: source,
       );
 
+      // Store in local action log
+      _addActionLogEntry(deviceId, entry);
+
+      // Notify ScheduleProvider via stream
       _actionLogController.add((deviceId: deviceId, entry: entry));
 
       if (kDebugMode) {
@@ -673,6 +787,164 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
         );
       }
     }
+  }
+
+  /// Add an action log entry for a device
+  void _addActionLogEntry(String deviceId, ActionLogEntry entry) {
+    final log = _actionLogs[deviceId] ?? [];
+
+    // Check if this is a duplicate (same timestamp and action)
+    if (log.isNotEmpty) {
+      final lastEntry = log.first;
+      if (lastEntry.isOn == entry.isOn &&
+          lastEntry.timestamp.difference(entry.timestamp).inSeconds.abs() < 2) {
+        return; // Skip duplicate
+      }
+    }
+
+    // Add at the beginning (newest first)
+    _actionLogs[deviceId] = [entry, ...log].take(_maxActionLogEntries).toList();
+    notifyListeners();
+  }
+
+  /// Fetch historical event log from API for a device
+  Future<void> fetchEventLog(String deviceId, {int limit = 10}) async {
+    if (currentApiUrl == null || currentToken == null) {
+      return;
+    }
+
+    try {
+      final response = await withAutoReauth((apiUrl, token) async {
+        return await _apiService.postJson(
+          '$apiUrl/statistics/event-log',
+          {
+            'tags': [deviceId],
+            'limit': limit,
+          },
+          token: token,
+        );
+      });
+
+      final result = response['result'] as Map<String, dynamic>?;
+      if (result == null) return;
+
+      final events = result[deviceId] as List<dynamic>?;
+      if (events == null || events.isEmpty) return;
+
+      final entries = <ActionLogEntry>[];
+      for (final event in events) {
+        final entry = _parseEventLogEntry(event as Map<String, dynamic>);
+        if (entry != null) {
+          entries.add(entry);
+        }
+      }
+
+      if (entries.isNotEmpty) {
+        // Merge with existing entries
+        final existing = _actionLogs[deviceId] ?? [];
+        final merged = _mergeActionLogs(entries, existing);
+        _actionLogs[deviceId] = merged.take(_maxActionLogEntries).toList();
+        notifyListeners();
+
+        if (kDebugMode) {
+          debugPrint(
+              '[DeviceProvider] Loaded ${entries.length} event log entries for $deviceId');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Failed to fetch event log: $e');
+      }
+    }
+  }
+
+  /// Parse a single event log entry from the API response
+  ActionLogEntry? _parseEventLogEntry(Map<String, dynamic> event) {
+    try {
+      // Event type 1 = switch state change
+      final eventType = event['e'] as int?;
+      if (eventType != 1) return null;
+
+      final timestamp = event['t'] as int?;
+      if (timestamp == null) return null;
+
+      // Parse the params JSON string: ["deviceId", switchId, isOn]
+      final paramsStr = event['p'] as String?;
+      if (paramsStr == null) return null;
+
+      final params = jsonDecode(paramsStr) as List<dynamic>;
+      if (params.length < 3) return null;
+
+      final isOn = params[2] as bool;
+
+      return ActionLogEntry(
+        timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp),
+        isOn: isOn,
+        source: ActionSource.unknown, // API doesn't provide source
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[DeviceProvider] Failed to parse event log entry: $e');
+      }
+      return null;
+    }
+  }
+
+  /// Fetch event logs for all relay devices without power monitoring
+  Future<void> _fetchEventLogsForRelays() async {
+    // Get devices without power monitoring (simple relays)
+    final relayDevices = _devices.where((d) {
+      if (!d.isPowerDevice) return false;
+      final status = _deviceStatuses[d.id]?.powerStatus;
+      // Include if no status or no power monitoring
+      return status == null || !status.hasPowerMonitoring;
+    }).toList();
+
+    if (relayDevices.isEmpty) return;
+
+    if (kDebugMode) {
+      debugPrint(
+          '[DeviceProvider] Fetching event logs for ${relayDevices.length} relay devices');
+    }
+
+    // Fetch in parallel but limit concurrency
+    await Future.wait(
+      relayDevices.map((d) => fetchEventLog(d.id, limit: 5)),
+    );
+  }
+
+  /// Merge two action log lists, removing duplicates by timestamp
+  List<ActionLogEntry> _mergeActionLogs(
+    List<ActionLogEntry> newEntries,
+    List<ActionLogEntry> existing,
+  ) {
+    final merged = <ActionLogEntry>[];
+    final seenTimestamps = <int>{};
+
+    // Add new entries first
+    for (final entry in newEntries) {
+      final ts = entry.timestamp.millisecondsSinceEpoch;
+      if (!seenTimestamps.contains(ts)) {
+        seenTimestamps.add(ts);
+        merged.add(entry);
+      }
+    }
+
+    // Add existing entries that don't overlap
+    for (final entry in existing) {
+      final ts = entry.timestamp.millisecondsSinceEpoch;
+      final isDuplicate = seenTimestamps.any(
+        (seen) => (seen - ts).abs() < 2000,
+      );
+      if (!isDuplicate) {
+        seenTimestamps.add(ts);
+        merged.add(entry);
+      }
+    }
+
+    // Sort by timestamp descending (newest first)
+    merged.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return merged;
   }
 
   void _handleOnlineChangeEvent(OnlineChangeEvent event) {
@@ -730,6 +1002,9 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
 
       // Fetch history for sparklines (non-blocking)
       _fetchAllHistories();
+
+      // Fetch event logs for relay devices (non-blocking)
+      _fetchEventLogsForRelays();
     } on ApiException catch (e) {
       // Try offline mode with cached devices
       await _tryOfflineMode(e.friendlyMessage);
@@ -772,21 +1047,32 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   }
 
   /// Update device online status based on local connection state
+  /// Only UPGRADES status (offline -> online), never DOWNGRADES (online -> offline)
+  /// This ensures cloud-online devices stay online even if locally unreachable
   void _updateDeviceOnlineStatusFromLocal() {
     final connectionManager = _connectionManager;
     if (connectionManager == null) return;
 
+    var anyChanged = false;
     for (int i = 0; i < _devices.length; i++) {
       final device = _devices[i];
       final localInfo = connectionManager.getLocalInfo(device.id);
       final isLocallyReachable = localInfo?.state == LocalConnectionState.connected;
 
-      // In offline mode, device is "online" if locally reachable
-      if (device.isOnline != isLocallyReachable) {
-        _devices[i] = device.copyWith(isOnline: isLocallyReachable);
+      // Only mark device as online if locally reachable
+      // NEVER mark a device as offline - if cloud says it's online, trust that
+      if (isLocallyReachable && !device.isOnline) {
+        _devices[i] = device.copyWith(isOnline: true);
+        anyChanged = true;
+        if (kDebugMode) {
+          debugPrint('[DeviceProvider] Device ${device.id} came online locally');
+        }
       }
     }
-    notifyListeners();
+
+    if (anyChanged) {
+      notifyListeners();
+    }
   }
 
   /// Extract and register device IPs from cloud API responses
@@ -829,6 +1115,75 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
       if (kDebugMode) {
         debugPrint('[DeviceProvider] Probe failed: $e');
       }
+    }
+  }
+
+  /// Start retry timer for offline devices on local network
+  void _startOfflineRetryTimer() {
+    _stopOfflineRetryTimer();
+    _offlineRetryTimer = Timer.periodic(_offlineRetryInterval, (_) {
+      _retryOfflineDevicesLocally();
+    });
+  }
+
+  void _stopOfflineRetryTimer() {
+    _offlineRetryTimer?.cancel();
+    _offlineRetryTimer = null;
+  }
+
+  /// Retry connecting to offline devices on local network
+  Future<void> _retryOfflineDevicesLocally() async {
+    final connectionManager = _connectionManager;
+    if (connectionManager == null) return;
+
+    // Only retry if we're on WiFi (local access available)
+    if (!_phoneOnWifi || connectionManager.isLocalAccessDisabled) return;
+
+    // Find devices that are offline AND on the current subnet
+    final offlineDevices = _devices.where((d) {
+      if (d.isOnline) return false;
+      final localInfo = connectionManager.getLocalInfo(d.id);
+      if (localInfo == null || localInfo.localIp == null) return false;
+      // Skip devices on different subnet to avoid timeouts
+      return connectionManager.isDeviceOnCurrentSubnet(d.id);
+    }).toList();
+
+    if (offlineDevices.isEmpty) return;
+
+    if (kDebugMode) {
+      debugPrint('[DeviceProvider] Retrying ${offlineDevices.length} offline devices locally...');
+    }
+
+    var anyChanged = false;
+    for (final device in offlineDevices) {
+      // Force retry regardless of backoff for offline devices
+      try {
+        final reachable = await connectionManager.isLocalReachable(device.id);
+        if (reachable) {
+          // Device came back online locally!
+          final index = _devices.indexWhere((d) => d.id == device.id);
+          if (index != -1) {
+            _devices[index] = device.copyWith(isOnline: true);
+            anyChanged = true;
+
+            if (kDebugMode) {
+              debugPrint('[DeviceProvider] Device ${device.id} came online locally!');
+            }
+
+            // Refresh status for this device
+            await connectionManager.refreshLocalStatus(device.id);
+          }
+        }
+      } catch (e) {
+        // Probe failure is non-fatal
+        if (kDebugMode) {
+          debugPrint('[DeviceProvider] Retry probe failed for ${device.id}: $e');
+        }
+      }
+    }
+
+    if (anyChanged) {
+      notifyListeners();
     }
   }
 
@@ -1047,6 +1402,7 @@ class DeviceProvider extends ChangeNotifier with ApiRetryMixin {
   void dispose() {
     _authProvider.removeListener(_onAuthChanged);
     _stopAutoRefresh();
+    _stopOfflineRetryTimer();
     _disconnectWebSocket();
     _unsubscribeFromNetworkChanges();
     _connectionManager?.dispose();

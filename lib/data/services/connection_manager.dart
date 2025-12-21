@@ -46,6 +46,10 @@ class ConnectionManager {
   String? _currentWifiName;
   String? get currentWifiName => _currentWifiName;
 
+  /// Current local subnet (first 3 octets, e.g., "192.168.1")
+  String? _currentSubnet;
+  String? get currentSubnet => _currentSubnet;
+
   /// Whether we're currently on WiFi (local access may be available)
   bool get isOnWifi => _networkMonitor.currentState.isWifi;
 
@@ -181,6 +185,7 @@ class ConnectionManager {
     }
 
     _currentWifiName = newWifiName;
+    _currentSubnet = null; // Clear subnet - will be re-learned from first successful probe
 
     // Reset all local connection states since we're on a new network
     // Devices from the old network likely have different IPs
@@ -313,19 +318,24 @@ class ConnectionManager {
     String deviceCode,
   ) async {
     final localInfo = _localInfoCache[deviceId.toLowerCase()];
+    final isOnSubnet = _isOnCurrentSubnet(localInfo?.localIp);
 
     if (kDebugMode) {
       final hasIp = localInfo?.localIp != null;
       final canTry = localInfo?.canTryLocal ?? false;
       final shouldRetry = localInfo?.shouldRetryLocal ?? false;
       debugPrint('[ConnMgr] getStatus $deviceId: hasIp=$hasIp, canTry=$canTry, shouldRetry=$shouldRetry, '
-          'state=${localInfo?.state}, localDisabled=$_localAccessDisabled');
+          'state=${localInfo?.state}, localDisabled=$_localAccessDisabled, onSubnet=$isOnSubnet');
     }
 
-    // Skip local if local access is disabled (not on WiFi)
-    if (_localAccessDisabled) {
+    // Skip local if local access is disabled (not on WiFi) or device on different subnet
+    if (_localAccessDisabled || !isOnSubnet) {
       if (kDebugMode) {
-        debugPrint('[ConnMgr] → Local access disabled, using cloud for $deviceId');
+        if (!isOnSubnet) {
+          debugPrint('[ConnMgr] → Different subnet, using cloud for $deviceId');
+        } else {
+          debugPrint('[ConnMgr] → Local access disabled, using cloud for $deviceId');
+        }
       }
       return DeviceStatusResult(
         status: null,
@@ -400,18 +410,22 @@ class ConnectionManager {
     final localInfo = _localInfoCache[deviceId.toLowerCase()];
     final action = turnOn ? 'ON' : 'OFF';
 
+    // Check if device is on current subnet
+    final isOnSubnet = _isOnCurrentSubnet(localInfo?.localIp);
+
     if (kDebugMode) {
       final canTry = localInfo?.canTryLocal ?? false;
       final shouldRetry = localInfo?.shouldRetryLocal ?? false;
       debugPrint('[ConnMgr] Toggle $deviceId -> $action (ip=${localInfo?.localIp}, state=${localInfo?.state}, '
-          'canTry=$canTry, shouldRetry=$shouldRetry, localDisabled=$_localAccessDisabled)');
+          'canTry=$canTry, shouldRetry=$shouldRetry, localDisabled=$_localAccessDisabled, onSubnet=$isOnSubnet)');
     }
 
-    // Skip local if local access is disabled (not on WiFi)
+    // Skip local if local access is disabled (not on WiFi) or device is on different subnet
     final shouldTryLocal = !_localAccessDisabled &&
         localInfo != null &&
         localInfo.canTryLocal &&
-        localInfo.shouldRetryLocal;
+        localInfo.shouldRetryLocal &&
+        isOnSubnet;
 
     // Try local first if we have an IP and should retry (respects backoff after failures)
     if (shouldTryLocal) {
@@ -457,7 +471,11 @@ class ConnectionManager {
         }
       }
     } else if (kDebugMode && localInfo != null) {
-      debugPrint('[ConnMgr] Skipping local for $deviceId: canTry=${localInfo.canTryLocal}, shouldRetry=${localInfo.shouldRetryLocal}');
+      if (!isOnSubnet) {
+        debugPrint('[ConnMgr] Skipping local for $deviceId: different subnet (${localInfo.localIp} vs $_currentSubnet)');
+      } else {
+        debugPrint('[ConnMgr] Skipping local for $deviceId: canTry=${localInfo.canTryLocal}, shouldRetry=${localInfo.shouldRetryLocal}');
+      }
     }
 
     // Fall back to cloud
@@ -520,12 +538,107 @@ class ConnectionManager {
     );
   }
 
+  /// Extract subnet (first 3 octets) from IP address
+  static String? _extractSubnet(String? ip) {
+    if (ip == null || ip.isEmpty) return null;
+    final parts = ip.split('.');
+    if (parts.length != 4) return null;
+    return '${parts[0]}.${parts[1]}.${parts[2]}';
+  }
+
+  /// Check if an IP is on the current subnet
+  bool _isOnCurrentSubnet(String? ip) {
+    if (_currentSubnet == null || ip == null) return true; // Allow if unknown
+    final deviceSubnet = _extractSubnet(ip);
+    return deviceSubnet == _currentSubnet;
+  }
+
+  /// Public method to check if a device is on the current subnet
+  bool isDeviceOnCurrentSubnet(String deviceId) {
+    final info = _localInfoCache[deviceId.toLowerCase()];
+    return _isOnCurrentSubnet(info?.localIp);
+  }
+
+  /// Update current subnet from a successfully connected device
+  void _updateCurrentSubnet(String ip) {
+    final subnet = _extractSubnet(ip);
+    if (subnet != null && subnet != _currentSubnet) {
+      if (kDebugMode) {
+        debugPrint('[ConnMgr] Updated current subnet: $_currentSubnet -> $subnet');
+      }
+      _currentSubnet = subnet;
+    }
+  }
+
+  /// Determine the most common subnet from known device IPs
+  /// This helps filter out stale IPs from different networks
+  String? _detectMostCommonSubnet() {
+    final subnetCounts = <String, int>{};
+
+    for (final entry in _localInfoCache.entries) {
+      final ip = entry.value.localIp;
+      final subnet = _extractSubnet(ip);
+      if (subnet != null) {
+        subnetCounts[subnet] = (subnetCounts[subnet] ?? 0) + 1;
+      }
+    }
+
+    if (subnetCounts.isEmpty) return null;
+
+    // Find subnet with most devices
+    String? mostCommon;
+    int maxCount = 0;
+    for (final entry in subnetCounts.entries) {
+      if (entry.value > maxCount) {
+        maxCount = entry.value;
+        mostCommon = entry.key;
+      }
+    }
+
+    // Only use if there's a clear majority (more than 1 device)
+    if (maxCount > 1) {
+      return mostCommon;
+    }
+
+    return null;
+  }
+
   /// Probe all known devices to check local reachability
   /// Runs in parallel for speed, returns true if any state changed
   Future<bool> probeLocalDevices() async {
+    // If we don't know the current subnet, try to detect it from device IPs
+    if (_currentSubnet == null) {
+      final detected = _detectMostCommonSubnet();
+      if (detected != null) {
+        if (kDebugMode) {
+          debugPrint('[ConnMgr] Auto-detected subnet from device IPs: $detected');
+        }
+        _currentSubnet = detected;
+      }
+    }
+
+    // Filter to devices that can be probed AND are on the current subnet
     final devicesToProbe = _localInfoCache.entries
-        .where((e) => e.value.canTryLocal && e.value.shouldRetryLocal)
+        .where((e) =>
+            e.value.canTryLocal &&
+            e.value.shouldRetryLocal &&
+            _isOnCurrentSubnet(e.value.localIp))
         .toList();
+
+    // Log skipped devices on different subnets
+    if (kDebugMode) {
+      final skippedDevices = _localInfoCache.entries
+          .where((e) =>
+              e.value.canTryLocal &&
+              e.value.shouldRetryLocal &&
+              !_isOnCurrentSubnet(e.value.localIp))
+          .toList();
+      if (skippedDevices.isNotEmpty) {
+        for (final entry in skippedDevices) {
+          debugPrint('[ConnMgr] Skipping ${entry.key} @ ${entry.value.localIp} (different subnet, current: $_currentSubnet)');
+        }
+      }
+    }
 
     if (devicesToProbe.isEmpty) {
       if (kDebugMode) {
@@ -558,6 +671,11 @@ class ConnectionManager {
 
           results[deviceId] = reachable;
           final newState = reachable ? LocalConnectionState.connected : LocalConnectionState.unreachable;
+
+          // Learn current subnet from successful connection
+          if (reachable && info.localIp != null) {
+            _updateCurrentSubnet(info.localIp!);
+          }
 
           // Only update if state actually changed
           if (previousState != newState) {
@@ -652,6 +770,7 @@ class ConnectionManager {
     _token = null;
     _initialized = false;
     _currentWifiName = null;
+    _currentSubnet = null;
     _localAccessDisabled = false;
   }
 

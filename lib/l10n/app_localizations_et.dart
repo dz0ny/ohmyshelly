@@ -158,10 +158,46 @@ class AppLocalizationsEt extends AppLocalizations {
   String get windDirection => 'Suund';
 
   @override
+  String get windCalm => 'Calm';
+
+  @override
+  String get windLight => 'Light Breeze';
+
+  @override
+  String get windModerate => 'Moderate';
+
+  @override
+  String get windStrong => 'Strong';
+
+  @override
+  String get windGale => 'Gale';
+
+  @override
+  String get windStorm => 'Storm';
+
+  @override
   String get rain => 'Vihm';
 
   @override
   String get rainToday => 'Täna';
+
+  @override
+  String get rainDew => 'Dew';
+
+  @override
+  String get rainDrizzle => 'Drizzle';
+
+  @override
+  String get rainLight => 'Light Rain';
+
+  @override
+  String get rainModerate => 'Rain';
+
+  @override
+  String get rainHeavy => 'Heavy Rain';
+
+  @override
+  String get rainDownpour => 'Downpour';
 
   @override
   String get illumination => 'Valgustus';

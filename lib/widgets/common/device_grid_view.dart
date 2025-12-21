@@ -59,6 +59,13 @@ class DeviceGridView extends StatelessWidget {
                         deviceProvider.getTemperatureHistory(device.id),
                     humidityHistory:
                         deviceProvider.getHumidityHistory(device.id),
+                    todayRainTotal:
+                        deviceProvider.getTodayRainTotal(device.id),
+                    currentRainIntensity:
+                        deviceProvider.getCurrentRainIntensity(device.id),
+                    windTrend: deviceProvider.getWindTrend(device.id),
+                    recentWindSpeeds:
+                        deviceProvider.getRecentWindSpeeds(device.id),
                   );
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -142,6 +149,7 @@ class DeviceGridView extends StatelessWidget {
         return PowerDeviceDashboardCard(
           device: device,
           status: status?.powerStatus,
+          actionLog: deviceProvider.getActionLog(device.id),
         );
       },
     );

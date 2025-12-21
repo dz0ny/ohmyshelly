@@ -13,6 +13,10 @@ class WeatherStationDashboardCard extends StatelessWidget {
   final WeatherStationStatus? status;
   final List<double> temperatureHistory;
   final List<double> humidityHistory;
+  final double? todayRainTotal;
+  final double? currentRainIntensity;
+  final double? windTrend;
+  final List<double> recentWindSpeeds;
   final VoidCallback? onTap;
 
   const WeatherStationDashboardCard({
@@ -21,8 +25,44 @@ class WeatherStationDashboardCard extends StatelessWidget {
     this.status,
     this.temperatureHistory = const [],
     this.humidityHistory = const [],
+    this.todayRainTotal,
+    this.currentRainIntensity,
+    this.windTrend,
+    this.recentWindSpeeds = const [],
     this.onTap,
   });
+
+  /// Get wind intensity label based on km/h (Beaufort scale simplified)
+  /// - Calm: < 1 km/h
+  /// - Light Breeze: 1 - 12 km/h
+  /// - Moderate: 12 - 30 km/h
+  /// - Strong: 30 - 50 km/h
+  /// - Gale: 50 - 75 km/h
+  /// - Storm: > 75 km/h
+  String _getWindIntensityLabel(double speed, AppLocalizations l10n) {
+    if (speed < 1) return l10n.windCalm;
+    if (speed < 12) return l10n.windLight;
+    if (speed < 30) return l10n.windModerate;
+    if (speed < 50) return l10n.windStrong;
+    if (speed < 75) return l10n.windGale;
+    return l10n.windStorm;
+  }
+
+  /// Get rain intensity label based on mm/h
+  /// - Dew/Mist: < 1 mm/h
+  /// - Drizzle: 1 - 2.5 mm/h
+  /// - Light rain: 2.5 - 7.5 mm/h
+  /// - Moderate rain: 7.5 - 15 mm/h
+  /// - Heavy rain: 15 - 30 mm/h
+  /// - Downpour: > 30 mm/h
+  String _getRainIntensityLabel(double intensity, AppLocalizations l10n) {
+    if (intensity < 1) return l10n.rainDew;
+    if (intensity < 2.5) return l10n.rainDrizzle;
+    if (intensity < 7.5) return l10n.rainLight;
+    if (intensity < 15) return l10n.rainModerate;
+    if (intensity < 30) return l10n.rainHeavy;
+    return l10n.rainDownpour;
+  }
 
   /// Get icon based on solar irradiance/illumination
   IconData get _weatherIcon {
@@ -304,21 +344,38 @@ class WeatherStationDashboardCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n.windSpeed,
+                  _getWindIntensityLabel(status!.windSpeed, l10n),
                   style: TextStyle(
                     fontSize: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-                Text(
-                  '${status!.windSpeedDisplay} ${status!.windDirectionLocalized(l10n)}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '${status!.windSpeedDisplay} ${status!.windDirectionLocalized(l10n)}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (windTrend != null && windTrend!.abs() > 1) ...[
+                      const SizedBox(width: 4),
+                      Text(
+                        windTrend! > 0 ? '↑' : '↓',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: windTrend! > 0 ? AppColors.warning : AppColors.info,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -330,21 +387,43 @@ class WeatherStationDashboardCard extends StatelessWidget {
 
   Widget _buildRainStat(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
-    final hasRain = status!.precipitation > 0;
-    final rainColor = hasRain ? AppColors.info : AppColors.weatherStation;
+    // Use today's total rain from statistics if available
+    final rainValue = todayRainTotal ?? 0.0;
+    final isRaining = currentRainIntensity != null && currentRainIntensity! > 0;
+    final hasRain = rainValue > 0 || isRaining;
+    final rainColor = isRaining ? AppColors.info : (hasRain ? AppColors.info : AppColors.weatherStation);
+
+    // Format rain display - show intensity if actively raining, otherwise show today's total
+    String rainDisplay;
+    String label;
+    if (isRaining) {
+      rainDisplay = '${currentRainIntensity!.toStringAsFixed(1)} mm/h';
+      // Rain intensity labels based on mm/h
+      label = _getRainIntensityLabel(currentRainIntensity!, l10n);
+    } else {
+      // Show more precision for small values
+      if (rainValue == 0) {
+        rainDisplay = '0 mm';
+      } else if (rainValue < 1) {
+        rainDisplay = '${rainValue.toStringAsFixed(2)} mm';
+      } else {
+        rainDisplay = '${rainValue.toStringAsFixed(1)} mm';
+      }
+      label = '${l10n.rain} ${l10n.rainToday}';
+    }
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: hasRain
-            ? AppColors.info.withValues(alpha: 0.1)
-            : colorScheme.surfaceContainerHighest,
+        color: isRaining
+            ? AppColors.info.withValues(alpha: 0.15)
+            : (hasRain ? AppColors.info.withValues(alpha: 0.1) : colorScheme.surfaceContainerHighest),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           Icon(
-            AppIcons.rain,
+            isRaining ? Icons.grain_rounded : AppIcons.rain,
             size: 18,
             color: rainColor,
           ),
@@ -354,14 +433,14 @@ class WeatherStationDashboardCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${l10n.rain} ${l10n.rainToday}',
+                  label,
                   style: TextStyle(
                     fontSize: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 Text(
-                  status!.precipitationDisplay,
+                  rainDisplay,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

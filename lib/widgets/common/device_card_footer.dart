@@ -42,17 +42,8 @@ class DeviceCardFooter extends StatelessWidget {
       items.add(_buildTappableIp(context, ipAddress!));
     }
 
-    // WiFi SSID
-    if (ssid != null && ssid!.isNotEmpty) {
-      items.add(_buildInfoItem(
-        context: context,
-        icon: Icons.wifi,
-        text: ssid!,
-      ));
-    }
-
-    // Signal strength (if no SSID shown)
-    if (rssi != null && (ssid == null || ssid!.isEmpty)) {
+    // Signal strength (always show if available)
+    if (rssi != null) {
       items.add(_buildSignalItem(l10n, rssi!));
     }
 

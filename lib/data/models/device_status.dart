@@ -216,9 +216,9 @@ class PowerDeviceStatus {
       temperature: (tempData?['tC'] as num?)?.toDouble() ?? 0.0,
       totalEnergy: (aenergy?['total'] as num?)?.toDouble() ?? 0.0,
       ipAddress: wifi?['sta_ip'] as String?,
-      rssi: wifi?['rssi'] as int?,
+      rssi: (wifi?['rssi'] as num?)?.toInt(),
       ssid: wifi?['ssid'] as String?,
-      uptime: sys?['uptime'] as int? ?? 0,
+      uptime: (sys?['uptime'] as num?)?.toInt() ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
       firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
       hasPowerMonitoring: hasPowerMonitoring,
@@ -428,7 +428,7 @@ class WeatherStationStatus {
       batteryPercent: (battery?['percent'] as num?)?.toDouble() ?? 0.0,
       batteryVoltage: (battery?['V'] as num?)?.toDouble(),
       isInRange: reporter?['inrange'] as bool? ?? false,
-      rssi: (reporter?['rssi'] as int?) ?? (wifi?['rssi'] as int?),
+      rssi: (reporter?['rssi'] as num?)?.toInt() ?? (wifi?['rssi'] as num?)?.toInt(),
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
       firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
     );
@@ -513,9 +513,9 @@ class GatewayStatus {
     return GatewayStatus(
       cloudConnected: cloud?['connected'] as bool? ?? false,
       ipAddress: wifi?['sta_ip'] as String?,
-      rssi: wifi?['rssi'] as int?,
+      rssi: (wifi?['rssi'] as num?)?.toInt(),
       ssid: wifi?['ssid'] as String?,
-      uptime: sys?['uptime'] as int? ?? 0,
+      uptime: (sys?['uptime'] as num?)?.toInt() ?? 0,
       lastUpdated: updatedStr != null ? DateTime.tryParse(updatedStr) : null,
       firmwareVersion: _parseFirmwareVersion(sys?['fw_id'] as String?),
     );

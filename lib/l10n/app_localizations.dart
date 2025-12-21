@@ -438,6 +438,42 @@ abstract class AppLocalizations {
   /// **'Direction'**
   String get windDirection;
 
+  /// No description provided for @windCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get windCalm;
+
+  /// No description provided for @windLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Breeze'**
+  String get windLight;
+
+  /// No description provided for @windModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get windModerate;
+
+  /// No description provided for @windStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get windStrong;
+
+  /// No description provided for @windGale.
+  ///
+  /// In en, this message translates to:
+  /// **'Gale'**
+  String get windGale;
+
+  /// No description provided for @windStorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Storm'**
+  String get windStorm;
+
   /// No description provided for @rain.
   ///
   /// In en, this message translates to:
@@ -449,6 +485,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get rainToday;
+
+  /// No description provided for @rainDew.
+  ///
+  /// In en, this message translates to:
+  /// **'Dew'**
+  String get rainDew;
+
+  /// No description provided for @rainDrizzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get rainDrizzle;
+
+  /// No description provided for @rainLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Rain'**
+  String get rainLight;
+
+  /// No description provided for @rainModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get rainModerate;
+
+  /// No description provided for @rainHeavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy Rain'**
+  String get rainHeavy;
+
+  /// No description provided for @rainDownpour.
+  ///
+  /// In en, this message translates to:
+  /// **'Downpour'**
+  String get rainDownpour;
 
   /// No description provided for @illumination.
   ///

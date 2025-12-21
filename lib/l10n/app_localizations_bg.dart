@@ -157,10 +157,46 @@ class AppLocalizationsBg extends AppLocalizations {
   String get windDirection => 'Посока';
 
   @override
+  String get windCalm => 'Calm';
+
+  @override
+  String get windLight => 'Light Breeze';
+
+  @override
+  String get windModerate => 'Moderate';
+
+  @override
+  String get windStrong => 'Strong';
+
+  @override
+  String get windGale => 'Gale';
+
+  @override
+  String get windStorm => 'Storm';
+
+  @override
   String get rain => 'Дъжд';
 
   @override
   String get rainToday => 'Днес';
+
+  @override
+  String get rainDew => 'Dew';
+
+  @override
+  String get rainDrizzle => 'Drizzle';
+
+  @override
+  String get rainLight => 'Light Rain';
+
+  @override
+  String get rainModerate => 'Rain';
+
+  @override
+  String get rainHeavy => 'Heavy Rain';
+
+  @override
+  String get rainDownpour => 'Downpour';
 
   @override
   String get illumination => 'Осветеност';

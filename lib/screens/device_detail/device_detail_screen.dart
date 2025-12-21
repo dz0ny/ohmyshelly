@@ -193,6 +193,8 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         uvHistory: deviceProvider.getUvHistory(device.id),
         solarHistory: deviceProvider.getSolarHistory(device.id),
         rainHistory: deviceProvider.getRainHistory(device.id),
+        todayRainTotal: deviceProvider.getTodayRainTotal(device.id),
+        currentRainIntensity: deviceProvider.getCurrentRainIntensity(device.id),
       );
     } else if (device.isGateway) {
       return GatewayDetail(

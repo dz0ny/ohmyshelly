@@ -18,6 +18,8 @@ class WeatherStationDetail extends StatelessWidget {
   final List<double> uvHistory;
   final List<double> solarHistory;
   final List<double> rainHistory;
+  final double? todayRainTotal;
+  final double? currentRainIntensity;
 
   const WeatherStationDetail({
     super.key,
@@ -29,10 +31,32 @@ class WeatherStationDetail extends StatelessWidget {
     this.uvHistory = const [],
     this.solarHistory = const [],
     this.rainHistory = const [],
+    this.todayRainTotal,
+    this.currentRainIntensity,
   });
 
   void _navigateToHistory(BuildContext context, String metric) {
     context.push('/statistics/$deviceId?type=weather&metric=$metric');
+  }
+
+  /// Get wind intensity label based on km/h (Beaufort scale simplified)
+  String _getWindIntensityLabel(double speed, AppLocalizations l10n) {
+    if (speed < 1) return l10n.windCalm;
+    if (speed < 12) return l10n.windLight;
+    if (speed < 30) return l10n.windModerate;
+    if (speed < 50) return l10n.windStrong;
+    if (speed < 75) return l10n.windGale;
+    return l10n.windStorm;
+  }
+
+  /// Get rain intensity label based on mm/h
+  String _getRainIntensityLabel(double intensity, AppLocalizations l10n) {
+    if (intensity < 1) return l10n.rainDew;
+    if (intensity < 2.5) return l10n.rainDrizzle;
+    if (intensity < 7.5) return l10n.rainLight;
+    if (intensity < 15) return l10n.rainModerate;
+    if (intensity < 30) return l10n.rainHeavy;
+    return l10n.rainDownpour;
   }
 
   @override
@@ -688,6 +712,7 @@ class WeatherStationDetail extends StatelessWidget {
 
   Widget _buildWindTile(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
+    final windLabel = _getWindIntensityLabel(status!.windSpeed, l10n);
     // No onTap - Shelly API doesn't provide wind history
     return _buildGridTile(
       context: context,
@@ -696,8 +721,8 @@ class WeatherStationDetail extends StatelessWidget {
       value: status!.windSpeedDisplay,
       color: colorScheme.onSurfaceVariant,
       subtitle: status!.windGust > 0
-          ? '${l10n.windGust}: ${status!.windGustDisplay}'
-          : null,
+          ? '$windLabel • ${l10n.windGust}: ${status!.windGustDisplay}'
+          : windLabel,
       sparkline: _buildWindCompass(context, l10n),
     );
   }
@@ -784,15 +809,40 @@ class WeatherStationDetail extends StatelessWidget {
 
   Widget _buildRainTile(BuildContext context, AppLocalizations l10n) {
     final colorScheme = Theme.of(context).colorScheme;
-    final hasRain = status!.precipitation > 0;
+    // Use today's total rain from statistics if available
+    final rainValue = todayRainTotal ?? 0.0;
+    final isRaining = currentRainIntensity != null && currentRainIntensity! > 0;
+    final hasRain = rainValue > 0 || isRaining;
+
+    // Show intensity if actively raining, otherwise show today's total
+    String rainDisplay;
+    String subtitle;
+    if (isRaining) {
+      rainDisplay = '${currentRainIntensity!.toStringAsFixed(1)} mm/h';
+      final intensityLabel = _getRainIntensityLabel(currentRainIntensity!, l10n);
+      final todayDisplay = rainValue < 1
+          ? rainValue.toStringAsFixed(2)
+          : rainValue.toStringAsFixed(1);
+      subtitle = '$intensityLabel • ${l10n.rainToday}: $todayDisplay mm';
+    } else {
+      // Show more precision for small values
+      if (rainValue == 0) {
+        rainDisplay = '0 mm';
+      } else if (rainValue < 1) {
+        rainDisplay = '${rainValue.toStringAsFixed(2)} mm';
+      } else {
+        rainDisplay = '${rainValue.toStringAsFixed(1)} mm';
+      }
+      subtitle = l10n.rainToday;
+    }
 
     return _buildGridTile(
       context: context,
-      icon: AppIcons.rain,
+      icon: isRaining ? Icons.grain_rounded : AppIcons.rain,
       label: l10n.rain,
-      value: status!.precipitationDisplay,
-      color: hasRain ? AppColors.info : colorScheme.onSurfaceVariant,
-      subtitle: l10n.rainToday,
+      value: rainDisplay,
+      color: isRaining ? AppColors.info : (hasRain ? AppColors.info : colorScheme.onSurfaceVariant),
+      subtitle: subtitle,
       onTap: () => _navigateToHistory(context, 'rain'),
       sparkline: rainHistory.length >= 2
           ? SparklineWidget(

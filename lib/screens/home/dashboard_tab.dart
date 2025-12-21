@@ -449,6 +449,7 @@ class _DashboardTabState extends State<DashboardTab> {
       return PowerDeviceDashboardCard(
         device: device,
         status: status?.powerStatus,
+        actionLog: deviceProvider.getActionLog(device.id),
       );
     } else if (device.isWeatherStation) {
       return WeatherStationDashboardCard(
@@ -456,6 +457,10 @@ class _DashboardTabState extends State<DashboardTab> {
         status: status?.weatherStatus,
         temperatureHistory: deviceProvider.getTemperatureHistory(device.id),
         humidityHistory: deviceProvider.getHumidityHistory(device.id),
+        todayRainTotal: deviceProvider.getTodayRainTotal(device.id),
+        currentRainIntensity: deviceProvider.getCurrentRainIntensity(device.id),
+        windTrend: deviceProvider.getWindTrend(device.id),
+        recentWindSpeeds: deviceProvider.getRecentWindSpeeds(device.id),
       );
     }
 
@@ -463,6 +468,7 @@ class _DashboardTabState extends State<DashboardTab> {
     return PowerDeviceDashboardCard(
       device: device,
       status: status?.powerStatus,
+      actionLog: deviceProvider.getActionLog(device.id),
     );
   }
 }

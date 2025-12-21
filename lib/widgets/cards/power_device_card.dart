@@ -144,6 +144,7 @@ class _PowerDeviceCardState extends State<PowerDeviceCard> {
             DeviceCardFooter(
               ipAddress: widget.status?.ipAddress,
               ssid: widget.status?.ssid,
+              rssi: widget.status?.rssi,
               lastUpdated: widget.status?.lastUpdated,
               firmwareVersion: widget.status?.firmwareVersion,
               connectionSource: widget.connectionSource,

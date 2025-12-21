@@ -118,6 +118,7 @@ class GatewayCard extends StatelessWidget {
             DeviceCardFooter(
               ipAddress: status?.ipAddress,
               ssid: status?.ssid,
+              rssi: status?.rssi,
               uptime: status?.uptimeDisplay,
               lastUpdated: status?.lastUpdated,
               firmwareVersion: status?.firmwareVersion,

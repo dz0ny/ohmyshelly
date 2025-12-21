@@ -147,7 +147,7 @@ class Device {
     final code = json['code'] as String? ?? '';
     final deviceType = json['type'] as String? ?? '';
     final gen = json['gen'] as String? ?? '';
-    final online = json['online'] as int? ?? 0;
+    final online = (json['online'] as num?)?.toInt() ?? 0;
 
     final settings = json['settings'] as Map<String, dynamic>?;
     final deviceInfo = settings?['DeviceInfo'] as Map<String, dynamic>?;
@@ -187,7 +187,7 @@ class Device {
     }
 
     // Get serial from status
-    final serial = status?['serial'] as int?;
+    final serial = (status?['serial'] as num?)?.toInt();
 
     // Parse input mode from switch:0 settings (in_mode)
     final inModeStr = switchSettings?['in_mode'] as String?;
